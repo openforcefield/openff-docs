@@ -1,0 +1,15 @@
+name: openff-toolkit-docs
+channels:
+    # Avoids crashing RTD machines by pulling an empty cudatoolkit pacakge
+    - jaimergp/label/unsupported-cudatoolkit-shim
+    - conda-forge
+    - defaults
+dependencies:
+    - pip
+    # readthedocs dependencies
+    - sphinx>=4.5,<5
+    - myst-parser>=0.13.6
+    - sphinx-notfound-page
+    # Theme
+    - pip:
+        - git+https://github.com/openforcefield/openff-sphinx-theme.git@main
