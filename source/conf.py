@@ -41,10 +41,10 @@ myst_enable_extensions = [
     "replacements",
     "deflist",
 ]
-myst_url_schemes = [
+myst_url_schemes = (
     "http",
     "https",
-]
+)
 _python_doc_base = "https://docs.python.org/3.6"
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3.6", None),
@@ -55,11 +55,16 @@ intersphinx_mapping = {
     "rdkit": ("https://www.rdkit.org/docs", None),
     "openeye": ("https://docs.eyesopen.com/toolkits/python/", None),
     "mdtraj": ("https://www.mdtraj.org/1.9.5/", None),
+    "openff.toolkit": ("https://docs.openforcefield.org/toolkit/en/stable", None),
     "openff.interchange": (
-        "https://openff-interchange.readthedocs.io/en/stable/",
+        "https://docs.openforcefield.org/interchange/en/stable",
         None,
     ),
-    "openff.fragmenter": ("https://fragmenter.readthedocs.io/en/stable/", None),
+    "openff.bespokefit": ("https://docs.openforcefield.org/bespokefit/en/stable", None),
+    "openff.qcsubmit": ("https://docs.openforcefield.org/qcsubmit/en/stable", None),
+    "openff.fragmenter": ("https://docs.openforcefield.org/fragmenter/en/stable", None),
+    "openff.evaluator": ("https://docs.openforcefield.org/evaluator/en/stable", None),
+    "openff.recharge": ("https://docs.openforcefield.org/recharge/en/stable", None),
 }
 
 
@@ -76,11 +81,8 @@ if importlib.util.find_spec("notfound"):
         "body": """
     <h1>404: File Not Found</h1>
     <p>
-        Sorry, we couldn't find that page. This often happens as a result of
-        following an outdated link. Please check the
-        <a href="https://open-forcefield-toolkit.readthedocs.io/en/stable/">latest stable version</a>
-        of the docs, unless you're sure you want an earlier version, and
-        try using the search box or the navigation menu on the left.
+        Sorry, we couldn't find that page. Try using the search box or the
+        navigation menu on the left.
     </p>
     <p>
     </p>

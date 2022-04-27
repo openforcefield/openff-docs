@@ -1,4 +1,10 @@
-# The Open Force Field ecosystem documentation
+# Open Force Field Software
+
+Welcome to the documentation for the [Open Force Field Initiative]'s software ecosystem.
+
+[Open Force Field Initiative]: https://openforcefield.org
+
+## OpenFF Projects
 
 [`openff-toolkit`](https://docs.openforcefield.org/toolkit)
 : Tools for preparing systems and manipulating force fields
