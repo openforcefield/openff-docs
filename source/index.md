@@ -4,7 +4,11 @@ Welcome to the documentation for the [Open Force Field Initiative]'s software ec
 
 [Open Force Field Initiative]: https://openforcefield.org
 
-## OpenFF Projects
+## Standards
+
+Specifications for SMIRNOFF and other standards defined by OpenFF can be found at [OpenFF Standards](https://docs.openforcefield.org/standards).
+
+## Projects
 
 [`openff-toolkit`](https://docs.openforcefield.org/toolkit)
 : Tools for preparing systems and manipulating force fields
@@ -34,6 +38,7 @@ maxdepth: 1
 ---
 
 Overview <self>
+OpenFF Standards <https://docs.openforcefield.org/standards>
 :::
 
 :::{toctree}
