@@ -37,26 +37,26 @@ ReadTheDocs should be configured to provide [redirects] that allow subprojects t
 
 For projects hosted outside of ReadTheDocs, the "to" URL should be the URL of the hosted documentation:
 
-> Redirect type: `Exact redirect`
-> From URL: `/standards/$rest`
+> Redirect type: `Exact redirect` \
+> From URL: `/standards/$rest` \
 > To URL: `https://openforcefield.github.io/standards/`
 
-> Redirect type: `Exact redirect`
-> From URL: `/standards`
+> Redirect type: `Exact redirect` \
+> From URL: `/standards` \
 > To URL: `https://openforcefield.github.io/standards/`
 
 
 For projects hosted within ReadTheDocs, the project should be [added as a subproject] of `openff-docs` and the "to" URL should be `/projects/projectname`
 
-> Child: `openff-interchange`
+> Child: `openff-interchange` \
 > Alias: `interchange`
 
-> Redirect type: `Exact redirect`
-> From URL: `/interchange/$rest`
+> Redirect type: `Exact redirect` \
+> From URL: `/interchange/$rest` \
 > To URL: `/projects/interchange/`
 
-> Redirect type: `Exact redirect`
-> From URL: `/interchange`
+> Redirect type: `Exact redirect` \
+> From URL: `/interchange` \
 > To URL: `/projects/interchange/`:
 
 You must have maintainer access to a project on RTD to add it as a subproject. If a project cannot be added as a subproject, the "to" URL can be set to the URL of the hosted documentation as with projects hosted externally.
