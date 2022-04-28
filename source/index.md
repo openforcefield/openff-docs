@@ -14,7 +14,7 @@ Specifications for SMIRNOFF and other standards defined by OpenFF can be found a
 : Tools for preparing systems and manipulating force fields
 
 [`openff-interchange`](https://docs.openforcefield.org/interchange)
-: Parameterize and export systems ready for simulation to various MD engines
+: Parametrize and export systems ready for simulation to various MD engines
 
 [`openff-bespokefit`](https://docs.openforcefield.org/bespokefit)
 : Automated parameter optimization for specific molecules or series of molecules
