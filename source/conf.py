@@ -42,6 +42,7 @@ myst_enable_extensions = [
     "deflist",
 ]
 myst_url_schemes = (
+    "mailto",
     "http",
     "https",
 )
