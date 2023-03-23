@@ -34,6 +34,9 @@ Specifications for SMIRNOFF and other standards defined by OpenFF can be found a
 [`openff-recharge`](https://docs.openforcefield.org/recharge)
 : Generate optimized partial charges for molecules with a variety of methods
 
+[`openff-nagl`](https://docs.openforcefield.org/nagl)
+: Train and use machine-learned partial charge models targetting molecular graphs
+
 ## Contact Us
 
 Need help? Raise an issue on [GitHub], open a topic on our [Discourse forum], or [email us]!
@@ -67,4 +70,5 @@ QCSubmit <https://docs.openforcefield.org/qcsubmit>
 Fragmenter <https://docs.openforcefield.org/fragmenter>
 Evaluator <https://docs.openforcefield.org/evaluator>
 Recharge <https://docs.openforcefield.org/recharge>
+NAGL <https://docs.openforcefield.org/nagl>
 :::
