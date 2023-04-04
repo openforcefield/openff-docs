@@ -58,7 +58,7 @@ We recommend installing x86_64 MambaForge on all Apple Macs, even Apple Silicon 
 (install_mamba)=
 ## Installing Mamba
 
-Mamba is much faster than the Conda package manager and can sometimes find ways to safely install two pieces of software that Conda thinks have conflicting dependencies. MambaForge includes Mamba itself, as well as an initial configuration supporting Conda Forge.
+Mamba is a drop-in replacement for the Conda package manager. It is faster and can sometimes find ways to safely install two pieces of software that Conda thinks have conflicting dependencies. MambaForge includes Mamba itself, as well as an initial configuration supporting Conda Forge.
 
 If you don't have Conda or Mamba installed, installing MambaForge will give you access to everything you need to install OpenFF software. If you can, we recommend installing MambaForge locally to your user account, rather than system-wide, so that you can freely create and destroy environments and manage your own configuration. If something goes wrong, you can always delete your MambaForge installation and start again, and you'll only lose your installed software.
 
