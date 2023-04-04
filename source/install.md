@@ -206,7 +206,7 @@ $ mamba install openff-bespokefit psi4 ambertools
 (install_windows)=
 ## OpenFF on Windows
 
-OpenFF does not directly support Windows operating systems, though much of our software is pure Python code and may work anyway as long as you can provide our dependencies.
+OpenFF does not support or test on Windows natively. All of our software is pure Python code and may work anyway as long as you can provide our dependencies, but many of these dependencies are not available on Windows and may not be in the foreseeable future.
 
 Regardless, we recommend using the [Windows Subsystem for Linux] to run OpenFF software on Windows. WSL runs a Linux kernel within your Windows system so you can run ordinary software as if you had a Linux system. If your hardware supports it, we suggest using WSL2 for a smoother experience; this is the default for new WSL installations on supported hardware. WSL2 requires hardware virtualization support, which is available on most modern CPUs but may require activation in the BIOS/UEFI. 
 
