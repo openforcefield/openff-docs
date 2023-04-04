@@ -138,7 +138,11 @@ $ jupyter notebook .
 
 ### Advanced Environment Management
 
-If you prefer, you can specify the path to a virtual environment's root directory as a prefix instead of giving an environment's name:
+Mamba/Conda cache the packages you install, so if you've already downloaded a particular version, you can install it in as many environments as you like without having to re-download it. In fact, Mamba/Conda try their hardest to unpack each version once, and then hardlink to it from each environment to keep the storage size of environments down. So don't be afraid to just create a new environment! 
+
+Because of this linking behavior, package code is often shared among different environments. If you edit one environment's `lib/python/site-packages` directory for example, those changes are likely to affect other environments. If you want to tinker with the code of your dependencies, consider using the `--copy` argument when installing them to avoid linking!
+
+If you prefer, you can specify the path to a virtual environment's root directory as a prefix instead of giving an environment's name. This can be useful for temporary environments, or for environments that are local to a project:
 
 ```shell-session
 $ mamba create -c conda-forge -p <prefix> <package(s)>
@@ -158,8 +162,6 @@ Or by adding the dependencies from an environment file:
 ```shell-session
 $ mamba env update -n <name> -f <path to .yaml file>
 ```
-
-Mamba/Conda cache the packages you install, so if you've already downloaded a particular version, you can install it in as many environments as you like without having to re-download it. In fact, Mamba/Conda try their hardest to unpack each version once, and then hardlink to it from each environment to keep the storage size of environments down. Be aware of this if you like to tinker with the code of your dependencies - your changes may affect other environments!
 
 The software in an environment can be automatically upgraded:
 
