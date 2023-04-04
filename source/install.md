@@ -24,7 +24,8 @@ OpenFF software is distributed via [Conda Forge]. Conda Forge is a repository of
         ```shell-session
         $ conda config --set auto_activate_base false
         ```
-3. Close and reopen the terminal window and install the desired packages into a [new environment]. Their dependencies will be automatically installed: 
+
+3. Close and reopen the terminal window and install the desired packages into a [new environment]. The names of OpenFF packages can be found in the [projects list]: 
     ```shell-session
     $ mamba create -c conda-forge -n openff-env openff-toolkit openmm jupyter-notebook nglview
     ```
@@ -51,6 +52,7 @@ We recommend installing x86_64 MambaForge on all Apple Macs, even Apple Silicon 
 :::
 
 [new environment]: managing_environments
+[projects list]: projects
 [project docs]: projects
 
 (install_mamba)=
