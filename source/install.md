@@ -165,7 +165,7 @@ The software in an environment can be automatically upgraded:
 $ mamba upgrade -n <name> --all
 ```
 
-But that can go wrong if you're mixing channels. Recreating the environment often works better:
+But that can go wrong if you're mixing channels and might be slow if the environment is old. Recreating the environment often works better:
 
 ```shell-session
 $ mamba env remove -n <name>
