@@ -1,0 +1,243 @@
+# Installation
+
+OpenFF software is distributed via [Conda Forge]. Conda Forge is a repository of software packages maintained by its community. Although it initially focused on scientific Python packages, its scope has since expanded to all kinds of software.
+
+You need a Conda-compatible package manager to install Conda Forge software. OpenFF recommends installing [Mamba] via the [MambaForge] distribution. Mamba is much faster than the Conda package manager and can sometimes find ways to safely install two pieces of software that Conda thinks have conflicting dependencies. MambaForge includes Mamba itself, as well as an initial configuration supporting Conda Forge.
+
+[Conda Forge]: https://conda-forge.org/
+[Mamba]: https://mamba.readthedocs.io/en/latest/index.html
+[MambaForge]: https://github.com/conda-forge/miniforge#mambaforge
+
+(quick_install)=
+## Quick Install Guide
+
+1. If you haven't already installed Mamba, run these commands in a terminal and then follow the prompts to download and install MambaForge. When asked, choose a directory owned by your user account (such as the default). For more information, see [](install_mambaforge):
+
+```shell-session
+$ curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-x86_64.sh"
+$ bash Mambaforge-$(uname)-x86_64.sh
+```
+
+2. When asked if you'd like to initialize MambaForge, answer "yes". For more information about this choice, see [](conda_init). Then, once the installer is finished, run the following command in a new terminal window:
+
+```shell-session
+$ conda config --set auto_activate_base false
+```
+
+3. Open another new terminal window and install the desired packages in a [new environment]. Their dependencies will be automatically installed:
+
+```shell-session
+$ mamba create -c conda-forge -n openff-env openff-toolkit openmm jupyter-notebook nglview
+```
+
+4. To use a package, first activate the environment, then run the desired command. Activation lasts until you close the shell session:
+
+```shell-session
+$ conda activate openff-env
+$ jupyter notebook "my-notebook.ipynb"
+```
+
+For package-specific installation instructions, please see the individual [project docs].
+
+:::{hint}
+If you're running Mamba through MambaForge, you're configured to use the Conda Forge channel by default, and you don't need to pass the `-c conda-forge` argument to the commands in this page. Including this argument does no harm, so we've included it for the benefit of users that don't have this configuration.
+:::
+
+[new environment]: managing_environments
+[project docs]: projects
+
+(install_mambaforge)=
+## Installing MambaForge
+
+If you don't have Conda or Mamba installed, installing MambaForge will give you access to everything you need to install OpenFF software. If you can, we recommend installing MambaForge locally to your user account, rather than system-wide, so that you can freely create and destroy environments and manage your own configuration. If something goes wrong, you can always delete your MambaForge installation and start again, and you'll only lose your installed software.
+
+1. Download the appropriate MambaForge installer from the [MambaForge repository]. Use [Mambaforge-MacOSX-x86_64] on a Mac and [Mambaforge-Linux-x86_64] on Linux/WSL.
+
+2. In a terminal, run the installer through Bash: `bash Mambaforge-$(uname)-x86_64.sh` and follow the prompts to install MambaForge to a directory owned by your user account (such as the default).
+
+3. If you opted to have the installer "initialize MambaForge by running conda init", we recommend running `conda config --set auto_activate_base false`. This still allows you to run Conda/Mamba commands without activating an environment, but prevents the base environment's Python installation from conflicting with system software.
+
+:::{admonition} OpenFF on Windows
+We recommend installing MambaForge through WSL on Windows. For more information, see [](install_windows).
+:::
+
+:::{admonition} OpenFF on Apple Silicon
+We recommend installing x86_64 MambaForge on all Apple Macs, even Apple Silicon Macs like the M1 and M2. For more information, see [](install_arm).
+:::
+
+[MambaForge repository]: https://github.com/conda-forge/miniforge#mambaforge
+[Mambaforge-MacOSX-x86_64]: https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-MacOSX-x86_64.sh
+[Mambaforge-Linux-x86_64]: https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+
+(conda_init)=
+### To init or not to init
+
+After it's done installing, the MambaForge installer will ask you if you want it to initialize MambaForge. Initialization involves adding a section to your shell startup script that tells the shell where to find Conda/Mamba. Answering "no" will leave you startup scripts untouched, but you will need to run an additional command every time you want to use Conda/Mamba or a Conda environment. Answering "yes" will attempt to add a version of this command to your shell startup script, which generally makes Conda easier to use.
+
+If you do answer "yes", we recommend preventing Conda from activating the base environment in every new shell:
+
+```shell-session
+$ conda config --set auto_activate_base false
+```
+
+This will prevent any conflicts between the MambaForge Python installation and the Python expected by your system. It does not prevent you from using Conda/Mamba directly to manage or activate environments.
+
+## Installing Mamba in an existing Conda installation
+
+If you already have Conda installed, you don't need to install MambaForge; you can install Mamba on its own with:
+
+```shell
+conda install -c conda-forge mamba
+```
+
+Or you can simply replace any calls to `mamba` with an identical call to `conda`:
+
+```diff
+- mamba env create -c conda-forge -n openff -f environment.yaml
++ conda env create -c conda-forge -n openff -f environment.yaml
+```
+
+We recommend installing Mamba, as it can solve OpenFF environments in seconds where Conda would take minutes or hours.
+
+(managing_environments)=
+## Managing Environments
+
+Conda and Mamba install software into [virtual environments]. These environments include installations of some collection of software and all their dependencies in an isolated group that doesn't affect the software installed in the rest of your computer system. This means you can install software that's incompatible with what's already installed; you just put the new software in its own environment!
+
+Distributions of Conda/Mamba come with a **base environment**, which includes the installation of the package manager itself. We highly recommend leaving this environment alone! If you make a mistake and install software from a conflicting channel, or say "install anyway" one too many times, or sneeze while staring at your shadow at noon on midsummer's eve during an update, you could break your entire Conda/Mamba install. All of us at OpenFF have done this at least once! It's not the end of the world, since hopefully that Conda/Mamba install was [local to your user] and you can just delete it and reinstall, but it is frustrating.
+
+Instead of installing software into your base environment, we recommend creating new environments to install software into as you go. Some people prefer to have one big environment they install everything into, while others prefer a few smaller ones that each have the software needed for a particular task. Some of us even spin up a new environment every time they start a PR!
+
+A new environment can be created from a list of packages:
+
+```shell-session
+$ mamba create -n <environment name> -c conda-forge <package(s)>
+```
+
+Or from an [environment file], which can specify both channels and dependencies:
+
+```shell-session
+$ mamba env create -n <name> -f <path to .yaml file>
+```
+
+Any time you want to use software installed in an environment you have created, you must activate it. An environment will stay active until you close the terminal window or shell session:
+
+```shell-session
+$ conda activate <name>
+$ jupyter notebook .
+```
+
+[virtual environments]: conda:user-guide/concepts/environments
+[local to your user]: install_mambaforge
+
+### Advanced Environment Management
+
+If you prefer, you can specify the path to a virtual environment's root directory as a prefix instead of giving an environment's name:
+
+```shell-session
+$ mamba create -c conda-forge -p <prefix> <package(s)>
+$ conda activate <prefix>
+```
+
+If you specify neither the name `-n` nor the prefix `-p`, the current active environment will be used.
+
+New software can be installed in an environment by listing packages:
+
+```shell-session
+$ mamba install -n <name> -c conda-forge <package(s)>
+```
+
+Or by adding the dependencies from an environment file:
+
+```shell-session
+$ mamba env update -n <name> -f <path to .yaml file>
+```
+
+Mamba/Conda cache the packages you install, so if you've already downloaded a particular version, you can install it in as many environments as you like without having to re-download it. In fact, Mamba/Conda try their hardest to unpack each version once, and then hardlink to it from each environment to keep the storage size of environments down. Be aware of this if you like to tinker with the code of your dependencies - your changes may affect other environments!
+
+The software in an environment can be automatically upgraded:
+
+```shell-session
+$ mamba upgrade -n <name> --all
+```
+
+But that can go wrong if you're mixing channels. Recreating the environment often works better:
+
+```shell-session
+$ mamba env remove -n <name>
+$ mamba create -n <name> -c conda-forge <package(s)>
+```
+
+Or specifying the particular package you want to update:
+
+```shell-session
+$ mamba upgrade -n <name> <package>
+```
+
+### Combining channels
+
+Sometimes, some of the software you want to use is not available on Conda Forge. In these cases, you can either install it in the usual way for your OS, or you can try combining channels:
+
+```shell-session
+$ mamba create -n psi4_and_bespokefit -c psi4 -c conda-forge -c anaconda openff-bespokefit psi4
+```
+
+In this case, this doesn't work because Conda/Mamba has to be very clever about how it solves this environment. It has to be able to choose versions of dependencies from the `anaconda` channel, even when those dependencies exist in the higher-priority `psi4` channel. It's generally recommended to use [strict channel priority] to avoid conflicts, but sometimes an environment can only be solved when channel priority is set to `"flexible"`. The catch is that the environment may solve and install but not work! But it's usually worth a try.
+
+This environment is also complex enough that remembering all the channels every time you want to update it is risky. So instead of trying to create it in one line, we might be better off creating it empty, configuring its channel list and priorities, and then installing our software:
+
+```shell-session
+$ mamba create -n psi4_and_bespokefit
+$ conda activate psi4_and_bespokefit
+$ conda config --env --set channel_priority flexible
+$ conda config --env --prepend channels anaconda
+$ conda config --env --prepend channels conda-forge
+$ conda config --env --prepend channels psi4
+$ mamba install openff-bespokefit psi4 ambertools
+```
+
+
+
+[environment file]: conda:create-env-file-manually
+[strict channel priority]: conda:concepts-performance-channel-priority
+
+(install_windows)=
+## OpenFF on Windows
+
+OpenFF does not directly support Windows operating systems, though much of our software is pure Python code and may work anyway as long as you can provide our dependencies.
+
+Regardless, we recommend using the [Windows Subsystem for Linux] to run OpenFF software on Windows. WSL runs a Linux kernel within your Windows system so you can run ordinary software as if you had a Linux system. If your hardware supports it, we suggest using WSL2 for a smoother experience; this is the default for new WSL installations on supported hardware. WSL2 requires hardware virtualization support, which is available on most modern CPUs but may require activation in the BIOS/UEFI. 
+
+In either case, once WSL is installed you can usually follow any documentation as though you had a Linux machine.
+
+Note that by default, Jupyter Notebook may not be able to open a browser window, and so may log an error on startup; just ignore the error and open the link it provides in your ordinary Windows web browser.
+
+:::{hint}
+WSL2 [does support](https://developer.nvidia.com/cuda/wsl) GPU compute, at least with NVIDIA cards, but setting it up [takes some work](https://learn.microsoft.com/en-us/windows/wsl/tutorials/gpu-compute).
+:::
+
+[Windows Subsystem for Linux]: https://learn.microsoft.com/en-us/windows/wsl/about
+
+(install_arm)=
+## OpenFF on Apple Silicon and ARM
+
+OpenFF software supports Apple Silicon (M1, M2, etc.), but at the moment (as of April 2023) some important dependencies such as Ambertools on Conda Forge do not. As a result, we recommend MacOS users of Apple Silicon install the x86_64 version of MambaForge and run all OpenFF software through [Rosetta]. ARM systems without access to a similar emulation layer may not be able to access all of the features of OpenFF software.
+
+An existing ARM installation of Conda can be configured to [use Rosetta] with the `CONDA_SUBDIR=osx-64` shell environment variable or the `subdir` Conda config variable. We recommend using this on a per-environment basis so that it persists across updates and new installs, but does not affect existing setups:
+
+```shell-session
+$ CONDA_SUBDIR=osx-64 conda create --name openff -c conda-forge openff-toolkit
+$ conda activate
+$ conda config --env --set subdir osx-64
+```
+
+Alternatively, make this setting the global default by updating the system Conda config:
+
+```
+$ conda config --system --set subdir osx-64
+```
+
+Note that this will affect how Conda behaves with other environments.
+
+[Rosetta]: https://support.apple.com/en-au/HT211861
+[use Rosetta]: https://conda-forge.org/docs/user/tipsandtricks.html#installing-apple-intel-packages-on-apple-silicon

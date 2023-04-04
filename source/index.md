@@ -8,6 +8,11 @@ Welcome to the documentation for the [Open Force Field Initiative]'s software ec
 
 Specifications for SMIRNOFF and other standards defined by OpenFF can be found at [OpenFF Standards](https://docs.openforcefield.org/standards).
 
+## Getting Started
+
+Instructions for installing and using OpenFF software can be found at [](install) and in the project-specific documentation below.
+
+(projects)=
 ## Projects
 
 [`openff-toolkit`](https://docs.openforcefield.org/toolkit)
@@ -53,6 +58,7 @@ maxdepth: 1
 
 Overview <self>
 OpenFF Standards <https://docs.openforcefield.org/standards>
+install
 :::
 
 :::{toctree}
