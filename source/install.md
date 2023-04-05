@@ -4,7 +4,7 @@ OpenFF software is distributed via [Conda Forge], a repository of software packa
 
 [Conda Forge]: https://conda-forge.org/
 [Mamba]: mamba:index
-[MambaForge]: https://github.com/conda-forge/miniforge#mambaforge
+[MambaForge]: https://github.com/conda-forge/miniforge#user-content-mambaforge
 
 (quick_install)=
 ## Quick Install Guide
@@ -55,7 +55,10 @@ We recommend installing MambaForge through WSL on Windows. For more information,
 We recommend installing x86_64 MambaForge on all Apple Macs, even Apple Silicon Macs like the M1 and M2. For more information, see [](install_arm).
 :::
 
-[complicated]: conda:user-guide/configuration/admin-multi-user-install
+[MambaForge repository]: https://github.com/conda-forge/miniforge#user-content-mambaforge
+[Mambaforge-MacOSX-x86_64]: https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-MacOSX-x86_64.sh
+[Mambaforge-Linux-x86_64]: https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+
 [new environment]: managing_environments
 [projects list]: projects
 [project docs]: projects
@@ -75,9 +78,7 @@ Mamba can be installed to your own user account without root/sudo access. A syst
 If you're running Mamba through MambaForge, you're configured to use the Conda Forge channel by default, and you don't need to pass the `-c conda-forge` argument to the commands in this page. Including this argument does no harm, so we've included it for the benefit of users that don't have this configuration.
 :::
 
-[MambaForge repository]: https://github.com/conda-forge/miniforge#mambaforge
-[Mambaforge-MacOSX-x86_64]: https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-MacOSX-x86_64.sh
-[Mambaforge-Linux-x86_64]: https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+[complicated]: conda:user-guide/configuration/admin-multi-user-install
 
 (conda_init)=
 ### To init or not to init
