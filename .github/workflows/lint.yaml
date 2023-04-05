@@ -1,0 +1,30 @@
+name: lint
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+
+  check:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Conda environment
+        uses: mamba-org/provision-with-micromamba@main
+        with:
+          environment-file: devtools/conda-envs/rtd-env.yml
+
+      - name: Check dead links
+        shell: bash -l {0}
+        run: |
+          sphinx-build -b linkcheck source build/html
