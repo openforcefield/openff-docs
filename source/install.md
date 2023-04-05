@@ -17,7 +17,7 @@ OpenFF software is distributed via [Conda Forge]. Conda Forge is a repository of
 
     1.  When asked for an install destination, choose a directory owned by your user account (such as the default).
 
-    2. When asked if you'd like to initialize MambaForge, answer "yes". For more information about this choice, see [](conda_init). 
+    2. When asked if you'd like to initialize MambaForge, answer "yes". Note that this will modify your shell's startup script; for more information about this choice, see [](conda_init). 
 
     3. Once the installer is finished, close the window and run the following command in a new terminal window: 
 
