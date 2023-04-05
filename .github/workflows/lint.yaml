@@ -28,4 +28,4 @@ jobs:
       - name: Check dead links
         shell: bash -l {0}
         run: |
-          sphinx-build -b linkcheck source build/html
+          FORCE_COLOR=1 sphinx-build -n -W --keep-going -b linkcheck source build/linkcheck
