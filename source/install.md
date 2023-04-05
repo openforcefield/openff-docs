@@ -55,6 +55,8 @@ We recommend installing x86_64 MambaForge on all Apple Macs, even Apple Silicon 
 [projects list]: projects
 [project docs]: projects
 
+* * *
+
 (install_mamba)=
 ## Installing Mamba
 
