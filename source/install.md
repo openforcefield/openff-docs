@@ -95,10 +95,10 @@ This will prevent any conflicts between the MambaForge Python installation and t
 (existing_conda)=
 ### Installing Mamba in an existing Conda installation
 
-If you already have Conda installed, you don't need to install MambaForge; you can install Mamba on its own with:
+If you already have Conda installed, you don't need to install MambaForge; you can install Mamba on its own into the base environment with:
 
 ```shell
-conda install -c conda-forge mamba
+conda install -n base -c conda-forge mamba
 ```
 
 Or you can simply replace any calls to `mamba` with an identical call to `conda`:
