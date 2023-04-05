@@ -1,13 +1,15 @@
 # Installation
 
-OpenFF software is distributed via [Conda Forge]. Conda Forge is a repository of software packages maintained by its community. Although it initially focused on scientific Python packages, its scope has since expanded to all kinds of software. You need a Conda-compatible package manager to install Conda Forge software. OpenFF recommends installing [Mamba] via the [MambaForge] distribution.
+OpenFF software is distributed via [Conda Forge], a repository of software packages maintained by the open source community. You need a Conda-compatible package manager to install Conda Forge software. OpenFF recommends [Mamba], installed via the [MambaForge] distribution.
 
 [Conda Forge]: https://conda-forge.org/
+[Mamba]: mamba:index
+[MambaForge]: https://github.com/conda-forge/miniforge#mambaforge
 
 (quick_install)=
 ## Quick Install Guide
 
-This guide describes how to install OpenFF software within your own user account. Note that this does not require sudo/root access; a system-wide multi-user Conda/Mamba installation is [complicated] and generally not necessary.
+This guide describes how to install OpenFF software within your own user account. Note that this does not require sudo/root access.
 
 1. Download the appropriate MambaForge installer from the [MambaForge repository]. Use [Mambaforge-MacOSX-x86_64] on a Mac and [Mambaforge-Linux-x86_64] on Linux/WSL.
 
@@ -67,12 +69,12 @@ Mamba is a drop-in replacement for the Conda package manager. It is faster and c
 
 If you don't have Conda or Mamba installed, installing MambaForge will give you access to everything you need to install OpenFF software. If you can, we recommend installing MambaForge locally to your user account, rather than system-wide, so that you can freely create and destroy environments and manage your own configuration. If something goes wrong, you can always delete your MambaForge installation and start again, and you'll only lose your installed software.
 
+Mamba can be installed to your own user account without root/sudo access. A system-wide multi-user Conda/Mamba installation is [complicated] and generally not necessary.
+
 :::{hint}
 If you're running Mamba through MambaForge, you're configured to use the Conda Forge channel by default, and you don't need to pass the `-c conda-forge` argument to the commands in this page. Including this argument does no harm, so we've included it for the benefit of users that don't have this configuration.
 :::
 
-[Mamba]: https://mamba.readthedocs.io/en/latest/index.html
-[MambaForge]: https://github.com/conda-forge/miniforge#mambaforge
 [MambaForge repository]: https://github.com/conda-forge/miniforge#mambaforge
 [Mambaforge-MacOSX-x86_64]: https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-MacOSX-x86_64.sh
 [Mambaforge-Linux-x86_64]: https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh

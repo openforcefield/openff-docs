@@ -58,6 +58,7 @@ intersphinx_mapping = {
     "openeye": ("https://docs.eyesopen.com/toolkits/python/", None),
     "mdtraj": ("https://www.mdtraj.org/1.9.5/", None),
     "conda": ("https://docs.conda.io/projects/conda/en/latest", None),
+    "mamba": ("https://mamba.readthedocs.io/en/latest/", None),
     "openff.toolkit": ("https://docs.openforcefield.org/toolkit/en/stable", None),
     "openff.interchange": (
         "https://docs.openforcefield.org/interchange/en/stable",
