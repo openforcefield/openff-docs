@@ -198,7 +198,7 @@ Sometimes, some of the software you want to use is not available on Conda Forge.
 $ mamba create -n psi4_and_bespokefit -c psi4 -c conda-forge -c anaconda openff-bespokefit psi4
 ```
 
-In this case, this doesn't work because Conda/Mamba has to be very clever about how it solves this environment. It has to be able to choose versions of dependencies from the `anaconda` channel, even when those dependencies exist in the higher-priority `psi4` channel. It's generally recommended to use [strict channel priority] to avoid conflicts, but sometimes an environment can only be solved when channel priority is set to `"flexible"`. The catch is that the environment may solve and install but not work! But it's usually worth a try.
+In this case, this doesn't work because Conda/Mamba has to be very clever about how it solves this environment. It has to be able to choose versions of dependencies from the `anaconda` channel, even when those dependencies exist in the higher-priority `conda-forge` channel. We can't make `anaconda` the higher priority channel, because BespokeFit needs Forge dependencies. It's generally recommended to use [strict channel priority] to avoid conflicts, but sometimes an environment can only be solved when channel priority is set to `"flexible"`. The catch is that the environment may solve and install but not work! But it's usually worth a try.
 
 This environment is also complex enough that remembering all the channels every time you want to update it is risky. So instead of trying to create it in one line, we might be better off creating it empty, configuring its channel list and priorities, and then installing our software:
 
