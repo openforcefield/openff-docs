@@ -45,7 +45,7 @@ If you have an existing Mamba installation, skip steps 1 and 2 below. If you hav
     $ jupyter notebook "my-notebook.ipynb"
     ```
 
-For package-specific installation instructions, please see the individual [project docs].
+If that worked, you're all set! The rest of this page covers corner cases and how to manage Conda environments. For package-specific installation instructions, please see the individual [project docs].
 
 :::{admonition} OpenFF on Windows
 We recommend installing MambaForge through WSL on Windows. For more information, see [](install_windows).
