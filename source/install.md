@@ -11,6 +11,10 @@ OpenFF software is distributed via [Conda Forge], a repository of software packa
 
 This guide describes how to install OpenFF software within your own user account. Note that this does not require sudo/root access.
 
+:::{admonition} Existing Conda/Mamba Installations
+If you have an existing Mamba installation, you can use it and skip steps 1 and 2 above. If you have an existing Conda installation, see [](existing_conda).
+:::
+
 1. Download the appropriate MambaForge installer from the [MambaForge repository]. Use [Mambaforge-MacOSX-x86_64] on a Mac and [Mambaforge-Linux-x86_64] on Linux/WSL.
 
 2. Run the MambaForge installer in a terminal window and accept the license agreement: 
@@ -42,10 +46,6 @@ This guide describes how to install OpenFF software within your own user account
     ```
 
 For package-specific installation instructions, please see the individual [project docs].
-
-:::{admonition} Existing Conda/Mamba Installations
-If you have an existing Mamba installation, you can use it and skip steps 1 and 2 above. If you have an existing Conda installation, see [](existing_conda).
-:::
 
 :::{admonition} OpenFF on Windows
 We recommend installing MambaForge through WSL on Windows. For more information, see [](install_windows).
