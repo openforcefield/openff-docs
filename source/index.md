@@ -59,6 +59,7 @@ maxdepth: 1
 Overview <self>
 OpenFF Standards <https://docs.openforcefield.org/standards>
 install
+ecosystem
 :::
 
 :::{toctree}

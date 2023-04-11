@@ -3,7 +3,7 @@
 OpenFF software is distributed via [Conda Forge], a repository of software packages maintained by the open source community. You need a Conda-compatible package manager to install Conda Forge software. OpenFF recommends [Mamba], installed via the [MambaForge] distribution.
 
 [Conda Forge]: https://conda-forge.org/
-[Mamba]: mamba:index
+[Mamba]: inv:mamba#index
 [MambaForge]: https://github.com/conda-forge/miniforge#user-content-mambaforge
 
 (quick_install)=
@@ -80,7 +80,7 @@ Mamba can be installed to your own user account without root/sudo access. A syst
 If you're running Mamba through MambaForge, you're configured to use the Conda Forge channel by default, and you don't need to pass the `-c conda-forge` argument to the commands in this page. Including this argument does no harm, so we've included it for the benefit of users that don't have this configuration.
 :::
 
-[complicated]: conda:user-guide/configuration/admin-multi-user-install
+[complicated]: inv:conda#user-guide/configuration/admin-multi-user-install
 
 (conda_init)=
 ### To init or not to init
@@ -153,7 +153,7 @@ $ conda activate <name>
 $ jupyter notebook .
 ```
 
-[virtual environments]: conda:user-guide/concepts/environments
+[virtual environments]: inv:conda#user-guide/concepts/environments
 [local to your user]: install_mamba
 
 ### Advanced Environment Management
@@ -225,8 +225,8 @@ $ conda config --env --prepend channels psi4
 $ mamba install openff-bespokefit psi4 ambertools
 ```
 
-[environment file]: conda:create-env-file-manually
-[strict channel priority]: conda:concepts-performance-channel-priority
+[environment file]: inv:conda#create-env-file-manually
+[strict channel priority]: inv:conda#concepts-performance-channel-priority
 
 (install_windows)=
 ## OpenFF on Windows

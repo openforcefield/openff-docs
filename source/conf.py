@@ -41,6 +41,8 @@ myst_enable_extensions = [
     "smartquotes",
     "replacements",
     "deflist",
+    "attrs_inline",
+    "attrs_block",
 ]
 myst_url_schemes = (
     "mailto",
