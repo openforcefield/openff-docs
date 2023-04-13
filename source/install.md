@@ -100,8 +100,8 @@ This will prevent any conflicts between the MambaForge Python installation and t
 
 If you already have Conda installed, you don't need to install MambaForge; you can install Mamba on its own into the base environment with:
 
-```shell
-conda install -n base -c conda-forge mamba
+```shell-session
+$ conda install -n base -c conda-forge mamba
 ```
 
 Or you can simply replace any calls to `mamba` with an identical call to `conda`:
@@ -112,6 +112,16 @@ Or you can simply replace any calls to `mamba` with an identical call to `conda`
 ```
 
 We recommend installing Mamba, as it can solve OpenFF environments in seconds where Conda would take minutes or hours.
+
+Conda environments that use packages from Conda Forge alongside packages from the default Conda channels run the risk of breaking when an installation or update is attempted. This most commonly happens when a user forgets the `-c conda-forge` switch when installing a package or updating an environment (see [](combining_channels)). If you are using a standard Conda installation, we recommend configuring environments with Forge dependencies to use Forge wherever possible:
+
+```shell-session
+$ conda activate openff
+$ conda config --env --add channels conda-forge
+$ conda config --env --set channel_priority strict 
+```
+
+In environments with this configuration, the `-c conda-forge` switch is unnecessary. Other channels, like `psi4` and `bioconda`, can still be used in the usual way. These settings can be applied to all your Conda environments by removing the `--env` switches, matching the default MambaForge configuration.
 
 (managing_environments)=
 ## Managing Environments
@@ -192,6 +202,7 @@ Or specifying the particular package you want to update:
 $ mamba upgrade -n <name> <package>
 ```
 
+(combining_channels)=
 ### Combining channels
 
 Sometimes, some of the software you want to use is not available on Conda Forge. In these cases, you can either install it in the usual way for your OS, or you can try combining channels:
