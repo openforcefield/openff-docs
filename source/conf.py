@@ -31,6 +31,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.intersphinx",
     "myst_parser",
+    "openff_sphinx_theme",
 ]
 
 # Extensions for the myst parser
@@ -56,16 +57,20 @@ intersphinx_mapping = {
     "rdkit": ("https://www.rdkit.org/docs", None),
     "openeye": ("https://docs.eyesopen.com/toolkits/python/", None),
     "mdtraj": ("https://www.mdtraj.org/1.9.5/", None),
+    "conda": ("https://docs.conda.io/projects/conda/en/latest", None),
+    "mamba": ("https://mamba.readthedocs.io/en/latest/", None),
     "openff.toolkit": ("https://docs.openforcefield.org/toolkit/en/stable", None),
     "openff.interchange": (
         "https://docs.openforcefield.org/interchange/en/stable",
         None,
     ),
+    "openff.units": ("https://docs.openforcefield.org/units/en/stable", None),
     "openff.bespokefit": ("https://docs.openforcefield.org/bespokefit/en/stable", None),
     "openff.qcsubmit": ("https://docs.openforcefield.org/qcsubmit/en/stable", None),
     "openff.fragmenter": ("https://docs.openforcefield.org/fragmenter/en/stable", None),
     "openff.evaluator": ("https://docs.openforcefield.org/evaluator/en/stable", None),
     "openff.recharge": ("https://docs.openforcefield.org/recharge/en/stable", None),
+    "openff.nagl": ("https://docs.openforcefield.org/nagl/en/stable", None),
 }
 
 
@@ -129,8 +134,3 @@ html_theme_options = {
 html_sidebars = {
     "**": ["globaltoc.html", "searchbox.html", "localtoc.html"],
 }
-
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
