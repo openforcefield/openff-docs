@@ -10,7 +10,7 @@ Specifications for SMIRNOFF and other standards defined by OpenFF can be found a
 
 ## Getting Started
 
-Instructions for installing and using OpenFF software can be found at [](install) and in the project-specific documentation below.
+Instructions for installing and using OpenFF software can be found at [](install) and in the project-specific documentation below. If you're not sure which package you want, see [](ecosystem).
 
 (projects)=
 ## Projects
@@ -58,6 +58,15 @@ maxdepth: 1
 
 Overview <self>
 OpenFF Standards <https://docs.openforcefield.org/standards>
+:::
+
+:::{toctree}
+---
+hidden: True
+maxdepth: 1
+caption: Getting Started
+---
+
 install
 ecosystem
 :::
