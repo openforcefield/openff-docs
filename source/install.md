@@ -35,13 +35,13 @@ If you have an existing Mamba installation, skip steps 1 and 2 below. If you hav
 
 3. Close and reopen the terminal window and install the desired packages into a [new environment]. The names of OpenFF packages can be found in the [projects list]: 
     ```shell-session
-    $ mamba create -c conda-forge -n openff-env openff-toolkit-examples
+    $ mamba create -c conda-forge -n openff openff-toolkit-examples
     ```
 
 4. To use a package, first activate the environment, then run the desired command. Activation lasts until you close the shell session. For example, run the Toolkit Showcase example:
 
     ```shell-session
-    $ conda activate openff-env
+    $ conda activate openff
     $ openff-toolkit-examples --target offtk-examples
     $ cd offtk-examples/toolkit_showcase
     $ jupyter notebook toolkit_showcase.ipynb
