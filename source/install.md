@@ -100,7 +100,7 @@ This will prevent any conflicts between the MambaForge Python installation and t
 
 If you already have Conda installed, you don't need to install MambaForge; you can install Mamba on its own into the base environment with:
 
-```shell
+```shell-session
 $ conda install -n base -c conda-forge mamba
 ```
 
@@ -115,7 +115,7 @@ We recommend installing Mamba, as it can solve OpenFF environments in seconds wh
 
 Conda environments that use packages from Conda Forge alongside packages from the default Conda channels run the risk of breaking when an installation or update is attempted. This most commonly happens when a user forgets the `-c conda-forge` switch when installing a package or updating an environment (see [](combining_channels)). If you are using a standard Conda installation, we recommend configuring environments with Forge dependencies to use Forge wherever possible:
 
-```shell
+```shell-session
 $ conda activate openff
 $ conda config --env --add channels conda-forge
 $ conda config --env --set channel_priority strict 
