@@ -113,6 +113,17 @@ Or you can simply replace any calls to `mamba` with an identical call to `conda`
 
 We recommend installing Mamba, as it can solve OpenFF environments in seconds where Conda would take minutes or hours.
 
+Conda environments that use packages from Conda Forge alongside packages from the default Conda channels run the risk of breaking when an installation or update is attempted. This most commonly happens when a user forgets the `-c conda-forge` switch when installing a package or updating an environment. When this happens, Conda attempts to install or update from the default channels, and may replace shared dependencies of already installed packages with incompatible versions from the default channels. This is why we recommend MambaForge, which uses Conda Forge for all transactions and excludes packages from the default channels unless they are unavailable in Forge. If you are using a standard Conda installation, we recommend you at configure environments with Forge dependencies similarly:
+
+```shell
+# Remove the --env switch to apply these settings globally
+conda activate openff
+conda config --env --add channels conda-forge
+conda config --env --set channel_priority strict 
+```
+
+In environments with this configuration, the `-c conda-forge` switch is unnecessary. Other channels, like `psi4` and `bioconda`, can still be used in the usual way.
+
 (managing_environments)=
 ## Managing Environments
 
