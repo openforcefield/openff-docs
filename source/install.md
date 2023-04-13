@@ -121,7 +121,7 @@ $ conda config --env --add channels conda-forge
 $ conda config --env --set channel_priority strict 
 ```
 
-In environments with this configuration, the `-c conda-forge` switch is unnecessary. Other channels, like `psi4` and `bioconda`, can still be used in the usual way. These settings can be applied to all your Conda environments by removing the `--env` switch, matching the default MambaForge configuration.
+In environments with this configuration, the `-c conda-forge` switch is unnecessary. Other channels, like `psi4` and `bioconda`, can still be used in the usual way. These settings can be applied to all your Conda environments by removing the `--env` switches, matching the default MambaForge configuration.
 
 (managing_environments)=
 ## Managing Environments
