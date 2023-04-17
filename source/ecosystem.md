@@ -1,7 +1,5 @@
 # The OpenFF Ecosystem
 
-
-
 <style>
 :root {
     --arrow-thickness: 4px;
@@ -31,18 +29,34 @@
   padding: 0;
 }
 
-.deflist_flowchart ul {
+.deflist_flowchart ul,
+ul.deflist_flowchart {
   display: flex;
   flex-direction: column;
-  justify-content: stretch;
+  justify-content: space-between;
   height: 100%;
+  gap: 1em;
+}
+
+@supports selector(:has(a, b)) {
+  ul.deflist_flowchart {
+    justify-content: stretch;
+  }
+  ul.deflist_flowchart li:has(> p > .arrow-down),
+  ul.deflist_flowchart li:has(> p > .arrow-up),
+  ul.deflist_flowchart li:has(> p > .arrow-cycle) {
+    flex: 1 0 var(--arrow-length);
+    container-type: size;
+  }
+  ul.deflist_flowchart li:has(> p > .arrow-down) *,
+  ul.deflist_flowchart li:has(> p > .arrow-up) *,
+  ul.deflist_flowchart li:has(> p > .arrow-cycle) * {
+    --arrow-length: 100cqh;
+  }
 }
 
 .content .deflist_flowchart li {
   list-style: none;
-  flex-grow: 1;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
 }
 
 .content .deflist_flowchart dl ul {
@@ -56,14 +70,6 @@
   list-style: bullet;
   margin-left: 1.25em;
   text-align: left;
-}
-
-.content .deflist_flowchart li:first-child {
-  margin-top: 0;
-}
-
-.content .deflist_flowchart li:last-child {
-  margin-bottom: 0;
 }
 
 .deflist_flowchart .arrow-down,
@@ -118,13 +124,32 @@
     transform: rotate(-135deg);
 }
 
-.content .deflist_flowchart dl {
-  text-align: center;
-  background-color: #f8f8f8;
-  border-radius: 4px;
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
-  position: relative;
-  padding: 0.5em;
+@supports not selector(:has(a, b)) {
+  .content .deflist_flowchart dl {
+    text-align: center;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
+    position: relative;
+    padding: 0.5em;
+  }
+}
+
+@supports selector(:has(a, b)) {
+  .content .deflist_flowchart ul li:not(
+    :has(> p > :is(
+      .arrow-up,
+      .arrow-down,
+      .arrow-cycle
+    )
+  )) > * {
+    text-align: center;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
+    position: relative;
+    padding: 0.5em;
+  }
 }
 
 .deflist_flowchart dd {
@@ -165,19 +190,19 @@
 }
 
 .deflist_flowchart dl.interchange-bg {
-  background-color: #ee4266;
+  background-color: #ee4266 !important;
 }
 
 .deflist_flowchart dl.toolkit-bg {
-  background-color: #2f9ed2;
+  background-color: #2f9ed2 !important;
 }
 
 .deflist_flowchart dl.bespokefit-bg {
-  background-color: #F08521;
+  background-color: #F08521 !important;
 }
 
 .deflist_flowchart dl.forcefield-bg {
-  background-color: #04e762;
+  background-color: #04e762 !important;
 }
 
 .content .deflist_flowchart {
@@ -185,7 +210,7 @@
   grid-template-areas: 
     "topology forcefield"
     "interchange interchange";
-    grid-gap: 0 1em;
+    grid-gap: 1em 1em;
   align-items: stretch;
 }
 
@@ -208,7 +233,6 @@
 .deflist_flowchart li:has(> .grid-interchange) {  
   grid-area: interchange;
 }
-
 </style>
 
 {.deflist_flowchart}
@@ -232,7 +256,7 @@
 
 - {.grid-forcefield}
   - {.bespokefit-bg}
-    Torsion refinement with [OpenFF BespokeFit]
+    Torsion refinement with [OpenFF BespokeFit]
     : Automatic refinement of SMIRNOFF force field torsion parameters from quantum chemical calculations
 
   - []{.arrow-cycle}
