@@ -1,61 +1,12 @@
 # The OpenFF Ecosystem
 
+
+
 <style>
-/*.deflist_flowchart {
-  position: relative;
-  width: 100%;
-}
-.deflist_flowchart dt {
-  width: 40%;
-  text-align: center;
-  background-color: #f8f8f8;
-  border-radius: 4px;
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
-  position: relative;
-}
-
-.deflist_flowchart dt:not(:first-child) {
-  margin-top: 2em;
-}
-
-
-.deflist_flowchart dd {
-  display: none;
-  width: calc(100);
-  height: 100%;
-  position: absolute;
-  right: 0;
-  top: 0;
-  margin: 0;
-  padding: 0;
-  margin-left: calc(40% + 1em);
-}
-.deflist_flowchart dt:hover + dd, 
-.deflist_flowchart dd:hover, 
-.deflist_flowchart dl:hover dd 
-{
-  display: block;
-}
-
-.deflist_flowchart dt:hover + dd > p:first-child, 
-.deflist_flowchart dd:hover > p:first-child,
-.deflist_flowchart dl:hover dd > p:first-child 
-{
-  margin-top: 0;
-}
-
-.deflist_flowchart dt:not(:first-child)::before {
-  content: "↓";
-  display: block;
-  width: 100%;
-  text-align: center;
-  position: absolute;
-  top: -2em;
-}*/
 :root {
     --arrow-thickness: 4px;
     --arrow-head-size: 7px;
-    --arrow-length: 25px;
+    --arrow-length: 2em;
     --arrow-color: black;
 }
 .arrow.thick {
@@ -63,103 +14,151 @@
     --arrow-head-size: 10px;
 }
 
-ul.deflist_flowchart,
-ul.deflist_flowchart li,
-ul.deflist_flowchart li ul,
-ul.deflist_flowchart dl
+.content .deflist_flowchart p:first-child {
+  margin-top: 0;
+}
+
+.content .deflist_flowchart p:last-child {
+  margin-bottom: 0;
+}
+
+.content .deflist_flowchart,
+.content .deflist_flowchart li,
+.content .deflist_flowchart li ul,
+.content .deflist_flowchart dl
 {
   margin: 0;
   padding: 0;
 }
 
-.deflist_flowchart li {
-  list-style: none;
+.deflist_flowchart ul {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  height: 100%;
 }
 
-.deflist_flowchart .arrow-down {
-  display: block;
-  width: 100%;
-  height: 2em;
+.content .deflist_flowchart li {
+  list-style: none;
+  flex-grow: 1;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
 
+.content .deflist_flowchart dl ul {
+  display: block;
+  height: unset;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.content .deflist_flowchart dl li {
+  list-style: bullet;
+  margin-left: 1.25em;
+  text-align: left;
+}
+
+.content .deflist_flowchart li:first-child {
+  margin-top: 0;
+}
+
+.content .deflist_flowchart li:last-child {
+  margin-bottom: 0;
+}
+
+.deflist_flowchart .arrow-down,
+.deflist_flowchart .arrow-up,
+.deflist_flowchart .arrow-cycle {
+  display: block;
+  height: var(--arrow-length);
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
 }
 
 .deflist_flowchart .arrow-down::after,
+.deflist_flowchart .arrow-up::after,
 .deflist_flowchart .arrow-cycle::after,
 .deflist_flowchart .arrow-cycle::before
 {
-    width: calc(var(--arrow-length)/1.4142);
-    height: calc(var(--arrow-length)/1.4142);
-    content: "";
-    padding: 0;
-    display: inline-block;
-    transform: rotate(45deg);
-    background-image: linear-gradient(
+  height: calc(var(--arrow-length)/1.4142);
+  width: auto;
+  aspect-ratio: 1;
+  content: "";
+  padding: 0;
+  display: inline-block;
+  transform: rotate(45deg);
+  background-image: 
+    linear-gradient(
       45deg,
       transparent calc(50% - var(--arrow-thickness)/2),
       var(--arrow-color) calc(50% - var(--arrow-thickness)/2),
       var(--arrow-color) calc(50% + var(--arrow-thickness)/2),
       transparent calc(50% + var(--arrow-thickness)/2)
-    ), linear-gradient(
+    ), 
+    linear-gradient(
       -45deg,
       var(--arrow-color) var(--arrow-head-size),
       transparent var(--arrow-head-size)
     );
-    margin-left: calc(50% - var(--arrow-head-size)/2);
+    margin: 0 calc(-0.5 * var(--arrow-length)/1.4142);
+    margin-top: calc(1.4142 * var(--arrow-length) / 10);
 }
+
+.deflist_flowchart .arrow-cycle::after,
+.deflist_flowchart .arrow-cycle::before
+{
+  margin: 0 calc(-0.5 * var(--arrow-length)/1.4142 + 10px);
+  margin-top: calc(var(--arrow-length) / 7);
+}
+
+.deflist_flowchart .arrow-up::after,
 .deflist_flowchart .arrow-cycle::before
 {
     transform: rotate(-135deg);
-    margin-left: calc(50% - 5*var(--arrow-head-size)/2);
-}
-.deflist_flowchart .arrow-cycle::after
-{
-    margin-left: calc(50% + 5*var(--arrow-head-size)/2);
 }
 
-.deflist_flowchart dl {
+.content .deflist_flowchart dl {
   text-align: center;
   background-color: #f8f8f8;
   border-radius: 4px;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
-  position: relative;  
+  position: relative;
+  padding: 0.5em;
 }
 
 .deflist_flowchart dd {
-  margin: 1em;
+  margin: 0;
+  margin-top: 0.5em;
+  padding: 0;
 }
 
-.deflist_flowchart dl.interchange-bg,
 .deflist_flowchart dl.toolkit-bg,
-.deflist_flowchart dl.bespokefit-bg ,
-.deflist_flowchart dl.green-bg {
+.deflist_flowchart dl.forcefield-bg {
   color: whitesmoke;
 }
 
-.deflist_flowchart dl.interchange-bg a,
 .deflist_flowchart dl.toolkit-bg a,
-.deflist_flowchart dl.bespokefit-bg a,
-.deflist_flowchart dl.green-bg a 
+.deflist_flowchart dl.forcefield-bg a 
 {
   color: whitesmoke;
   font-weight: bold;
 }
 
-.deflist_flowchart dl.interchange-bg a:hover,
+.deflist_flowchart dl a {
+  font-weight: bold;
+}
+
 .deflist_flowchart dl.toolkit-bg a:hover,
-.deflist_flowchart dl.bespokefit-bg a:hover,
-.deflist_flowchart dl.green-bg a:hover,
-.deflist_flowchart dl.interchange-bg a:hover code,
+.deflist_flowchart dl.forcefield-bg a:hover,
 .deflist_flowchart dl.toolkit-bg a:hover code,
-.deflist_flowchart dl.bespokefit-bg a:hover code,
-.deflist_flowchart dl.green-bg a:hover code 
+.deflist_flowchart dl.forcefield-bg a:hover code 
 {
   color: #2f9ed2;
 }
 
-.deflist_flowchart dl.interchange-bg a code,
 .deflist_flowchart dl.toolkit-bg a code,
-.deflist_flowchart dl.bespokefit-bg a code,
-.deflist_flowchart dl.green-bg a code 
+.deflist_flowchart dl.forcefield-bg a code 
 {
   color: #015480;
   font-weight: normal;
@@ -167,38 +166,37 @@ ul.deflist_flowchart dl
 
 .deflist_flowchart dl.interchange-bg {
   background-color: #ee4266;
-  color: whitesmoke;
 }
 
 .deflist_flowchart dl.toolkit-bg {
   background-color: #2f9ed2;
-  color: whitesmoke;
 }
 
 .deflist_flowchart dl.bespokefit-bg {
   background-color: #F08521;
-  color: whitesmoke;
 }
 
-.deflist_flowchart dl.green-bg {
+.deflist_flowchart dl.forcefield-bg {
   background-color: #04e762;
-  color: whitesmoke;
 }
 
-ul.deflist_flowchart {
+.content .deflist_flowchart {
   display: grid;
   grid-template-areas: 
     "topology forcefield"
     "interchange interchange";
     grid-gap: 0 1em;
-  align-items: end;
+  align-items: stretch;
 }
 
-ul.deflist_flowchart > li:last-child {
-  grid-area: interchange;
+@supports not selector(:has(a, b)) {
+  /* Fallback for when :has() is unsupported */
+  ul.deflist_flowchart > li:last-child {
+    grid-area: interchange;
+  }
 }
 
-/*.deflist_flowchart li:has(> .grid-topology) {
+.deflist_flowchart li:has(> .grid-topology) {
   grid-area: topology;
 }
 
@@ -209,13 +207,14 @@ ul.deflist_flowchart > li:last-child {
 
 .deflist_flowchart li:has(> .grid-interchange) {  
   grid-area: interchange;
-}*/
+}
+
 </style>
 
 {.deflist_flowchart}
 - {.grid-topology}
   - Chemical Inputs
-    : Molecular identities, coordinates, etc. We support [lots of formats]: SMILES, SDF, PDB, MOL/MOL2, RDKit, OpenEye...
+    : Molecular identities, coordinates, etc. We support [lots of formats]: SMILES, SDF, PDB, MOL/MOL2, RDKit `Mol`, OpenEye `OEGraphMol`, NumPy Arrays...
 
   - []{.arrow-down}
 
@@ -238,9 +237,9 @@ ul.deflist_flowchart > li:last-child {
 
   - []{.arrow-cycle}
 
-  - {.green-bg}
+  - {.forcefield-bg}
     [SMIRNOFF Force Field]
-    : A [force field format] that relies on direct chemical perception.
+    : An engine-agnostic [force field format] that parametrizes a molecular graph without assigning atom types.
 
   - []{.arrow-down}
 

@@ -4,13 +4,13 @@ Welcome to the documentation for the [Open Force Field Initiative]'s software ec
 
 [Open Force Field Initiative]: https://openforcefield.org
 
+## Getting Started
+
+Instructions for installing and using OpenFF software can be found at [](install) and in the project-specific documentation below. If you're not sure which package you want, or you want to see what's possible, see [](ecosystem).
+
 ## Standards
 
 Specifications for SMIRNOFF and other standards defined by OpenFF can be found at [OpenFF Standards](https://docs.openforcefield.org/standards).
-
-## Getting Started
-
-Instructions for installing and using OpenFF software can be found at [](install) and in the project-specific documentation below. If you're not sure which package you want, see [](ecosystem).
 
 (projects)=
 ## Projects
