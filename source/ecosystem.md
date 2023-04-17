@@ -244,13 +244,13 @@ ul.deflist_flowchart {
 
   - {.toolkit-bg}
     OpenFF Toolkit [`Molecule`]
-    : A molecular graph, with optional coordinates
+    : A molecular graph, with optional coordinates.
 
   - []{.arrow-down}
 
   - {.toolkit-bg}
     OpenFF Toolkit [`Topology`]
-    : A collection of `Molecule` objects
+    : A collection of `Molecule` objects, with optional coordinates and box vectors, representing a molecular system.
 
   - []{.arrow-down}
 
@@ -269,14 +269,14 @@ ul.deflist_flowchart {
 
   - {.toolkit-bg}
     OpenFF Toolkit [`ForceField`]
-    : Python representation of a SMIRNOFF force field
+    : Python representation of a SMIRNOFF force field, with tools for inspection, modification, and storage.
 
   - []{.arrow-down}
 
 - {.grid-interchange}
   - {.interchange-bg}
     OpenFF [`Interchange`]
-    : A parametrized molecular simulation system, complete with force field parameters, chemical identities, box vectors, and coordinates, that can be exported to many different MD engines
+    : A parametrized molecular simulation system, complete with force field parameters, chemical identities, box vectors, and coordinates, that can be [exported] to many different MD engines
 
   - []{.arrow-cycle}
 
@@ -292,3 +292,4 @@ ul.deflist_flowchart {
 [OpenFF BespokeFit]: inv:openff.bespokefit#index
 [SMIRNOFF Force Field]: https://github.com/openforcefield/openff-forcefields
 [force field format]: https://openforcefield.github.io/standards/standards/smirnoff/
+[exported]: inv:openff.interchange#using/output
