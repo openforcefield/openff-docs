@@ -133,8 +133,8 @@ ul.deflist_flowchart {
 }
 
 @supports selector(:has(a, b)) {
-  .content .deflist_flowchart ul li:not(
-    :has(> p > :is(
+  .content .deflist_flowchart li:not(
+    :has(:is(
       .arrow-up,
       .arrow-down,
       .arrow-cycle
@@ -202,31 +202,8 @@ ul.deflist_flowchart {
   background-color: #04e762 !important;
 }
 
-.content .deflist_flowchart {
+.deflist_flowchart .flowchart-sidebyside {
   display: grid;
-  grid-template-areas:
-    "topology forcefield"
-    "interchange interchange";
-    grid-gap: 1em 1em;
-  align-items: stretch;
-}
-
-@supports not selector(:has(a, b)) {
-  /* Fallback for when :has() is unsupported */
-  ul.deflist_flowchart > li:last-child {
-    grid-area: interchange;
-  }
-}
-
-.deflist_flowchart li:has(> .grid-topology) {
-  grid-area: topology;
-}
-
-.deflist_flowchart li:has(> .grid-forcefield) {
-  grid-area: forcefield;
-
-}
-
-.deflist_flowchart li:has(> .grid-interchange) {
-  grid-area: interchange;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
 }
