@@ -99,6 +99,10 @@ if importlib.util.find_spec("notfound"):
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
+html_static_path = ["_static"]
+html_css_files = [
+    "css/deflist-flowchart.css",
+]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
