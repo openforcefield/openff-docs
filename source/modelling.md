@@ -117,6 +117,10 @@ A topology is essentially a collection of `Molecule` objects with some extra sys
 
 The OpenFF Toolkit avoids providing tools for system generation because we want to focus on what we're good at: making force fields better. But we encourage the wider modelling community to build tools for things like solvation, bilayer creation and docking on top of the OpenFF Toolkit!
 
+The Toolkit is distributed in the [`openff-toolkit`] package and is represented in [blue]{.toolkit} on the [flowchart].
+
+[`openff-toolkit`]: inv:openff.toolkit#installation
+
 (ecosystem-interchange)=
 ## [Parametrizing and Simulating]{.interchange}
 
