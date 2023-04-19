@@ -119,7 +119,7 @@ The OpenFF Toolkit avoids providing tools for system generation because we want 
 
 The Toolkit is distributed in the [`openff-toolkit`] package and is represented in [blue]{.toolkit} on the [flowchart].
 
-[`openff-toolkit`]: inv:openff.toolkit#installation
+[`openff-toolkit`]: inv:openff.toolkit:*:doc#installation
 
 (ecosystem-interchange)=
 ## [Parametrizing and Simulating]{.interchange}
