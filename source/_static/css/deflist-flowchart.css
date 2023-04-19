@@ -207,3 +207,23 @@ ul.deflist_flowchart {
   grid-auto-columns: minmax(0, 1fr);
   grid-auto-flow: column;
 }
+
+.interchange {
+  color: #ee4266;
+  font-weight: 500;
+}
+
+.toolkit {
+  color: #2f9ed2;
+  font-weight: 500;
+}
+
+.bespokefit {
+  color: #F08521;
+  font-weight: 500;
+}
+
+.forcefield {
+  color: #04e762;
+  font-weight: 500;
+}
