@@ -156,15 +156,18 @@ ul.deflist_flowchart {
 }
 
 .deflist_flowchart dl.toolkit-bg,
-.deflist_flowchart dl.forcefield-bg {
+.deflist_flowchart dl.forcefield-bg,
+.deflist_flowchart dl.interchange-bg,
+.deflist_flowchart dl.bespokefit-bg {
   color: whitesmoke;
 }
 
 .deflist_flowchart dl.toolkit-bg a,
-.deflist_flowchart dl.forcefield-bg a
+.deflist_flowchart dl.forcefield-bg a,
+.deflist_flowchart dl.interchange-bg a,
+.deflist_flowchart dl.bespokefit-bg a
 {
   color: whitesmoke;
-  font-weight: bold;
 }
 
 .deflist_flowchart dl a {
@@ -173,14 +176,20 @@ ul.deflist_flowchart {
 
 .deflist_flowchart dl.toolkit-bg a:hover,
 .deflist_flowchart dl.forcefield-bg a:hover,
+.deflist_flowchart dl.interchange-bg a:hover,
+.deflist_flowchart dl.bespokefit-bg a:hover,
 .deflist_flowchart dl.toolkit-bg a:hover code,
-.deflist_flowchart dl.forcefield-bg a:hover code
+.deflist_flowchart dl.forcefield-bg a:hover code,
+.deflist_flowchart dl.interchange-bg a:hover code,
+.deflist_flowchart dl.bespokefit-bg a:hover code
 {
   color: #2f9ed2;
 }
 
 .deflist_flowchart dl.toolkit-bg a code,
-.deflist_flowchart dl.forcefield-bg a code
+.deflist_flowchart dl.forcefield-bg a code,
+.deflist_flowchart dl.interchange-bg a code,
+.deflist_flowchart dl.bespokefit-bg a code
 {
   color: #015480;
   font-weight: normal;
