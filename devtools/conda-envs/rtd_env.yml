@@ -7,6 +7,8 @@ dependencies:
     - sphinx>=5,<7
     - myst-parser>=1,<2
     - sphinx-notfound-page
+    - nbsphinx
+    - sphinx-gallery
     # Theme
     - pip:
         # Theme

@@ -6,7 +6,7 @@ The [Open Force Field Initiative] is creating molecular mechanics force fields f
 
 ## Getting Started
 
-Instructions for installing and using OpenFF software can be found at [](install) and in the project-specific documentation below. If you want to understand how to use OpenFF force fields, or if you want to see what's possible, see [](modelling).
+Instructions for installing and using OpenFF software can be found at [](install) and in the project-specific documentation below. If you want to understand how to use OpenFF force fields, or if you want to see what's possible, see [](modelling) or the [](examples).
 
 ## Standards
 
@@ -69,6 +69,7 @@ caption: Getting Started
 
 install
 modelling
+examples
 :::
 
 :::{toctree}
