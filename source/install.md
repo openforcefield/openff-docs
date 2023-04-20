@@ -260,7 +260,7 @@ $ conda config --env --set subdir osx-64
 
 Alternatively, make this setting the global default by updating the system Conda config:
 
-```
+```shell-session
 $ conda config --system --set subdir osx-64
 ```
 
