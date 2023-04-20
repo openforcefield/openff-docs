@@ -6,7 +6,7 @@ Welcome to the documentation for the [Open Force Field Initiative]'s software ec
 
 ## Getting Started
 
-Instructions for installing and using OpenFF software can be found at [](install) and in the project-specific documentation below. If you want to understand how to use OpenFF force fields, or you want to see what's possible, see [](modelling).
+Instructions for installing and using OpenFF software can be found at [](install) and in the project-specific documentation below. If you want to understand how to use OpenFF force fields, or if you want to see what's possible, see [](modelling).
 
 ## Standards
 
