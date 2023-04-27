@@ -44,10 +44,10 @@ Specifications for SMIRNOFF and other standards defined by OpenFF can be found a
 
 ## Contact Us
 
-Need help? Raise an issue on [GitHub], open a topic on our [Discourse forum], or [email us]!
+Need help? Raise an issue on [GitHub], open a discussion on [OpenFF Discussions], or [email us]!
 
 [GitHub]: https://github.com/openforcefield
-[Discourse forum]: https://discourse.openforcefield.org/
+[OpenFF Discussions]: https://github.com/orgs/openforcefield/discussions
 [email us]: mailto:support@openforcefield.org
 
 :::{toctree}

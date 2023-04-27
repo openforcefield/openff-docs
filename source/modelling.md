@@ -88,7 +88,7 @@ openmm_positions = interchange.positions.to_openmm()
 (ecosystem-smirnoff)=
 ## [The SMIRNOFF Force Field Format]{.forcefield}
 
-OpenFF force fields are published in the **SMIR**KS-**N**ative **O**pen **F**orce **F**ield format (SMIRNOFF). SMIRNOFF is a next-generation force field format that's intended to encode all the information needed to compute a potential energy from any molecule covered by the force field. SMIRNOFF records many important variables that are essential to reproducing the potential energy function used in fitting, but are missing from existing force field definition formats:
+OpenFF force fields are published in the **SMIR**KS-**N**ative **O**pen **F**orce **F**ield format ([SMIRNOFF]). SMIRNOFF is a next-generation force field format that's intended to encode all the information needed to compute a potential energy from any molecule covered by the force field. SMIRNOFF records many important variables that are essential to reproducing the potential energy function used in fitting, but are missing from existing force field definition formats:
 
 - The actual chemistry a parameter should be assigned to, which SMIRNOFF records with [SMIRKS strings]
 - The non-bonded cutoff distance, combining rules, and long-range corrections (such as PME)
@@ -101,19 +101,21 @@ OpenFF force fields are published in the **SMIR**KS-**N**ative **O**pen **F**orc
 
 Many MD engines treat these as details of the simulation rather than of the force field, but varying them changes the potential energy of the system so we think they are best thought of as part of the force field. SMIRNOFF also does away with atom types: each parameter is just applied directly to the relevant atoms via a SMIRKS string. This means we can fine-tune a specific interaction without incurring the complexity cost of creating a new atom type or duplicating other parameters.
 
-OpenFF maintains both the [SMIRNOFF format specification] as well as software tooling to apply SMIRNOFF force fields to systems for simulation in most mainstream MD engines. OpenFF's SMIRNOFF force fields are distributed in the [`openff-forcefields`] package ([green]{.forcefield} in the [flowchart]). The OpenFF Toolkit documentation [describes the SMIRNOFF format in more detail](inv:openff.toolkit#users/smirnoff).
+OpenFF maintains both the [SMIRNOFF format specification] as well as software tooling to apply SMIRNOFF force fields to systems for simulation in most mainstream MD engines. OpenFF's SMIRNOFF force fields are distributed in the [`openff-forcefields`] package ([green]{.forcefield} in the [flowchart]), and anyone can publish their own SMIRNOFF force field as described [in the FAQ]. The OpenFF Toolkit documentation [describes the SMIRNOFF format in more detail](inv:openff.toolkit#users/smirnoff).
 
 [SMIRKS strings]: https://www.daylight.com/dayhtml/doc/theory/theory.smirks.html
+[SMIRNOFF]: https://openforcefield.github.io/standards/standards/smirnoff/
 [SMIRNOFF format specification]: https://openforcefield.github.io/standards/standards/smirnoff/
 [flowchart]: modelling-flowchart
 [`openff-forcefields`]: https://github.com/openforcefield/openff-forcefields
+[in the FAQ]: https://docs.openforcefield.org/projects/toolkit/en/stable/faq.html#how-can-i-distribute-my-own-force-fields-in-smirnoff-format
 
 (ecosystem-toolkit)=
 ## [Preparing a Simulation System]{.toolkit}
 
-The [OpenFF Toolkit] provides tools for assembling chemical systems out of components prepared elsewhere. The pinnacle of this process is the [`Topology`] Python class. In OpenFF-speak, a topology is a simulation system; a collection of molecules without any force field parameters or other model-specific information. This makes comparative force field studies really easy, as you just prepare the topology once and can then parametrize it as many times as you like with any SMIRNOFF force field!
+The [OpenFF Toolkit] provides tools for assembling chemical systems out of components prepared elsewhere. The pinnacle of this process is the [`Topology`] Python class. In OpenFF-speak, a topology is a model-agnostic collection of molecules, possibly in a box. It does not include any force field parameters or other model-specific values, and so can be easily parametrized and simulated with any force field. This makes comparative force field studies really easy, as you just prepare the topology once and can then parametrize it as many times as you like with any SMIRNOFF force field!
 
-A topology is essentially a collection of `Molecule` objects with some extra system-level information like box vectors. Molecules represent a single molecule as a molecular graph; atoms connected by bonds. We provide tools for loading both individual molecules and entire topologies from a wide variety of file formats. For details, see the [`Molecule`] and [`Topology`] API docs, and the [](inv:openff.toolkit#users/molecule_cookbook).
+A topology is essentially a collection of `Molecule` objects with some extra system-level information like positions and box vectors. Molecules represent a single molecule as a molecular graph; atoms connected by bonds. We provide tools for loading both individual molecules and entire topologies from a wide variety of file formats. For details, see the [`Molecule`] and [`Topology`] API docs, and the [](inv:openff.toolkit#users/molecule_cookbook).
 
 The OpenFF Toolkit avoids providing tools for system generation because we want to focus on what we're good at: making force fields better. But we encourage the wider modelling community to build tools for things like solvation, bilayer creation and docking on top of the OpenFF Toolkit!
 
@@ -126,11 +128,11 @@ The Toolkit is distributed in the [`openff-toolkit`] package and is represented 
 (ecosystem-interchange)=
 ## [Parametrizing and Simulating]{.interchange}
 
-[OpenFF Interchange] is our package for producing simulation data in various formats. The Interchange API mostly consists of the [`Interchange`] class, an instance of which represents a fully parametrized simulation system. You can call any of the `to_<format>` methods to [produce] input files to simulate that system in your MD engine of choice; OpenMM, Amber, GROMACS, and LAMMPS are all supported!
+[OpenFF Interchange] is our package for exporting simulation input data for an MD engine. The Interchange API mostly consists of the [`Interchange`] class, an instance of which represents a fully parametrized simulation system. You can call any of the `to_<format>` methods to [produce] input files to simulate that system in your MD engine of choice; OpenMM, Amber, GROMACS, and LAMMPS are all supported!
 
-The main way to produce an `Interchange` is to combine a [`Topology`] with a [`ForceField`] using the [`Interchange.from_smirnoff()`] method. Interchange also implements a few other `from_<format>` methods that allow it to ingest parametrized systems from other MD engines! While these other formats usually do not provide enough information to produce a topology and then apply a different force field, Interchange can then export the parametrized system to other formats. So Interchange doesn't just export OpenFF stuff to MD engines, it also converts between MD engines!
+The main way to produce an `Interchange` is to combine a [`Topology`] with a [`ForceField`] using the [`Interchange.from_smirnoff()`] method. Interchange also implements a few other `from_<format>` methods that allow it to ingest parametrized systems from other MD engines! While these other formats usually do not provide enough information for Interchange to produce a [`Topology`] and then apply a different force field, Interchange can export the pre-parametrized system to other formats. So Interchange doesn't just export OpenFF stuff to MD engines, it also converts between MD engines!
 
-Once you have your MD engine input files from Interchange, you just simulate them in the usual way. Interchange is distributed in the [`openff-interchange`] package and is represented in [pink]{.interchange} on the [flowchart].
+Once you have your MD engine input files from Interchange, you just simulate them in the usual way --- most MD engines have excellent tutorials and documentation on how to do this. Interchange is distributed in the [`openff-interchange`] package and is represented in [pink]{.interchange} on the [flowchart].
 
 [`Interchange.from_smirnoff()`]: openff.interchange.Interchange.from_smirnoff
 [`openff-interchange`]: inv:openff.interchange:*:doc#installation
@@ -139,7 +141,7 @@ Once you have your MD engine input files from Interchange, you just simulate the
 (ecosystem-bespokefit)=
 ## [Fine-Tuning a Force Field]{.bespokefit}
 
-Sometimes, a general force field like the mainline OpenFF force fields just isn't good enough, and you need to refine parameters for a new molecule. [OpenFF BespokeFit] is a tool that automatically identifies torsions that could use refinement, computes a torsion drive around those dihedrals, and refines a force field to reproduce that torsion drive. It uses all sorts of clever tricks like fragmentation, multithreading, and caching to make this refinement fast, reproducible, and restartable. It has the flexibility to work with a variety of quantum chemical engines. And it works seamlessly with SMIRNOFF force fields; not only does it use a general SMIRNOFF force field as its starting point, it also produces a refined SMIRNOFF force field as its output, complete with automatic SMIRKS generation. If you refine torsion that's common to a line of molecules that you're interested in, you can use the resulting force field for the entire line!
+Sometimes, general force fields like those we publish just aren't good enough, and you need to refine parameters for a new molecule. [OpenFF BespokeFit] is a tool that automatically identifies torsions that could use refinement, computes a quantum chemical torsion drive around those dihedrals, and refines a force field to reproduce that accurate torsion drive. It uses all sorts of clever tricks like fragmentation, multithreading, and caching to make this refinement fast, reproducible, and restartable. It has the flexibility to work with a variety of quantum chemical engines. It use a general SMIRNOFF force field as its starting point, and adds new terms to describe the new torsions. If you refine a torsion that's common to a line of molecules that you're interested in, you can use the resulting force field for the entire line!
 
 BespokeFit uses a CLI interface to make it easy to use. It can be a bit involved, so to get started, see the [](inv:openff.bespokefit#getting-started/quick-start) or our [YouTube tutorial]. BespokeFit is distributed in the 
 [`openff-bespokefit`] package and is represented in [orange]{.bespokefit} on the [flowchart].
