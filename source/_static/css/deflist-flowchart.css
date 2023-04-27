@@ -3,6 +3,10 @@
     --arrow-head-size: 7px;
     --arrow-length: 2em;
     --arrow-color: black;
+    --interchange-color: #ee4266;
+    --toolkit-color: #2f9ed2;
+    --bespokefit-color: #F08521;
+    --forcefield-color: #00bc4e;
 }
 .arrow.thick {
     --arrow-thickness: 6px;
@@ -196,19 +200,19 @@ ul.deflist_flowchart {
 }
 
 .deflist_flowchart dl.interchange-bg {
-  background-color: #ee4266 !important;
+  background-color: var(--interchange-color) !important;
 }
 
 .deflist_flowchart dl.toolkit-bg {
-  background-color: #2f9ed2 !important;
+  background-color: var(--toolkit-color) !important;
 }
 
 .deflist_flowchart dl.bespokefit-bg {
-  background-color: #F08521 !important;
+  background-color: var(--bespokefit-color) !important;
 }
 
 .deflist_flowchart dl.forcefield-bg {
-  background-color: #04e762 !important;
+  background-color: var(--forcefield-color) !important;
 }
 
 .deflist_flowchart .flowchart-sidebyside {
@@ -218,21 +222,21 @@ ul.deflist_flowchart {
 }
 
 .interchange {
-  color: #ee4266;
+  color: var(--interchange-color);
   font-weight: 500;
 }
 
 .toolkit {
-  color: #2f9ed2;
+  color: var(--toolkit-color);
   font-weight: 500;
 }
 
 .bespokefit {
-  color: #F08521;
+  color: var(--bespokefit-color);
   font-weight: 500;
 }
 
 .forcefield {
-  color: #04e762;
+  color: var(--forcefield-color);
   font-weight: 500;
 }
