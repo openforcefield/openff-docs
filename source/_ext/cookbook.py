@@ -1,12 +1,20 @@
 import json
 from pathlib import Path
-from typing import List, Optional, Any, TypeVar
+from typing import Generator, List, Optional, Any, Tuple, TypeVar
 from uuid import uuid4
 from copy import deepcopy
+import shutil
+from tempfile import TemporaryDirectory
 
 from sphinx.application import Sphinx as Application
 from sphinx.config import Config
 from sphinx.environment import BuildEnvironment
+from docutils import nodes
+from sphinx import addnodes
+from sphinx.directives.other import TocTree
+from sphinx.util.docutils import SphinxDirective
+from git.repo import Repo
+from nbsphinx import NbGallery
 
 
 def insert_cell(
@@ -60,6 +68,9 @@ def get_metadata(
     return notebook.get("metadata", {}).get(key, default)
 
 
+# TODO: Make sure this works
+# TODO: Use examples conda environments instead of a list of packages
+# TODO: Make a version of this for Binder
 def create_colab_notebook(notebook, notebook_path: Path, outpath: Path, config: Config):
     """Create a copy of the notebook for Google Colab and save it to output
 
@@ -145,6 +156,28 @@ def inject_tags_index(notebook: dict) -> dict:
     )
 
 
+def inject_links(notebook: dict, docpath: Path, cookbook_examples_path: Path) -> dict:
+    user, repo, *path = str(docpath.relative_to(cookbook_examples_path)).split("/")
+    path = "/".join(path)
+
+    github_url = f"https://github.com/{user}/{repo}/blob/main/{path}"
+    # TODO: Figure out how to get the conda colab install cell into this
+    colab_url = (
+        f"https://colab.research.google.com/github/{user}/{repo}/blob/main/{path}"
+    )
+
+    return insert_cell(
+        notebook,
+        cell_type="raw",
+        metadata={"raw_mimetype": "text/restructuredtext"},
+        source=[
+            f":download:`Download Notebook </{docpath}>`",
+            f"`View in GitHub <{github_url}>`_",
+            f"`Open in Google Colab <{colab_url}>`_",
+        ],
+    )
+
+
 def process_notebook(app: Application, docname: str, source: list[str]):
     build_colab = Path(app.outdir) / "colab"
 
@@ -154,7 +187,10 @@ def process_notebook(app: Application, docname: str, source: list[str]):
         notebook = json.loads(source[0])
         create_colab_notebook(notebook, docpath, build_colab / docpath, app.config)
 
-        source[0] = json.dumps(inject_tags_index(notebook))
+        notebook = inject_links(notebook, docpath, app.config.cookbook_examples_path)
+        notebook = inject_tags_index(notebook)
+
+        source[0] = json.dumps(notebook)
 
 
 def remove_colab_notebook(app: Application, env: BuildEnvironment, docname: str):
@@ -167,7 +203,94 @@ def remove_colab_notebook(app: Application, env: BuildEnvironment, docname: str)
         colab_path.unlink()
 
 
+def download_dir(src_repo: str, src_path: str, examples_path: Path):
+    """Download src_path from GitHub src_repo
+
+    The folder is downloaded to to ``<examples_path>/<src_repo>/<src_path>``"""
+    local_repo_path = examples_path / src_repo
+
+    # Try a simple pull
+    try:
+        repo = Repo(local_repo_path)
+        repo.remotes.origin.pull(depth=1)
+        return
+    except Exception as e:
+        # Clean up whatever's there
+        if local_repo_path.exists():
+            shutil.rmtree(local_repo_path)
+
+    # If the repo doesn't exist, or a pull fails for some other reason, clone
+    local_repo_path.mkdir(parents=True, exist_ok=True)
+    # Clone without downloading anything
+    repo = Repo.clone_from(
+        url=f"https://github.com/{src_repo}.git",
+        to_path=local_repo_path,
+        multi_options=[
+            "--depth=1",
+            "--filter=tree:0",
+            "--no-checkout",
+        ],
+    )
+    # Just checkout the examples directory
+    repo.git.sparse_checkout("set", src_path)
+    repo.git.checkout()
+
+
+def collect_notebooks(app: Application, config: Config):
+    """Download examples directories from example repositories"""
+    app.cookbook_examples_path = Path(app.srcdir) / config.cookbook_examples_path  # type: ignore
+    if config.cookbook_dont_fetch:
+        return
+    for repo in config.cookbook_example_repos:
+        print("Collecting examples from", repo)
+
+        download_dir(repo, "examples", app.cookbook_examples_path)  # type: ignore
+
+
+def find_notebooks(path: Path) -> Generator[Path, None, None]:
+    """Descend through a file tree and yield all the notebooks inside"""
+    index = [*path.iterdir()]
+    while index:
+        item = index.pop(0)
+
+        if item.is_dir():
+            index.extend([subitem for subitem in item.iterdir()])
+        else:
+            if item.suffix.lower() == ".ipynb":
+                yield path / item
+
+
+def find_notebook_docnames(app, env, docnames):
+    """Find the downloaded notebooks and make sure Sphinx sees them"""
+    if not hasattr(app, "cookbook_notebooks"):
+        app.cookbook_notebooks = []  # type: ignore
+
+    for repo in env.config.cookbook_example_repos:
+        for path in find_notebooks(app.cookbook_examples_path / repo / "examples"):
+            docname = env.project.path2doc(str(path.relative_to(app.srcdir)))
+            app.cookbook_notebooks.append(docname)
+            docnames.append(docname)
+
+
+class CookbookDirective(NbGallery):
+    """
+    Directive to draw thumbnails of the cookbook.
+    """
+
+    def run(self):
+        nodes = super().run()
+        toctree = nodes[0][0][0]
+
+        toctree["entries"].extend(
+            [(None, docname) for docname in self.env.app.cookbook_notebooks]
+        )
+        toctree["includefiles"].extend(self.env.app.cookbook_notebooks)
+
+        return nodes
+
+
 def setup(app: Application):
+    # TODO: Remove these config values and replace with simpler versions
     app.add_config_value(
         "cookbook_default_conda_forge_deps",
         default=[],
@@ -184,8 +307,34 @@ def setup(app: Application):
         rebuild="env",
     )
 
+    # Everything after this can stay :)
+    app.add_config_value(
+        "cookbook_example_repos",
+        default=[],
+        rebuild="env",
+    )
+    app.add_config_value(
+        "cookbook_examples_path",
+        default="_static/examples/",
+        rebuild="env",
+    )
+    app.add_config_value(
+        "cookbook_dont_fetch",
+        default=False,
+        rebuild="env",
+    )
+    # TODO: Implement this config value
+    app.add_config_value(
+        "cookbook_ignore_notebook_pattern",
+        default=["deprecated/**"],
+        rebuild="env",
+    )
+
+    app.connect("config-inited", collect_notebooks)
     app.connect("env-purge-doc", remove_colab_notebook)
     app.connect("source-read", process_notebook)
+    app.connect("env-before-read-docs", find_notebook_docnames)
+    app.add_directive("cookbook", CookbookDirective)
 
     return {
         "parallel_read_safe": True,

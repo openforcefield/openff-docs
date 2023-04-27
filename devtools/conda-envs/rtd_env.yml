@@ -9,6 +9,9 @@ dependencies:
     - sphinx-notfound-page
     - nbsphinx
     - sphinx-gallery
+    - ipython >=8.8
+    # Examples
+    - gitpython
     # Theme
     - pip:
         # Theme
