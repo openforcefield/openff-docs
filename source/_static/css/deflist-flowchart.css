@@ -130,9 +130,15 @@ ul.deflist_flowchart {
     text-align: center;
     background-color: #f8f8f8;
     border-radius: 4px;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 10px 0 rgba(0,0,0,0.14),
+                0 1px 18px 0 rgba(0,0,0,0.12),
+                0 3px 5px -1px rgba(0,0,0,0.4);
     position: relative;
     padding: 0.5em;
+  }
+
+  .content .deflist_flowchart .optional dl {
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
   }
 }
 
@@ -147,9 +153,21 @@ ul.deflist_flowchart {
     text-align: center;
     background-color: #f8f8f8;
     border-radius: 4px;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 10px 0 rgba(0,0,0,0.14),
+                0 1px 18px 0 rgba(0,0,0,0.12),
+                0 3px 5px -1px rgba(0,0,0,0.4);
     position: relative;
     padding: 0.5em;
+  }
+
+  .content .deflist_flowchart .optional li:not(
+      :has(:is(
+        .arrow-up,
+        .arrow-down,
+        .arrow-cycle
+      )
+    )) > * {
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
   }
 }
 
@@ -240,3 +258,25 @@ ul.deflist_flowchart {
   color: var(--forcefield-color);
   font-weight: 500;
 }
+
+.deflist_flowchart .optional {
+  --arrow-color: #777;
+  border: 1.5px var(--arrow-color) dashed;
+  border-radius: 10px;
+  padding: 1em !important;
+  filter: opacity(0.5);
+  transition: filter 0.2s;
+}
+
+.deflist_flowchart .optional::before {
+  content: "[Optional]";
+  text-align: center;
+  font-size: 0.8em;
+  line-height: 0;
+  font-weight: 200;
+}
+
+.deflist_flowchart .optional:hover {
+  filter: opacity(1.0);
+}
+

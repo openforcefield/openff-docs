@@ -24,11 +24,12 @@ The basic OpenFF workflow consists of preparing a simulation system with the [Op
   
     - []{.arrow-down}
 
-  - - {.bespokefit-bg}
-      Torsion refinement with [OpenFF BespokeFit]
-      : Automatic refinement of SMIRNOFF force field torsion parameters from quantum chemical calculations.
+  - - {.optional}
+      - {.bespokefit-bg}
+        Torsion refinement with [OpenFF BespokeFit]
+        : Automatic refinement of SMIRNOFF force field torsion parameters from quantum chemical calculations.
   
-    - []{.arrow-cycle}
+      - []{.arrow-cycle}
   
     - {.forcefield-bg}
       [SMIRNOFF Force Field]
