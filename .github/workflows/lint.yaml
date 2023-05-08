@@ -23,9 +23,14 @@ jobs:
       - name: Install Conda environment
         uses: mamba-org/provision-with-micromamba@main
         with:
-          environment-file: devtools/conda-envs/rtd_env.yml
+          environment-file: devtools/conda-envs/lint_env.yml
 
       - name: Check dead links
         shell: bash -l {0}
         run: |
           FORCE_COLOR=1 sphinx-build -n -W --keep-going -b linkcheck source build/linkcheck
+
+      - name: Check code blocks
+        shell: bash -l {0}
+        run: |
+          FORCE_COLOR=1 sphinx-build -n -W --keep-going -b codelinter source build/codelinter

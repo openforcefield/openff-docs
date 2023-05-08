@@ -41,6 +41,8 @@ myst_enable_extensions = [
     "smartquotes",
     "replacements",
     "deflist",
+    "attrs_inline",
+    "attrs_block",
 ]
 myst_url_schemes = (
     "mailto",
@@ -73,7 +75,6 @@ intersphinx_mapping = {
     "openff.nagl": ("https://docs.openforcefield.org/nagl/en/stable", None),
 }
 
-
 # sphinx-notfound-page
 # https://github.com/readthedocs/sphinx-notfound-page
 # Renders a 404 page with absolute links
@@ -95,8 +96,18 @@ if importlib.util.find_spec("notfound"):
     """,
     }
 
+extensions.append("sphinxawesome.codelinter")
+codelinter_languages = {
+    # Language: command to pass codeblock as stdin
+    "python": "python",
+}
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
+html_static_path = ["_static"]
+html_css_files = [
+    "css/deflist-flowchart.css",
+]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

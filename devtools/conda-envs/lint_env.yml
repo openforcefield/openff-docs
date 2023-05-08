@@ -7,7 +7,12 @@ dependencies:
     - sphinx>=5,<7
     - myst-parser>=1,<2
     - sphinx-notfound-page
-    # Theme
+    # Code example deps
+    - openff-toolkit-base
+    - openff-interchange-base
+    - ambertools
+    - rdkit
+
     - pip:
         # Theme
         - git+https://github.com/openforcefield/openff-sphinx-theme.git@main

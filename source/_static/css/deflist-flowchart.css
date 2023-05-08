@@ -1,0 +1,282 @@
+:root {
+    --arrow-thickness: 4px;
+    --arrow-head-size: 7px;
+    --arrow-length: 2em;
+    --arrow-color: black;
+    --interchange-color: #ee4266;
+    --toolkit-color: #2f9ed2;
+    --bespokefit-color: #F08521;
+    --forcefield-color: #00bc4e;
+}
+.arrow.thick {
+    --arrow-thickness: 6px;
+    --arrow-head-size: 10px;
+}
+
+.content .deflist_flowchart p:first-child {
+  margin-top: 0;
+}
+
+.content .deflist_flowchart p:last-child {
+  margin-bottom: 0;
+}
+
+.content .deflist_flowchart,
+.content .deflist_flowchart li,
+.content .deflist_flowchart li ul,
+.content .deflist_flowchart dl
+{
+  margin: 0;
+  padding: 0;
+}
+
+.deflist_flowchart ul,
+ul.deflist_flowchart {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  gap: 1em;
+}
+
+@supports selector(:has(a, b)) {
+  ul.deflist_flowchart {
+    justify-content: stretch;
+  }
+  ul.deflist_flowchart li:has(> p > .arrow-down),
+  ul.deflist_flowchart li:has(> p > .arrow-up),
+  ul.deflist_flowchart li:has(> p > .arrow-cycle) {
+    flex: 1 0 var(--arrow-length);
+    container-type: size;
+  }
+  ul.deflist_flowchart li:has(> p > .arrow-down) *,
+  ul.deflist_flowchart li:has(> p > .arrow-up) *,
+  ul.deflist_flowchart li:has(> p > .arrow-cycle) * {
+    --arrow-length: 100cqh;
+  }
+}
+
+.content .deflist_flowchart li {
+  list-style: none;
+}
+
+.content .deflist_flowchart dl ul {
+  display: block;
+  height: unset;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.content .deflist_flowchart dl li {
+  list-style: bullet;
+  margin-left: 1.25em;
+  text-align: left;
+}
+
+.deflist_flowchart .arrow-down,
+.deflist_flowchart .arrow-up,
+.deflist_flowchart .arrow-cycle {
+  display: block;
+  height: var(--arrow-length);
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+}
+
+.deflist_flowchart .arrow-down::after,
+.deflist_flowchart .arrow-up::after,
+.deflist_flowchart .arrow-cycle::after,
+.deflist_flowchart .arrow-cycle::before
+{
+  height: calc(var(--arrow-length)/1.4142);
+  width: auto;
+  aspect-ratio: 1;
+  content: "";
+  padding: 0;
+  display: inline-block;
+  transform: rotate(45deg);
+  background-image:
+    linear-gradient(
+      45deg,
+      transparent calc(50% - var(--arrow-thickness)/2),
+      var(--arrow-color) calc(50% - var(--arrow-thickness)/2),
+      var(--arrow-color) calc(50% + var(--arrow-thickness)/2),
+      transparent calc(50% + var(--arrow-thickness)/2)
+    ),
+    linear-gradient(
+      -45deg,
+      var(--arrow-color) var(--arrow-head-size),
+      transparent var(--arrow-head-size)
+    );
+    margin: 0 calc(-0.5 * var(--arrow-length)/1.4142);
+    margin-top: calc(1.4142 * var(--arrow-length) / 10);
+}
+
+.deflist_flowchart .arrow-cycle::after,
+.deflist_flowchart .arrow-cycle::before
+{
+  margin: 0 calc(-0.5 * var(--arrow-length)/1.4142 + 10px);
+  margin-top: calc(var(--arrow-length) / 7);
+}
+
+.deflist_flowchart .arrow-up::after,
+.deflist_flowchart .arrow-cycle::before
+{
+    transform: rotate(-135deg);
+}
+
+@supports not selector(:has(a, b)) {
+  .content .deflist_flowchart dl {
+    text-align: center;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    box-shadow: 0 6px 10px 0 rgba(0,0,0,0.14),
+                0 1px 18px 0 rgba(0,0,0,0.12),
+                0 3px 5px -1px rgba(0,0,0,0.4);
+    position: relative;
+    padding: 0.5em;
+  }
+
+  .content .deflist_flowchart .optional dl {
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
+  }
+}
+
+@supports selector(:has(a, b)) {
+  .content .deflist_flowchart li:not(
+    :has(:is(
+      .arrow-up,
+      .arrow-down,
+      .arrow-cycle
+    )
+  )) > * {
+    text-align: center;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    box-shadow: 0 6px 10px 0 rgba(0,0,0,0.14),
+                0 1px 18px 0 rgba(0,0,0,0.12),
+                0 3px 5px -1px rgba(0,0,0,0.4);
+    position: relative;
+    padding: 0.5em;
+  }
+
+  .content .deflist_flowchart .optional li:not(
+      :has(:is(
+        .arrow-up,
+        .arrow-down,
+        .arrow-cycle
+      )
+    )) > * {
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
+  }
+}
+
+.deflist_flowchart dd {
+  margin: 0;
+  margin-top: 0.5em;
+  padding: 0;
+}
+
+.deflist_flowchart dl.toolkit-bg,
+.deflist_flowchart dl.forcefield-bg,
+.deflist_flowchart dl.interchange-bg,
+.deflist_flowchart dl.bespokefit-bg {
+  color: whitesmoke;
+}
+
+.deflist_flowchart dl.toolkit-bg a,
+.deflist_flowchart dl.forcefield-bg a,
+.deflist_flowchart dl.interchange-bg a,
+.deflist_flowchart dl.bespokefit-bg a
+{
+  color: whitesmoke;
+}
+
+.deflist_flowchart dl a {
+  font-weight: bold;
+}
+
+.deflist_flowchart dl.toolkit-bg a:hover,
+.deflist_flowchart dl.forcefield-bg a:hover,
+.deflist_flowchart dl.interchange-bg a:hover,
+.deflist_flowchart dl.bespokefit-bg a:hover,
+.deflist_flowchart dl.toolkit-bg a:hover code,
+.deflist_flowchart dl.forcefield-bg a:hover code,
+.deflist_flowchart dl.interchange-bg a:hover code,
+.deflist_flowchart dl.bespokefit-bg a:hover code
+{
+  color: #2f9ed2;
+}
+
+.deflist_flowchart dl.toolkit-bg a code,
+.deflist_flowchart dl.forcefield-bg a code,
+.deflist_flowchart dl.interchange-bg a code,
+.deflist_flowchart dl.bespokefit-bg a code
+{
+  color: #015480;
+  font-weight: normal;
+}
+
+.deflist_flowchart dl.interchange-bg {
+  background-color: var(--interchange-color) !important;
+}
+
+.deflist_flowchart dl.toolkit-bg {
+  background-color: var(--toolkit-color) !important;
+}
+
+.deflist_flowchart dl.bespokefit-bg {
+  background-color: var(--bespokefit-color) !important;
+}
+
+.deflist_flowchart dl.forcefield-bg {
+  background-color: var(--forcefield-color) !important;
+}
+
+.deflist_flowchart .flowchart-sidebyside {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+}
+
+.interchange {
+  color: var(--interchange-color);
+  font-weight: 500;
+}
+
+.toolkit {
+  color: var(--toolkit-color);
+  font-weight: 500;
+}
+
+.bespokefit {
+  color: var(--bespokefit-color);
+  font-weight: 500;
+}
+
+.forcefield {
+  color: var(--forcefield-color);
+  font-weight: 500;
+}
+
+.deflist_flowchart .optional {
+  --arrow-color: #777;
+  border: 1.5px var(--arrow-color) dashed;
+  border-radius: 10px;
+  padding: 1em !important;
+  filter: opacity(0.5);
+  transition: filter 0.2s;
+}
+
+.deflist_flowchart .optional::before {
+  content: "[Optional]";
+  text-align: center;
+  font-size: 0.8em;
+  line-height: 0;
+  font-weight: 200;
+}
+
+.deflist_flowchart .optional:hover {
+  filter: opacity(1.0);
+}
+
