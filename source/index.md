@@ -1,6 +1,6 @@
 # Open Force Field Software
 
-Welcome to the documentation for the [Open Force Field Initiative]'s software ecosystem.
+The [Open Force Field Initiative] is creating molecular mechanics force fields for simulation of large biomolecular systems, and the tools to use them easily and accurately. OpenFF force fields are optimized automatically and in the open, with open source tools, from open source datasets. We assign parameters directly to chemical graphs without the intermediate step of assigning atom types, and we can export parametrized systems to a host of simulation engines.
 
 [Open Force Field Initiative]: https://openforcefield.org
 
