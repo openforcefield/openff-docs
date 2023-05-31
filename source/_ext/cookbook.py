@@ -1,18 +1,14 @@
 import json
 from pathlib import Path
-from typing import Generator, List, Optional, Any, Tuple, TypeVar
+from typing import Generator, List, Optional
 from uuid import uuid4
 from copy import deepcopy
 import shutil
-from tempfile import TemporaryDirectory
+from zipfile import ZIP_DEFLATED, ZipFile
 
 from sphinx.application import Sphinx as Application
 from sphinx.config import Config
 from sphinx.environment import BuildEnvironment
-from docutils import nodes
-from sphinx import addnodes
-from sphinx.directives.other import TocTree
-from sphinx.util.docutils import SphinxDirective
 from git.repo import Repo
 from nbsphinx import NbGallery
 
@@ -68,7 +64,7 @@ def get_metadata(
     return notebook.get("metadata", {}).get(key, default)
 
 
-# TODO: Make sure this works
+# TODO: Make this work with RTD and OpenFF
 # TODO: Use examples conda environments instead of a list of packages
 # TODO: Make a version of this for Binder
 def create_colab_notebook(notebook, notebook_path: Path, outpath: Path, config: Config):
@@ -141,6 +137,48 @@ def create_colab_notebook(notebook, notebook_path: Path, outpath: Path, config: 
         json.dump(notebook, file)
 
 
+def notebook_zip(docpath: Path) -> Path:
+    """Get the name of the zip file for the notebook at ``docpath``"""
+    if docpath.parent.name in ["examples", "experimental", "deprecated"]:
+        # Notebook has no needed files, just zip the notebook itself
+        return docpath.with_suffix(".zip")
+    else:
+        # Zip the entire containing folder
+        return docpath.parent.with_suffix(".zip")
+
+
+def create_zip(app: Application, docname: str):
+    """
+    Create a zip file with all needed files from a jupyter notebook docname
+    """
+    docpath_abs = Path(app.env.doc2path(docname, True))
+    zip_path = notebook_zip(docpath_abs)
+    if zip_path == docpath_abs.with_suffix(".zip"):
+        # Notebook has no needed files, just zip the notebook itself
+        with ZipFile(
+            file=zip_path,
+            mode="w",
+            compression=ZIP_DEFLATED,
+            compresslevel=9,
+        ) as file:
+            file.write(docpath_abs, arcname=docpath_abs.name)
+    else:
+        # Zip the entire containing folder
+        shutil.make_archive(
+            str(zip_path.with_suffix("")),
+            "zip",
+            docpath_abs.parent,
+        )
+    # # Add files like a readme and the environment
+    # with ZipFile(
+    #     zip_path,
+    #     mode="a",
+    #     compression=ZIP_DEFLATED,
+    #     compresslevel=9,
+    # ) as file:
+    #     pass
+
+
 def inject_tags_index(notebook: dict) -> dict:
     """Inject an `index` directive containing the notebook's metadata tags"""
 
@@ -171,7 +209,7 @@ def inject_links(notebook: dict, docpath: Path, cookbook_examples_path: Path) ->
         cell_type="raw",
         metadata={"raw_mimetype": "text/restructuredtext"},
         source=[
-            f":download:`Download Notebook </{docpath}>`",
+            f":download:`Download Notebook </{notebook_zip(docpath)}>`",
             f"`View in GitHub <{github_url}>`_",
             f"`Open in Google Colab <{colab_url}>`_",
         ],
@@ -179,18 +217,21 @@ def inject_links(notebook: dict, docpath: Path, cookbook_examples_path: Path) ->
 
 
 def process_notebook(app: Application, docname: str, source: list[str]):
+    docpath = Path(app.env.doc2path(docname, False))
+    if docpath.suffix != ".ipynb":
+        return
+
     build_colab = Path(app.outdir) / "colab"
 
-    docpath = Path(app.env.doc2path(docname, False))
+    create_zip(app, docname)
 
-    if docpath.suffix == ".ipynb":
-        notebook = json.loads(source[0])
-        create_colab_notebook(notebook, docpath, build_colab / docpath, app.config)
+    notebook = json.loads(source[0])
+    create_colab_notebook(notebook, docpath, build_colab / docpath, app.config)
 
-        notebook = inject_links(notebook, docpath, app.config.cookbook_examples_path)
-        notebook = inject_tags_index(notebook)
+    notebook = inject_links(notebook, docpath, app.config.cookbook_examples_path)
+    notebook = inject_tags_index(notebook)
 
-        source[0] = json.dumps(notebook)
+    source[0] = json.dumps(notebook)
 
 
 def remove_colab_notebook(app: Application, env: BuildEnvironment, docname: str):
@@ -214,7 +255,7 @@ def download_dir(src_repo: str, src_path: str, examples_path: Path):
         repo = Repo(local_repo_path)
         repo.remotes.origin.pull(depth=1)
         return
-    except Exception as e:
+    except Exception:
         # Clean up whatever's there
         if local_repo_path.exists():
             shutil.rmtree(local_repo_path)
@@ -253,7 +294,7 @@ def find_notebooks(path: Path) -> Generator[Path, None, None]:
     while index:
         item = index.pop(0)
 
-        if item.is_dir():
+        if item.is_dir() and item.name != "deprecated":
             index.extend([subitem for subitem in item.iterdir()])
         else:
             if item.suffix.lower() == ".ipynb":
