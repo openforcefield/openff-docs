@@ -32,7 +32,6 @@ extensions = [
     "sphinx.ext.intersphinx",
     "myst_parser",
     "openff_sphinx_theme",
-    "nbsphinx",
 ]
 source_suffix = [".rst", ".md"]
 # Extensions for the myst parser
@@ -112,7 +111,6 @@ extensions.extend(
     [
         "nbsphinx",
         "cookbook",
-        "sphinx_gallery.load_style",
     ]
 )
 cookbook_default_conda_forge_deps = ["openff-toolkit-examples"]
