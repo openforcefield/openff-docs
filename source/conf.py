@@ -123,30 +123,6 @@ cookbook_example_repos = [
 ]
 nbsphinx_execute = "never"
 
-# Add links to top of each notebook
-# TODO: Make colab links work (with RTD build)
-# TODO: Point github link to original repo
-# TODO: Add binder link
-# TODO: Style .nbsphinx-prolog in css
-# TODO: Have the local download produce a zip with env.yml, other files
-# This might be easier to do in cookbook.py (add a cell to top of nb)
-nbsphinx_prolog = """
-{%- set colabpath = env.config.release -%}
-{%- set docname = env.doc2path(env.docname, base=False) -%}
-{%- set github = "openforcefield/openff-docs" -%}
-{%- set on_local = docname.split('/') | last -%}
-{%- set on_github = "https://github.com/" ~ github ~ "/blob/main/" ~ docname -%}
-{%- set on_colab = "https://colab.research.google.com/github/" ~ github ~ "/blob/gh-pages/" ~ colabpath ~ "/colab/" ~ docname -%}
-.. raw:: html
-
-    <div class="nbsphinx-prolog">
-        <a href="{{ on_local }}" download>Download Notebook</a>
-        <a href="{{ on_github }}">View in GitHub</a>
-        <a href="{{ on_colab }}">Open in Google Colab</a>
-    </div>
-
-"""
-
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 html_static_path = ["_static"]
