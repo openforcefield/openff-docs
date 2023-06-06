@@ -11,6 +11,8 @@ dependencies:
     - ipython >=8.8
     # Examples
     - gitpython
+    - nbconvert
+    - nbformat
     # Theme
     - pip:
         # Theme

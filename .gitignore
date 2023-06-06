@@ -6,6 +6,7 @@ source/examples/
 # Python stuff
 __pycache__/
 .pytest_cache
+.ipynb_checkpoints
 
 # SOAP
 .soap/
