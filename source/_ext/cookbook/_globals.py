@@ -25,6 +25,7 @@ IGNORED_FILES: Final = [
     "__pycache__",
 ]
 """File names to exclude from zipped download files and Colab folders."""
+# TODO: Get latest release, not `main`
 GITHUB_REPOS: Final = [
     "openforcefield/openff-toolkit",
     "openforcefield/openff-interchange",
@@ -35,7 +36,6 @@ GitHub repos to download example notebooks from.
 Should be given as ``username/repo-name``.
 """
 
-# TODO: Implement special handling for experimental notebooks and remove them from this
 DO_NOT_SEARCH = [
     "deprecated",
 ]

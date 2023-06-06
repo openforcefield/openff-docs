@@ -168,14 +168,16 @@ def execute_notebook(src: Path):
             metadata={"nbsphinx": "hidden", "tags": ["nbsphinx-thumbnail"]},
         )
 
-    # TODO: See if we can convince this to do each notebook single-threaded
-    # TODO: Work out how to store widget state
+    # TODO: See if we can convince this to do each notebook single-threaded?
+    # TODO: Work out how to store widget state for nglview
     executor = ExecutePreprocessor(
         kernel_name="python3",
         timeout=600,
     )
     executor.store_widget_state = True
     # Execute the notebook
+    # TODO: Do this in a temporary directory with needed_files to keep src clean
+    # TODO: Run in the notebook-specific Conda environment
     executor.preprocess(nb, {"metadata": {"path": src.parent}})
 
     # Write the executed notebook
@@ -248,6 +250,7 @@ def main(do_proc=True, do_exec=True, redo_all=False):
 if __name__ == "__main__":
     import sys, os
 
+    # TODO: Implement special handling for experimental notebooks
     # Set the INTERCHANGE_EXPERIMENTAL environment variable
     os.environ["INTERCHANGE_EXPERIMENTAL"] = "1"
 
