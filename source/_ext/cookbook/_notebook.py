@@ -5,7 +5,7 @@ from copy import deepcopy
 from pathlib import Path
 from hashlib import sha1
 
-from _globals import ZIPPED_IPYNB_ROOT, COLAB_IPYNB_ROOT, DO_NOT_SEARCH
+from ._globals import ZIPPED_IPYNB_ROOT, COLAB_IPYNB_ROOT, DO_NOT_SEARCH
 
 
 def insert_cell(

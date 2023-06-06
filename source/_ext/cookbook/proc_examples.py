@@ -160,7 +160,7 @@ def execute_notebook(src: Path):
     # marked as the thumbnail.
     # https://nbsphinx.readthedocs.io/en/latest/hidden-cells.html
     # https://nbsphinx.readthedocs.io/en/latest/gallery/cell-tag.html
-    # TODO: See if this works
+    # TODO: Check that thumbnail rendering works
     if Path.exists(src.parent / "thumbnail.png"):
         insert_cell(
             nb,

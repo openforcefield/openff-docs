@@ -26,7 +26,6 @@ def setup(app: Application):
         rebuild="env",
     )
 
-    # Everything after this can stay :)
     app.add_config_value(
         "cookbook_example_repos",
         default=[],

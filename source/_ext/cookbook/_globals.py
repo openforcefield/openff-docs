@@ -25,7 +25,7 @@ IGNORED_FILES: Final = [
     "__pycache__",
 ]
 """File names to exclude from zipped download files and Colab folders."""
-# TODO: Get latest release, not `main`
+# TODO: Get latest release, not default branch
 GITHUB_REPOS: Final = [
     "openforcefield/openff-toolkit",
     "openforcefield/openff-interchange",
