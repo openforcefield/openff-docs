@@ -81,7 +81,7 @@ def needed_files(notebook_path: Path) -> list[tuple[Path, Path]]:
         raise ValueError(
             f"Could not choose a Conda environment file from multiple candidates:"
             + "".join("\n  " + str(path) for path in environment_files)
-            + f"\nName the intended Conda environment {PACKAGED_ENV_NAME}."
+            + f"\nName the intended Conda environment '{PACKAGED_ENV_NAME}'."
         )
 
     return list(files.items())
@@ -187,6 +187,15 @@ def execute_notebook(src: Path):
     print("Done executing", src.relative_to(SRC_IPYNB_ROOT))
 
 
+def delay_iterator(iterator, seconds=1.0):
+    """Introduce a delay to iteration.
+
+    This may be helpful to avoid race conditions with process pools."""
+    for item in iterator:
+        yield item
+        sleep(seconds)
+
+
 def main(do_proc=True, do_exec=True, redo_all=False):
     print("Working in", Path().resolve())
 
@@ -231,18 +240,16 @@ def main(do_proc=True, do_exec=True, redo_all=False):
         # Context manager ensures the pool is correctly terminated if there's
         # an exception
         with Pool() as pool:
-            for notebook in notebooks:
-                pool.apply_async(execute_notebook, (notebook,))
-                # Wait a second between launching subprocesses
-                # Workaround https://github.com/jupyter/nbconvert/issues/1066
-                sleep(1.0)
-            # Wait until all the notebooks are done
-            pool.close()
-            pool.join()
+            # Wait a second between launching subprocesses
+            # Workaround https://github.com/jupyter/nbconvert/issues/1066
+            _ = [*pool.imap_unordered(execute_notebook, delay_iterator(notebooks))]
 
 
 if __name__ == "__main__":
-    import sys
+    import sys, os
+
+    # Set the INTERCHANGE_EXPERIMENTAL environment variable
+    os.environ["INTERCHANGE_EXPERIMENTAL"] = "1"
 
     main(
         do_proc=not "--skip-proc" in sys.argv,

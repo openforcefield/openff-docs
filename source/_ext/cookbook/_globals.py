@@ -36,7 +36,9 @@ Should be given as ``username/repo-name``.
 """
 
 # TODO: Implement special handling for experimental notebooks and remove them from this
-DO_NOT_SEARCH = ["deprecated", "experimental"]
+DO_NOT_SEARCH = [
+    "deprecated",
+]
 """Directory names to not descend into when searching for notebooks."""
 
 SRC_IPYNB_ROOT: Final[Path] = Path("src")
