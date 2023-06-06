@@ -11,3 +11,6 @@ dependencies:
     # Examples
     - openff-toolkit-examples
     - gromacs
+    - lammps
+    - rich
+    - jax

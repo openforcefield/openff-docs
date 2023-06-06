@@ -5,7 +5,7 @@ from copy import deepcopy
 from pathlib import Path
 from hashlib import sha1
 
-from _globals import ZIPPED_IPYNB_ROOT, COLAB_IPYNB_ROOT
+from _globals import ZIPPED_IPYNB_ROOT, COLAB_IPYNB_ROOT, DO_NOT_SEARCH
 
 
 def insert_cell(
@@ -91,7 +91,7 @@ def find_notebooks(path: Path) -> Generator[Path, None, None]:
     while index:
         item = index.pop(0)
 
-        if item.is_dir() and item.name != "deprecated":
+        if item.is_dir() and item.name not in DO_NOT_SEARCH:
             index.extend([subitem for subitem in item.iterdir()])
         else:
             if item.suffix.lower() == ".ipynb":

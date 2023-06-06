@@ -4,6 +4,8 @@ from zipfile import ZIP_DEFLATED, ZipFile
 from pathlib import Path
 import json
 import shutil
+from multiprocessing import Pool
+from time import sleep
 
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
@@ -124,9 +126,11 @@ def create_colab_notebook(
         ],
     )
 
+    # Decide where we're going to write this modified notebook
     dst = notebook_colab(src)
     dst.parent.mkdir(parents=True, exist_ok=True)
 
+    # Copy over all the files Colab will need
     for path, rel_path in needed_files(src):
         shutil.copy(path, dst.parent / rel_path)
 
@@ -140,12 +144,15 @@ def create_colab_notebook(
             yaml.dump(env_yaml, env_file)
             env_file.truncate()
 
+    # Write the file
     with open(dst, "w") as file:
         json.dump(notebook, file)
 
 
 def execute_notebook(src: Path):
     """Execute a notebook and retain its widget state"""
+    print("Executing", src.relative_to(SRC_IPYNB_ROOT))
+
     with open(src, "r") as f:
         nb = nbformat.read(f, nbformat.NO_CONVERT)
 
@@ -161,42 +168,77 @@ def execute_notebook(src: Path):
             metadata={"nbsphinx": "hidden", "tags": ["nbsphinx-thumbnail"]},
         )
 
-    executor = ExecutePreprocessor(timeout=600, store_widget_state=True)
+    # TODO: See if we can convince this to do each notebook single-threaded
+    # TODO: Work out how to store widget state
+    executor = ExecutePreprocessor(
+        kernel_name="python3",
+        timeout=600,
+    )
+    executor.store_widget_state = True
+    # Execute the notebook
     executor.preprocess(nb, {"metadata": {"path": src.parent}})
 
+    # Write the executed notebook
     dst = EXEC_IPYNB_ROOT / src.relative_to(SRC_IPYNB_ROOT)
     dst.parent.mkdir(parents=True, exist_ok=True)
     with open(dst, "w", encoding="utf-8") as f:
         nbformat.write(nb, f)
 
+    print("Done executing", src.relative_to(SRC_IPYNB_ROOT))
 
-def main(do_proc=True, do_exec=True):
+
+def main(do_proc=True, do_exec=True, redo_all=False):
     print("Working in", Path().resolve())
 
+    # Download the examples from GitHub
+    updates = None
     for repo in GITHUB_REPOS:
         print("Downloading", repo, "to", (SRC_IPYNB_ROOT / repo).resolve())
-        download_dir(repo, "examples", SRC_IPYNB_ROOT)
+        updates = download_dir(repo, "examples", SRC_IPYNB_ROOT)
+    if updates is None:
+        print("Nothing to do.")
+        return
 
+    # Find the notebooks we need to update
     notebooks = [*find_notebooks(SRC_IPYNB_ROOT)]
+    if updates.start_over or redo_all:
+        # If we're starting over, we do all the notebooks and clear what's
+        # already in there
+        print("Updating all notebooks")
+        shutil.rmtree(EXEC_IPYNB_ROOT, ignore_errors=True)
+        shutil.rmtree(COLAB_IPYNB_ROOT, ignore_errors=True)
+        shutil.rmtree(ZIPPED_IPYNB_ROOT, ignore_errors=True)
+    else:
+        # Only work on notebooks that were changed AND were found
+        # This is important because `updates` doesn't do any of the filtering
+        # that find_notebooks does (eg, deprecated notebooks)
+        notebooks = [
+            *set(notebooks).intersection(
+                [SRC_IPYNB_ROOT / path for path in updates.reprocess]
+            )
+        ]
+        # TODO: Clean up notebooks that have been removed
 
+    # Create Colab and downloadable versions of the notebooks
     if do_proc:
         for notebook in notebooks:
-            # TODO: Check if the notebook has changed since the last time we ran this
             print("Processing", notebook)
             create_colab_notebook(notebook)
             create_zip(notebook)
 
+    # Execute notebooks in parallel for rendering as HTML
     if do_exec:
-        for notebook in notebooks:
-            print(
-                "Executing ",
-                notebook.relative_to(SRC_IPYNB_ROOT),
-                end="...",
-                sep="",
-                flush=True,
-            )
-            execute_notebook(notebook)
-            print(" done.")
+        # Context manager ensures the pool is correctly terminated if there's
+        # an exception
+        with Pool() as pool:
+            for notebook in notebooks:
+                pool.apply_async(execute_notebook, (notebook,))
+                # Wait a second between launching subprocesses
+                # Workaround https://github.com/jupyter/nbconvert/issues/1066
+                sleep(1.0)
+            # Wait until all the notebooks are done
+            pool.close()
+            pool.join()
 
 
 if __name__ == "__main__":
@@ -205,4 +247,5 @@ if __name__ == "__main__":
     main(
         do_proc=not "--skip-proc" in sys.argv,
         do_exec=not "--skip-exec" in sys.argv,
+        redo_all="--redo-all" in sys.argv,
     )

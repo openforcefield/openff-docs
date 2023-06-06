@@ -35,6 +35,10 @@ GitHub repos to download example notebooks from.
 Should be given as ``username/repo-name``.
 """
 
+# TODO: Implement special handling for experimental notebooks and remove them from this
+DO_NOT_SEARCH = ["deprecated", "experimental"]
+"""Directory names to not descend into when searching for notebooks."""
+
 SRC_IPYNB_ROOT: Final[Path] = Path("src")
 """Path to download notebooks to and cache unmodified notebooks in"""
 EXEC_IPYNB_ROOT: Final[Path] = Path("exec")
