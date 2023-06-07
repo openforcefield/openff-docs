@@ -5,7 +5,7 @@ from copy import deepcopy
 from pathlib import Path
 from hashlib import sha1
 
-from .globals import ZIPPED_IPYNB_ROOT, COLAB_IPYNB_ROOT, DO_NOT_SEARCH
+from .globals import ZIPPED_IPYNB_ROOT, COLAB_IPYNB_ROOT, DO_NOT_SEARCH, SRC_IPYNB_ROOT
 
 
 def insert_cell(
@@ -65,7 +65,12 @@ def is_bare_notebook(docpath: Path) -> bool:
 
 def notebook_zip(docpath: Path) -> Path:
     """Get the name of the zip file for the notebook at ``docpath``"""
-    if is_bare_notebook(docpath):
+    # Strip off any leading SRC_IPYNB_ROOT
+    notebook = docpath
+    if str(docpath).startswith(str(SRC_IPYNB_ROOT) + "/"):
+        docpath = Path(str(docpath)[len(str(SRC_IPYNB_ROOT)) + 1 :])
+    # Get the zip file path
+    if is_bare_notebook(notebook):
         # Notebook has no needed files, just zip the notebook itself
         return ZIPPED_IPYNB_ROOT / docpath.with_suffix(".zip")
     else:
@@ -74,11 +79,20 @@ def notebook_zip(docpath: Path) -> Path:
 
 
 def notebook_colab(docpath: Path) -> Path:
-    """Get the path to the Colab notebook for the notebook at ``docpath``"""
-    if is_bare_notebook(docpath):
+    """
+    Get the path to the Colab notebook for the notebook at ``docpath``.
+
+    The notebook's directory is ``notebook_colab(...).parent``
+    """
+    # Strip off any leading SRC_IPYNB_ROOT
+    notebook = docpath
+    if str(docpath).startswith(str(SRC_IPYNB_ROOT) + "/"):
+        docpath = Path(str(docpath)[len(str(SRC_IPYNB_ROOT)) + 1 :])
+    # Get the colab notebook path
+    if is_bare_notebook(notebook):
         # Put the bare notebook in its own folder, named with the hash of the
         # notebook to avoid collisions
-        new_folder = docpath.stem + "_" + sha1(docpath.read_bytes()).hexdigest()[:6]
+        new_folder = docpath.stem + "_" + sha1(notebook.read_bytes()).hexdigest()[:6]
         return COLAB_IPYNB_ROOT / docpath.parent / new_folder / docpath.name
     else:
         # Just use the existing folder

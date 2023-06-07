@@ -1,24 +1,26 @@
 """Code for working with GitHub in both the Sphinx extension and proc_examples.py"""
 import shutil
 from pathlib import Path
-from typing import Generator, Iterable, Literal, Optional
+from typing import Generator, Iterable, Literal, Optional, Union
 
 from git.repo import Repo
 from git.diff import DiffIndex
 
 
-class UpdateSpec:
+class UpdatedNotebooks:
     """Stores paths that must be reprocessed or cleaned up"""
 
     def __init__(
         self,
         reprocess: Optional[Iterable[Path]] = None,
         cleanup: Optional[Iterable[Path]] = None,
-        start_over=False,
+        rebuild_all: Optional[Iterable[str]] = None,
     ):
         # Find the notebooks associated with each change, and remove duplicates
         reprocess = set(self._find_all_notebooks(reprocess))
-        cleanup = set(self._find_all_notebooks(cleanup))
+        cleanup = set(
+            notebook for notebook in (cleanup or []) if notebook.suffix == ".ipynb"
+        )
 
         # We don't need to cleanup notebooks we're reprocessing, so remove them
         cleanup = cleanup - reprocess
@@ -27,11 +29,11 @@ class UpdateSpec:
         """List of paths to reprocess"""
         self.cleanup = list(cleanup)
         """List of paths to clean up"""
-        self.start_over = start_over
-        """If True, all notebooks should be cleaned up and reprocessed"""
+        self.rebuild_all = list(rebuild_all or [])
+        """List of the repos that need to be completely rebuilt"""
 
     @classmethod
-    def from_diff(cls, diffs) -> "UpdateSpec":
+    def from_diff(cls, diffs) -> "UpdatedNotebooks":
         reprocess = []
         cleanup = []
 
@@ -47,8 +49,8 @@ class UpdateSpec:
         return cls(reprocess=reprocess, cleanup=cleanup)
 
     @classmethod
-    def update_all(cls) -> "UpdateSpec":
-        return cls(start_over=True)
+    def new_rebuild_all(cls) -> "UpdatedNotebooks":
+        return cls(rebuild_all=True)
 
     @classmethod
     def _find_all_notebooks(
@@ -76,11 +78,26 @@ class UpdateSpec:
     def __repr__(self) -> str:
         return (
             f"{self.__class__.__name__}(reprocess={list(self.reprocess)},"
-            + f" cleanup={list(self.cleanup)}, start_over={self.start_over})"
+            + f" cleanup={list(self.cleanup)}, rebuild_all={self.rebuild_all})"
         )
 
+    def extend(self, other):
+        """Merge the elements of ``other`` into ``self``"""
+        reprocess = set(self.reprocess + other.reprocess)
+        cleanup = set(self.cleanup + other.cleanup) - reprocess
+        rebuild_all = set(self.rebuild_all + other.rebuild_all)
 
-def download_dir(src_repo: str, src_path: str, examples_path: Path) -> UpdateSpec:
+        self.reprocess = list(reprocess)
+        self.cleanup = list(cleanup)
+        self.rebuild_all = list(rebuild_all)
+
+
+def download_dir(
+    src_repo: str,
+    src_path: str,
+    examples_path: Path,
+    refspec: Union[str, None] = None,
+) -> UpdatedNotebooks:
     """Download src_path from GitHub src_repo
 
     The folder is downloaded to to ``<examples_path>/<src_repo>/<src_path>``.
@@ -88,12 +105,13 @@ def download_dir(src_repo: str, src_path: str, examples_path: Path) -> UpdateSpe
     newly-downloaded or updated files are returned."""
     local_repo_path = examples_path / src_repo
 
-    # Try a simple pull
+    # Try a simple pull - the repo will have been set up with sparse_checkout
+    # already so we don't need to bother with that
     try:
         repo = Repo(local_repo_path)
 
         previous = repo.head.commit
-        repo.remotes.origin.pull(depth=1)
+        repo.git.checkout(refspec)
         new = repo.head.commit
     except Exception:
         # Clean up whatever's there
@@ -101,9 +119,9 @@ def download_dir(src_repo: str, src_path: str, examples_path: Path) -> UpdateSpe
             shutil.rmtree(local_repo_path)
     else:
         if previous == new:
-            return UpdateSpec()
+            return UpdatedNotebooks()
         else:
-            return UpdateSpec.from_diff(previous.diff(new))
+            return UpdatedNotebooks.from_diff(previous.diff(new))
 
     # If the repo doesn't exist, or a pull fails for some other reason, clone
     local_repo_path.mkdir(parents=True, exist_ok=True)
@@ -113,12 +131,13 @@ def download_dir(src_repo: str, src_path: str, examples_path: Path) -> UpdateSpe
         to_path=local_repo_path,
         multi_options=[
             "--depth=1",
-            "--filter=tree:0",
+            "--sparse",
             "--no-checkout",
+            f"--branch={refspec}",
         ],
     )
     # Just checkout the examples directory
     repo.git.sparse_checkout("set", src_path)
     repo.git.checkout()
 
-    return UpdateSpec.update_all()
+    return UpdatedNotebooks(rebuild_all=[src_repo])

@@ -11,6 +11,8 @@ import sys
 import nbformat
 from nbconvert.preprocessors.execute import ExecutePreprocessor
 import yaml
+import requests
+from packaging.version import Version
 
 sys.path.append(str(Path(__file__).parent))
 
@@ -22,7 +24,7 @@ from cookbook.notebook import (
     find_notebooks,
     is_bare_notebook,
 )
-from cookbook.github import download_dir
+from cookbook.github import UpdatedNotebooks, download_dir
 from cookbook.globals import *
 
 
@@ -154,6 +156,7 @@ def create_colab_notebook(
 
 def execute_notebook(src: Path):
     """Execute a notebook and retain its widget state"""
+    src_rel = src.relative_to(SRC_IPYNB_ROOT)
     print("Executing", src.relative_to(SRC_IPYNB_ROOT))
 
     with open(src, "r") as f:
@@ -181,7 +184,10 @@ def execute_notebook(src: Path):
     # Execute the notebook
     # TODO: Do this in a temporary directory with needed_files to keep src clean
     # TODO: Run in the notebook-specific Conda environment
-    executor.preprocess(nb, {"metadata": {"path": src.parent}})
+    try:
+        executor.preprocess(nb, {"metadata": {"path": src.parent}})
+    except Exception as e:
+        raise ValueError(f"Exception encountered while executing {src_rel}")
 
     # Write the executed notebook
     dst = EXEC_IPYNB_ROOT / src.relative_to(SRC_IPYNB_ROOT)
@@ -201,23 +207,62 @@ def delay_iterator(iterator, seconds=1.0):
         sleep(seconds)
 
 
+def get_stable_tagname(repo: str) -> str:
+    """
+    Get the tag name for the release with the greatest semver version number.
+    """
+    r = requests.get(
+        f"https://api.github.com/repos/{repo}/releases",
+        params={"per_page": "100"},
+    )
+    r.raise_for_status()
+    release_tags = [release["tag_name"] for release in r.json()]
+
+    while "next" in r.links:
+        r = requests.get(r.links["next"]["url"])
+        r.raise_for_status()
+        release_tags += [release["tag_name"] for release in r.json()]
+
+    return max(release_tags, key=Version)
+
+
+def clean_up_notebook(notebook: Path):
+    """
+    Delete processed versions of the notebook.
+
+    Note that this does not delete the source notebook.
+    """
+    notebook_zip(notebook).unlink()
+    shutil.rmtree(notebook_colab(notebook).parent)
+    exec_notebook = EXEC_IPYNB_ROOT / notebook.relative_to(SRC_IPYNB_ROOT)
+    exec_notebook.unlink()
+
+
 def main(do_proc=True, do_exec=True, redo_all=False):
     print("Working in", Path().resolve())
 
-    # Download the examples from GitHub
-    updates = None
+    # Download the examples from latest releases on GitHub
+    updates = UpdatedNotebooks()
     for repo in GITHUB_REPOS:
         print("Downloading", repo, "to", (SRC_IPYNB_ROOT / repo).resolve())
-        updates = download_dir(repo, "examples", SRC_IPYNB_ROOT)
-    if updates is None:
-        print("Nothing to do.")
-        return
+
+        # TODO: Get version number from current environment?
+        updates.extend(
+            download_dir(
+                repo,
+                "examples",
+                SRC_IPYNB_ROOT,
+                refspec=get_stable_tagname(repo),
+            )
+        )
 
     # Find the notebooks we need to update
     notebooks = [*find_notebooks(SRC_IPYNB_ROOT)]
-    if updates.start_over or redo_all:
+    if updates.rebuild_all or redo_all:
         # If we're starting over, we do all the notebooks and clear what's
         # already in there
+        # At the moment, we rebuild everything if anything needs rebuilding
+        # TODO: Only rebuild the repos in updates.rebuild_all
         print("Updating all notebooks")
         shutil.rmtree(EXEC_IPYNB_ROOT, ignore_errors=True)
         shutil.rmtree(COLAB_IPYNB_ROOT, ignore_errors=True)
@@ -231,7 +276,9 @@ def main(do_proc=True, do_exec=True, redo_all=False):
                 [SRC_IPYNB_ROOT / path for path in updates.reprocess]
             )
         ]
-        # TODO: Clean up notebooks that have been removed
+        # Clean up any notebooks that have been removed
+        for notebook in updates.cleanup:
+            clean_up_notebook(notebook)
 
     # Create Colab and downloadable versions of the notebooks
     if do_proc:
