@@ -6,12 +6,15 @@ import json
 import shutil
 from multiprocessing import Pool
 from time import sleep
+import sys
 
 import nbformat
-from nbconvert.preprocessors import ExecutePreprocessor
+from nbconvert.preprocessors.execute import ExecutePreprocessor
 import yaml
 
-from _notebook import (
+sys.path.append(str(Path(__file__).parent))
+
+from cookbook.notebook import (
     notebook_zip,
     notebook_colab,
     get_metadata,
@@ -19,8 +22,8 @@ from _notebook import (
     find_notebooks,
     is_bare_notebook,
 )
-from _github import download_dir
-from _globals import *
+from cookbook.github import download_dir
+from cookbook.globals import *
 
 
 def needed_files(notebook_path: Path) -> list[tuple[Path, Path]]:

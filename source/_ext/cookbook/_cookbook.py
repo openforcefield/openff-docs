@@ -9,8 +9,8 @@ from sphinx.config import Config
 from sphinx.environment import BuildEnvironment
 from nbsphinx import NbGallery
 
-from ._notebook import insert_cell, get_metadata, find_notebooks, notebook_zip
-from ._github import download_dir
+from .notebook import insert_cell, get_metadata, find_notebooks, notebook_zip
+from .github import download_dir
 
 
 def inject_tags_index(notebook: dict) -> dict:

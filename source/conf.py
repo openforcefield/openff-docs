@@ -110,7 +110,7 @@ sys.path.insert(0, str(Path("./_ext").resolve()))
 extensions.extend(
     [
         "nbsphinx",
-        "cookbook",
+        "cookbook.sphinx_ext",
     ]
 )
 cookbook_default_conda_forge_deps = ["openff-toolkit-examples"]
