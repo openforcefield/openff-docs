@@ -22,7 +22,7 @@ def setup(app: Application):
     app.connect("env-before-read-docs", find_notebook_docnames)
     app.connect("doctree-resolved", proc_cookbook_toctree)
     app.add_directive("cookbook", CookbookDirective)
-    include_css_files(app, ["notebook-grid.css"])
+    include_css_files(app)
 
     app.add_node(
         CookbookNode,

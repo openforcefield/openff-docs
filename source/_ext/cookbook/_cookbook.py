@@ -1,5 +1,7 @@
 """Implementation of the cookbook Sphinx extension"""
+from __future__ import annotations
 
+from dataclasses import dataclass
 import json
 from pathlib import Path
 
@@ -13,7 +15,13 @@ import docutils.nodes
 import docutils.parsers.rst.directives
 from sphinx.writers.html5 import HTML5Translator
 
-from .notebook import insert_cell, get_metadata, find_notebooks, notebook_zip
+from .notebook import (
+    insert_cell,
+    get_metadata,
+    find_notebooks,
+    notebook_zip,
+    set_metadata,
+)
 from .globals import EXEC_IPYNB_ROOT
 
 
@@ -65,6 +73,9 @@ def process_notebook(app: Application, docname: str, source: list[str]):
     notebook = inject_links(app, notebook, docpath)
     notebook = inject_tags_index(notebook)
 
+    # Tell Sphinx we don't expect this notebook to show up in a toctree
+    set_metadata(notebook, "orphan", True)
+
     source[0] = json.dumps(notebook)
 
 
@@ -80,16 +91,30 @@ def remove_old_notebooks(app: Application, env: BuildEnvironment, docname: str):
 
 def find_notebook_docnames(app, env, docnames):
     """Find the downloaded notebooks and make sure Sphinx sees them"""
-    if not hasattr(env, "cookbook_notebooks"):
-        env.cookbook_notebooks = []  # type: ignore
-
     for path in find_notebooks(EXEC_IPYNB_ROOT):
         docname = env.project.path2doc(str(path))
-        env.cookbook_notebooks.append(docname)
         docnames.append(docname)
 
 
-class CookbookDirective(TocTree):
+@dataclass
+class CookbookEntry:
+    docname: str
+    uri: str | None = None
+    title: str | None = None
+
+    @classmethod
+    def from_path(cls, env: BuildEnvironment, path: Path) -> CookbookEntry:
+        docname = env.path2doc(str(path))
+
+        if docname is None:
+            raise ValueError(
+                "path is not a document in this Sphinx environment.",
+            )
+
+        return CookbookEntry(docname)
+
+
+class CookbookDirective(SphinxDirective):
     """
     Directive to draw thumbnails of the cookbook.
     """
@@ -98,20 +123,18 @@ class CookbookDirective(TocTree):
 
     def run(self):
         node = CookbookNode()
-        node.extend(super().run())
-        toctree = node[0][0]
 
-        toctree["entries"].extend(
-            [(None, docname) for docname in self.env.cookbook_notebooks]
-        )
-        toctree["includefiles"].extend(self.env.cookbook_notebooks)
+        for path in find_notebooks(EXEC_IPYNB_ROOT):
+            node.entries.append(CookbookEntry.from_path(self.env, path))
 
         return [node]
 
 
 class CookbookNode(docutils.nodes.Element):
+    """Docutils node representing the cookbook directive"""
+
     def __init__(self, *args, **kwargs):
-        self.entries = []
+        self.entries: list[CookbookEntry] = []
         return super().__init__(*args, **kwargs)
 
 
@@ -120,50 +143,45 @@ def proc_cookbook_toctree(
     doctree: sphinx.addnodes.document,
     docname: str,
 ):
+    """Update the cookbook with URIs and titles"""
     for cookbook_node in doctree.findall(CookbookNode):
-        toctree_node = cookbook_node[0][0]
-        # print("proc_cookbook_toctree", app, toctree_node, docname)
-        for title, notebook in toctree_node["entries"]:
-            if title is not None:
-                pass
-            elif (title := app.env.titles[notebook].astext()) != "<no title>":
-                pass
-            else:
-                title = Path(notebook).stem.replace("_", " ")
+        for entry in cookbook_node.entries:
+            entry.title = app.env.titles[entry.docname].astext()
+            if entry.title == "<no title>":
+                entry.title = Path(entry.docname).stem.replace("_", " ")
 
-            uri = app.builder.get_relative_uri(docname, notebook)
-
-            cookbook_node.entries.append((notebook, title, uri))
-
-        cookbook_node.children = []
+            entry.uri = app.builder.get_relative_uri(docname, entry.docname)
 
 
 def depart_cookbook_html(translator: HTML5Translator, node: CookbookNode):
+    """Render the CookbookNode in HTML"""
     translator.body.append("<div class='notebook-grid'>")
-    for notebook, notebook_title, notebook_uri in node.entries:
+    for entry in node.entries:
         # TODO: Get the thumbnail from the notebook
         thumbnail_url = "https://openforcefield.org/about/branding/img/openforcefield_v2_full-color.png"
         translator.body.extend(
             [
-                f"<a class='notebook-grid-elem' href={notebook_uri}>",
+                f"<a class='notebook-grid-elem' href={entry.uri}>",
                 f"<img src={thumbnail_url}>",
                 "<div class='caption'>",
-                notebook_title or Path(notebook).stem,
+                entry.title,
                 "</div>",
             ]
         )
-        print(notebook, notebook_title, notebook_uri)
     translator.body.append("</div>")
 
 
 def include_css_files(app: Application, filenames: list[str]):
+    """Include all the CSS files in the `cookbook/css` directory"""
     srcdir = Path(__file__).parent / "css"
+
+    filenames = [str(fn) for fn in srcdir.iterdir() if fn.suffix == ".css"]
 
     def copy_custom_css_file(application: Application, exc):
         if application.builder.format == "html" and not exc:
             staticdir = Path(app.builder.outdir) / "_static"
             for filename in filenames:
-                copy_asset_file(str(srcdir / filename), str(staticdir))
+                copy_asset_file(filename, str(staticdir))
 
     app.connect("build-finished", copy_custom_css_file)
     for filename in filenames:

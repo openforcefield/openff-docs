@@ -65,6 +65,12 @@ def get_metadata(
     return notebook.get("metadata", {}).get(key, default)
 
 
+def set_metadata(notebook: dict, key: str, value: Any):
+    """Set a notebook's metadata value for a given key"""
+    metadata = notebook.setdefault("metadata", {})
+    metadata[key] = value
+
+
 def is_bare_notebook(docpath: Path) -> bool:
     return docpath.parent.name in ["examples", "experimental", "deprecated"]
 
