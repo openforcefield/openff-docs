@@ -26,4 +26,5 @@
 .notebook-grid .notebook-grid-elem .caption {
     margin-top: auto;
     margin-bottom: auto;
+    text-align: center;
 }

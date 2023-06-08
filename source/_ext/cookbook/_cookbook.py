@@ -171,7 +171,7 @@ def depart_cookbook_html(translator: HTML5Translator, node: CookbookNode):
     translator.body.append("</div>")
 
 
-def include_css_files(app: Application, filenames: list[str]):
+def include_css_files(app: Application):
     """Include all the CSS files in the `cookbook/css` directory"""
     srcdir = Path(__file__).parent / "css"
 
