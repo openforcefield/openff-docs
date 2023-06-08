@@ -16,3 +16,4 @@ dependencies:
     - lammps
     - rich
     - jax
+    - pint<0.22

@@ -32,10 +32,10 @@ def inject_tags_index(notebook: dict) -> dict:
 
     return insert_cell(
         notebook,
-        cell_type="raw",
-        metadata={"raw_mimetype": "text/restructuredtext"},
+        cell_type="markdown",
         source=[
-            f".. index:: {', '.join(tags)}",
+            f"```{{index}} {', '.join(tags)}",
+            f"```",
         ],
     )
 
@@ -49,16 +49,22 @@ def inject_links(app: Application, notebook: dict, docpath: Path) -> dict:
     colab_url = (
         f"https://colab.research.google.com/github/{user}/{repo}/blob/main/{path}"
     )
-    zip_path = notebook_zip(docpath).relative_to(app.srcdir)
+
+    zip_path = app.builder.get_relative_uri(
+        str(docpath.relative_to(app.srcdir)),
+        str(notebook_zip(docpath).relative_to(app.srcdir)),
+    )
+    # get_relative_uri adds .html, so remove it
+    if zip_path.endswith(".html"):
+        zip_path = zip_path[:-5]
 
     return insert_cell(
         notebook,
-        cell_type="raw",
-        metadata={"raw_mimetype": "text/restructuredtext"},
+        cell_type="markdown",
         source=[
-            f":download:`Download Notebook </{zip_path}>`",
-            f"`View in GitHub <{github_url}>`_",
-            f"`Open in Google Colab <{colab_url}>`_",
+            f"[Download Notebook]({zip_path})",
+            f"[View in GitHub]({github_url})",
+            f"[Open in Google Colab]({colab_url})",
         ],
     )
 
