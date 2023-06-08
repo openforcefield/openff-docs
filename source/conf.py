@@ -30,8 +30,10 @@ author = "The Open Force Field Initiative"
 extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.intersphinx",
-    "myst_parser",
+    # "nbsphinx",
+    "myst_nb",
     "openff_sphinx_theme",
+    "sphinx_design",
 ]
 source_suffix = [".rst", ".md"]
 # Extensions for the myst parser
@@ -49,6 +51,9 @@ myst_url_schemes = (
     "http",
     "https",
 )
+suppress_warnings = [
+    "myst.header",
+]
 _python_doc_base = "https://docs.python.org/3.6"
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3.6", None),
@@ -109,19 +114,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path("./_ext").resolve()))
 extensions.extend(
     [
-        "nbsphinx",
         "cookbook.sphinx_ext",
     ]
 )
-cookbook_default_conda_forge_deps = ["openff-toolkit-examples"]
-cookbook_required_files_base_uri = (
-    "https://raw.githubusercontent.com/openforcefield/openff-docs/main"
-)
-cookbook_example_repos = [
-    "openforcefield/openff-toolkit",
-    "openforcefield/openff-interchange",
-]
 nbsphinx_execute = "never"
+nb_execution_mode = "off"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

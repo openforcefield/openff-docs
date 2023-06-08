@@ -1,5 +1,4 @@
 from ._cookbook import (
-    collect_notebooks,
     remove_old_notebooks,
     process_notebook,
     find_notebook_docnames,
@@ -48,7 +47,6 @@ def setup(app: Application):
         rebuild="env",
     )
 
-    app.connect("config-inited", collect_notebooks)
     app.connect("env-purge-doc", remove_old_notebooks)
     app.connect("source-read", process_notebook)
     app.connect("env-before-read-docs", find_notebook_docnames)

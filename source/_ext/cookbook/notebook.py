@@ -5,7 +5,13 @@ from copy import deepcopy
 from pathlib import Path
 from hashlib import sha1
 
-from .globals import ZIPPED_IPYNB_ROOT, COLAB_IPYNB_ROOT, DO_NOT_SEARCH, SRC_IPYNB_ROOT
+from .globals import (
+    EXEC_IPYNB_ROOT,
+    ZIPPED_IPYNB_ROOT,
+    COLAB_IPYNB_ROOT,
+    DO_NOT_SEARCH,
+    SRC_IPYNB_ROOT,
+)
 
 
 def insert_cell(
@@ -65,12 +71,13 @@ def is_bare_notebook(docpath: Path) -> bool:
 
 def notebook_zip(docpath: Path) -> Path:
     """Get the name of the zip file for the notebook at ``docpath``"""
-    # Strip off any leading SRC_IPYNB_ROOT
-    notebook = docpath
+    # Strip off any leading SRC_IPYNB_ROOT or EXEC_IPYNB_ROOT
     if str(docpath).startswith(str(SRC_IPYNB_ROOT) + "/"):
         docpath = Path(str(docpath)[len(str(SRC_IPYNB_ROOT)) + 1 :])
+    if str(docpath).startswith(str(EXEC_IPYNB_ROOT) + "/"):
+        docpath = Path(str(docpath)[len(str(EXEC_IPYNB_ROOT)) + 1 :])
     # Get the zip file path
-    if is_bare_notebook(notebook):
+    if is_bare_notebook(docpath):
         # Notebook has no needed files, just zip the notebook itself
         return ZIPPED_IPYNB_ROOT / docpath.with_suffix(".zip")
     else:
@@ -84,15 +91,20 @@ def notebook_colab(docpath: Path) -> Path:
 
     The notebook's directory is ``notebook_colab(...).parent``
     """
-    # Strip off any leading SRC_IPYNB_ROOT
-    notebook = docpath
+    # Strip off any leading SRC_IPYNB_ROOT or EXEC_IPYNB_ROOT
     if str(docpath).startswith(str(SRC_IPYNB_ROOT) + "/"):
         docpath = Path(str(docpath)[len(str(SRC_IPYNB_ROOT)) + 1 :])
+    if str(docpath).startswith(str(EXEC_IPYNB_ROOT) + "/"):
+        docpath = Path(str(docpath)[len(str(EXEC_IPYNB_ROOT)) + 1 :])
+    # Get the path to the source notebook
+    src_notebook = SRC_IPYNB_ROOT / docpath
     # Get the colab notebook path
-    if is_bare_notebook(notebook):
+    if is_bare_notebook(src_notebook):
         # Put the bare notebook in its own folder, named with the hash of the
         # notebook to avoid collisions
-        new_folder = docpath.stem + "_" + sha1(notebook.read_bytes()).hexdigest()[:6]
+        new_folder = (
+            docpath.stem + "_" + sha1(src_notebook.read_bytes()).hexdigest()[:6]
+        )
         return COLAB_IPYNB_ROOT / docpath.parent / new_folder / docpath.name
     else:
         # Just use the existing folder
