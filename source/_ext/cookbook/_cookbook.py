@@ -2,17 +2,18 @@
 
 import json
 from pathlib import Path
-from typing import Generator
 
 from sphinx.application import Sphinx as Application
-from sphinx.config import Config
 from sphinx.environment import BuildEnvironment
-
-# from nbsphinx import NbGallery
+from sphinx.util.docutils import SphinxDirective
+from sphinx.util.fileutil import copy_asset_file
 from sphinx.directives.other import TocTree
+import sphinx.addnodes
+import docutils.nodes
+import docutils.parsers.rst.directives
+from sphinx.writers.html5 import HTML5Translator
 
 from .notebook import insert_cell, get_metadata, find_notebooks, notebook_zip
-from .github import download_dir
 from .globals import EXEC_IPYNB_ROOT
 
 
@@ -79,12 +80,12 @@ def remove_old_notebooks(app: Application, env: BuildEnvironment, docname: str):
 
 def find_notebook_docnames(app, env, docnames):
     """Find the downloaded notebooks and make sure Sphinx sees them"""
-    if not hasattr(app, "cookbook_notebooks"):
-        app.cookbook_notebooks = []  # type: ignore
+    if not hasattr(env, "cookbook_notebooks"):
+        env.cookbook_notebooks = []  # type: ignore
 
     for path in find_notebooks(EXEC_IPYNB_ROOT):
         docname = env.project.path2doc(str(path))
-        app.cookbook_notebooks.append(docname)
+        env.cookbook_notebooks.append(docname)
         docnames.append(docname)
 
 
@@ -93,13 +94,77 @@ class CookbookDirective(TocTree):
     Directive to draw thumbnails of the cookbook.
     """
 
+    has_content = False
+
     def run(self):
-        nodes = super().run()
-        toctree = nodes[0][0]
+        node = CookbookNode()
+        node.extend(super().run())
+        toctree = node[0][0]
 
         toctree["entries"].extend(
-            [(None, docname) for docname in self.env.app.cookbook_notebooks]
+            [(None, docname) for docname in self.env.cookbook_notebooks]
         )
-        toctree["includefiles"].extend(self.env.app.cookbook_notebooks)
+        toctree["includefiles"].extend(self.env.cookbook_notebooks)
 
-        return nodes
+        return [node]
+
+
+class CookbookNode(docutils.nodes.Element):
+    def __init__(self, *args, **kwargs):
+        self.entries = []
+        return super().__init__(*args, **kwargs)
+
+
+def proc_cookbook_toctree(
+    app: Application,
+    doctree: sphinx.addnodes.document,
+    docname: str,
+):
+    for cookbook_node in doctree.findall(CookbookNode):
+        toctree_node = cookbook_node[0][0]
+        # print("proc_cookbook_toctree", app, toctree_node, docname)
+        for title, notebook in toctree_node["entries"]:
+            if title is not None:
+                pass
+            elif (title := app.env.titles[notebook].astext()) != "<no title>":
+                pass
+            else:
+                title = Path(notebook).stem.replace("_", " ")
+
+            uri = app.builder.get_relative_uri(docname, notebook)
+
+            cookbook_node.entries.append((notebook, title, uri))
+
+        cookbook_node.children = []
+
+
+def depart_cookbook_html(translator: HTML5Translator, node: CookbookNode):
+    translator.body.append("<div class='notebook-grid'>")
+    for notebook, notebook_title, notebook_uri in node.entries:
+        # TODO: Get the thumbnail from the notebook
+        thumbnail_url = "https://openforcefield.org/about/branding/img/openforcefield_v2_full-color.png"
+        translator.body.extend(
+            [
+                f"<a class='notebook-grid-elem' href={notebook_uri}>",
+                f"<img src={thumbnail_url}>",
+                "<div class='caption'>",
+                notebook_title or Path(notebook).stem,
+                "</div>",
+            ]
+        )
+        print(notebook, notebook_title, notebook_uri)
+    translator.body.append("</div>")
+
+
+def include_css_files(app: Application, filenames: list[str]):
+    srcdir = Path(__file__).parent / "css"
+
+    def copy_custom_css_file(application: Application, exc):
+        if application.builder.format == "html" and not exc:
+            staticdir = Path(app.builder.outdir) / "_static"
+            for filename in filenames:
+                copy_asset_file(str(srcdir / filename), str(staticdir))
+
+    app.connect("build-finished", copy_custom_css_file)
+    for filename in filenames:
+        app.add_css_file(filename)
