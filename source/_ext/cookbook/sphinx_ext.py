@@ -17,9 +17,9 @@ def do_nothing(self, node):
 
 
 def setup(app: Application):
+    app.connect("env-before-read-docs", find_notebook_docnames)
     app.connect("env-purge-doc", remove_old_notebooks)
     app.connect("source-read", process_notebook)
-    app.connect("env-before-read-docs", find_notebook_docnames)
     app.connect("doctree-resolved", proc_cookbook_toctree)
     app.add_directive("cookbook", CookbookDirective)
     include_css_files(app)
