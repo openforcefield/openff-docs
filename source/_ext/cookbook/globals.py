@@ -45,7 +45,7 @@ DO_NOT_SEARCH = [
 ]
 """Directory names to not descend into when searching for notebooks."""
 
-COOKBOOK_DATA_ROOT: Final[Path] = OPENFF_DOCS_ROOT / "source/_cookbook_data/"
+COOKBOOK_DATA_ROOT: Final[Path] = OPENFF_DOCS_ROOT / "source/_cookbook/"
 """
 Folder to store the output of proc_examples/input of Sphinx extension.
 
@@ -61,7 +61,7 @@ Path to download notebooks to and cache unmodified notebooks in.
 Should be a subdirectory of ``COOKBOOK_DATA_ROOT``.
 """
 
-EXEC_IPYNB_ROOT: Final[Path] = COOKBOOK_DATA_ROOT / "notebooks-exec"
+EXEC_IPYNB_ROOT: Final[Path] = COOKBOOK_DATA_ROOT / "examples"
 """
 Path to store executed notebooks in, ready for HTML rendering.
 
@@ -88,3 +88,9 @@ Filename for a notebook's thumbnail.
 Should be in the same directory as the notebook. If the file does not exist, a
 default thumbnail will be used.
 """
+
+REPO_EXAMPLES_DIR = "examples"
+"""Directory in source repositories where the examples are stored."""
+
+CACHE_BRANCH = "examples-cache"
+"""Branch of the openff-docs repository where cached notebooks are stored."""

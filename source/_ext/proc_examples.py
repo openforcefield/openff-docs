@@ -1,5 +1,5 @@
 """Script to execute and pre-process example notebooks"""
-
+from typing import Tuple, List
 from zipfile import ZIP_DEFLATED, ZipFile
 from pathlib import Path
 import json
@@ -11,8 +11,6 @@ import sys
 import nbformat
 from nbconvert.preprocessors.execute import ExecutePreprocessor
 import yaml
-import requests
-from packaging.version import Version
 
 sys.path.append(str(Path(__file__).parent))
 
@@ -23,12 +21,13 @@ from cookbook.notebook import (
     insert_cell,
     find_notebooks,
     is_bare_notebook,
+    set_metadata,
 )
-from cookbook.github import UpdatedNotebooks, download_dir
+from cookbook.github import download_dir, get_tag_matching_installed_version
 from cookbook.globals import *
 
 
-def needed_files(notebook_path: Path) -> list[tuple[Path, Path]]:
+def needed_files(notebook_path: Path) -> List[Tuple[Path, Path]]:
     """
     Get the files needed to run the notebook
 
@@ -109,9 +108,7 @@ def create_zip(notebook_path: Path):
             zip_file.write(path, arcname=arcname)
 
 
-def create_colab_notebook(
-    src: Path,
-):
+def create_colab_notebook(src: Path):
     """
     Create a copy of the notebook at src for Google Colab and save it to dst.
     """
@@ -154,8 +151,12 @@ def create_colab_notebook(
         json.dump(notebook, file)
 
 
-def execute_notebook(src: Path):
+def execute_notebook(src_and_tag: Tuple[Path, str]):
     """Execute a notebook and retain its widget state"""
+    # Unpack the argument
+    src, tag = src_and_tag
+
+    # Get the source
     src_rel = src.relative_to(SRC_IPYNB_ROOT)
     print("Executing", src_rel)
 
@@ -169,12 +170,14 @@ def execute_notebook(src: Path):
     )
     executor.store_widget_state = True
     # Execute the notebook
-    # TODO: Do this in a temporary directory with needed_files to keep src clean
-    # TODO: Run in the notebook-specific Conda environment
+    # TODO: Run in the notebook-specific Conda environment?
     try:
         executor.preprocess(nb, {"metadata": {"path": src.parent}})
     except Exception as e:
         raise ValueError(f"Exception encountered while executing {src_rel}")
+
+    # Store the tag used to execute the notebook in metadata
+    set_metadata(nb, "src_repo_tag", tag)
 
     # Write the executed notebook
     dst = EXEC_IPYNB_ROOT / src_rel
@@ -202,25 +205,6 @@ def delay_iterator(iterator, seconds=1.0):
         sleep(seconds)
 
 
-def get_stable_tagname(repo: str) -> str:
-    """
-    Get the tag name for the release with the greatest semver version number.
-    """
-    r = requests.get(
-        f"https://api.github.com/repos/{repo}/releases",
-        params={"per_page": "100"},
-    )
-    r.raise_for_status()
-    release_tags = [release["tag_name"] for release in r.json()]
-
-    while "next" in r.links:
-        r = requests.get(r.links["next"]["url"])
-        r.raise_for_status()
-        release_tags += [release["tag_name"] for release in r.json()]
-
-    return max(release_tags, key=Version)
-
-
 def clean_up_notebook(notebook: Path):
     """
     Delete processed versions of the notebook.
@@ -233,57 +217,38 @@ def clean_up_notebook(notebook: Path):
     exec_notebook.unlink()
 
 
-def main(do_proc=True, do_exec=True, redo_all=False):
+def main(do_proc=True, do_exec=True):
     print("Working in", Path().resolve())
 
+    notebooks: List[Tuple[Path, str]] = []
     # Download the examples from latest releases on GitHub
-    updates = UpdatedNotebooks()
     for repo in GITHUB_REPOS:
-        print("Downloading", repo, "to", (SRC_IPYNB_ROOT / repo).resolve())
+        dst_path = SRC_IPYNB_ROOT / repo
+        print("Downloading", repo, "to", dst_path.resolve())
 
-        # TODO: Get version number from current environment?
-        updates.extend(
-            download_dir(
-                repo,
-                "examples",
-                SRC_IPYNB_ROOT,
-                refspec=get_stable_tagname(repo),
-            )
+        tag = get_tag_matching_installed_version(repo)
+        download_dir(
+            repo,
+            REPO_EXAMPLES_DIR,
+            dst_path,
+            refspec=tag,
         )
 
-    # Find the notebooks we need to update
-    notebooks = [*find_notebooks(SRC_IPYNB_ROOT)]
-    if updates.rebuild_all or redo_all:
-        # If we're starting over, we do all the notebooks and clear what's
-        # already in there
-        # At the moment, we rebuild everything if anything needs rebuilding
-        # TODO: Only rebuild the repos in updates.rebuild_all
-        print("Updating all notebooks")
-        shutil.rmtree(EXEC_IPYNB_ROOT, ignore_errors=True)
-        shutil.rmtree(COLAB_IPYNB_ROOT, ignore_errors=True)
-        shutil.rmtree(ZIPPED_IPYNB_ROOT, ignore_errors=True)
-    else:
-        # Only work on notebooks that were changed AND were found
-        # This is important because `updates` doesn't do any of the filtering
-        # that find_notebooks does (eg, deprecated notebooks)
-        notebooks = [
-            *set(notebooks).intersection(
-                [SRC_IPYNB_ROOT / path for path in updates.reprocess]
-            )
-        ]
-        # Clean up any notebooks that have been removed
-        for notebook in updates.cleanup:
-            clean_up_notebook(notebook)
+        # Find the notebooks we need to process
+        notebooks.extend((notebook, tag) for notebook in find_notebooks(dst_path))
 
     # Create Colab and downloadable versions of the notebooks
     if do_proc:
-        for notebook in notebooks:
+        shutil.rmtree(COLAB_IPYNB_ROOT, ignore_errors=True)
+        shutil.rmtree(ZIPPED_IPYNB_ROOT, ignore_errors=True)
+        for notebook, _ in notebooks:
             print("Processing", notebook)
             create_colab_notebook(notebook)
             create_zip(notebook)
 
     # Execute notebooks in parallel for rendering as HTML
     if do_exec:
+        shutil.rmtree(EXEC_IPYNB_ROOT, ignore_errors=True)
         # Context manager ensures the pool is correctly terminated if there's
         # an exception
         with Pool() as pool:
@@ -295,12 +260,14 @@ def main(do_proc=True, do_exec=True, redo_all=False):
 if __name__ == "__main__":
     import sys, os
 
-    # TODO: Implement special handling for experimental notebooks
+    # TODO: Implement special handling for experimental notebooks?
     # Set the INTERCHANGE_EXPERIMENTAL environment variable
+    # It kinda makes sense to do this here - it means users can see our
+    # experimental stuff without being bothered by it, but if they want to *use*
+    # it they hit a road bump.
     os.environ["INTERCHANGE_EXPERIMENTAL"] = "1"
 
     main(
         do_proc=not "--skip-proc" in sys.argv,
         do_exec=not "--skip-exec" in sys.argv,
-        redo_all="--redo-all" in sys.argv,
     )

@@ -23,7 +23,13 @@ from .notebook import (
     notebook_zip,
     set_metadata,
 )
-from .globals import EXEC_IPYNB_ROOT
+from .globals import (
+    EXEC_IPYNB_ROOT,
+    REPO_EXAMPLES_DIR,
+    CACHE_BRANCH,
+    COLAB_IPYNB_ROOT,
+    OPENFF_DOCS_ROOT,
+)
 
 
 def inject_tags_index(notebook: dict) -> dict:
@@ -45,11 +51,15 @@ def inject_links(app: Application, notebook: dict, docpath: Path) -> dict:
     user, repo, *path = str(docpath.relative_to(EXEC_IPYNB_ROOT)).split("/")
     path = "/".join(path)
 
-    github_url = f"https://github.com/{user}/{repo}/blob/main/{path}"
-    # TODO: Figure out how to get the conda colab install cell into this
-    colab_url = (
-        f"https://colab.research.google.com/github/{user}/{repo}/blob/main/{path}"
+    tag = get_metadata(notebook, "src_repo_tag", "main")
+
+    github_uri = (
+        f"https://github.com/{user}/{repo}/blob/{tag}/{REPO_EXAMPLES_DIR}/{path}"
     )
+
+    # TODO: Test colab
+    colab_path = COLAB_IPYNB_ROOT.relative_to(OPENFF_DOCS_ROOT) / path
+    colab_uri = f"https://colab.research.google.com/github/{user}/{repo}/blob/{CACHE_BRANCH}/{colab_path}"
 
     zip_path = notebook_zip(docpath).relative_to(app.srcdir)
 
@@ -58,8 +68,8 @@ def inject_links(app: Application, notebook: dict, docpath: Path) -> dict:
         cell_type="markdown",
         source=[
             f"[Download Notebook](path:/{zip_path})",
-            f"[View in GitHub]({github_url})",
-            f"[Open in Google Colab]({colab_url})",
+            f"[View in GitHub]({github_uri})",
+            f"[Open in Google Colab]({colab_uri})",
         ],
     )
 
@@ -77,7 +87,6 @@ def process_notebook(app: Application, docname: str, source: list[str]):
     # Copy the modified NGLView JS to the build directory
     # TODO: Remove this once https://github.com/nglviewer/nglview/pull/1064 gets
     #       into a release
-
     out_path = Path(app.outdir) / app.env.doc2path(docname, base=False)
     js_src = Path(__file__).parent / "js/nglview-js-widgets.js"
     out_path.parent.mkdir(parents=True, exist_ok=True)
