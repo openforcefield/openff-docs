@@ -14,10 +14,12 @@ Name of the Conda environment file in zipped download files and Colab folders.
 
 OPENFF_DOCS_ROOT = Path(__file__).parent.parent.parent.parent
 """Path to the root of the openff-docs repo."""
+
 UNIVERSAL_ENV_PATH: Final = OPENFF_DOCS_ROOT / "devtools/conda-envs/examples_env.yml"
 """
 Path to the default environment file for notebooks that don't package their own.
 """
+
 IGNORED_FILES: Final = [
     ".gitignore",
     "Thumbs.db",
@@ -26,6 +28,7 @@ IGNORED_FILES: Final = [
     "__pycache__",
 ]
 """File names to exclude from zipped download files and Colab folders."""
+
 GITHUB_REPOS: Final = [
     "openforcefield/openff-toolkit",
     "openforcefield/openff-interchange",
@@ -42,11 +45,46 @@ DO_NOT_SEARCH = [
 ]
 """Directory names to not descend into when searching for notebooks."""
 
-SRC_IPYNB_ROOT: Final[Path] = OPENFF_DOCS_ROOT / "build/notebook-src"
-"""Path to download notebooks to and cache unmodified notebooks in"""
-EXEC_IPYNB_ROOT: Final[Path] = OPENFF_DOCS_ROOT / "source/notebooks"
-"""Path to store executed notebooks in, ready for HTML rendering"""
-COLAB_IPYNB_ROOT: Final[Path] = OPENFF_DOCS_ROOT / "build/notebook-colab"
-"""Path to store notebooks and their required files for Colab"""
-ZIPPED_IPYNB_ROOT: Final[Path] = OPENFF_DOCS_ROOT / "source/_downloads/examples"
-"""Path to store zips of notebooks and their required files"""
+COOKBOOK_DATA_ROOT: Final[Path] = OPENFF_DOCS_ROOT / "source/_cookbook_data/"
+"""
+Folder to store the output of proc_examples/input of Sphinx extension.
+
+This should be a folder in the Sphinx source directory, and it should be
+configured to be ignored by Sphinx in the ``exclude_patterns`` variable
+within ``conf.py``.
+"""
+
+SRC_IPYNB_ROOT: Final[Path] = COOKBOOK_DATA_ROOT / "notebook-src"
+"""
+Path to download notebooks to and cache unmodified notebooks in.
+
+Should be a subdirectory of ``COOKBOOK_DATA_ROOT``.
+"""
+
+EXEC_IPYNB_ROOT: Final[Path] = COOKBOOK_DATA_ROOT / "notebooks-exec"
+"""
+Path to store executed notebooks in, ready for HTML rendering.
+
+Should be a subdirectory of ``COOKBOOK_DATA_ROOT``.
+"""
+COLAB_IPYNB_ROOT: Final[Path] = COOKBOOK_DATA_ROOT / "notebook-colab"
+"""
+Path to store notebooks and their required files for Colab.
+
+Should be a subdirectory of ``COOKBOOK_DATA_ROOT``.
+"""
+
+ZIPPED_IPYNB_ROOT: Final[Path] = COOKBOOK_DATA_ROOT / "notebook-zipped"
+"""
+Path to store zips of notebooks and their required files.
+
+Should be a subdirectory of ``COOKBOOK_DATA_ROOT``.
+"""
+
+THUMBNAIL_FILENAME = "thumbnail.png"
+"""
+Filename for a notebook's thumbnail.
+
+Should be in the same directory as the notebook. If the file does not exist, a
+default thumbnail will be used.
+"""

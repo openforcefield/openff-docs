@@ -157,22 +157,10 @@ def create_colab_notebook(
 def execute_notebook(src: Path):
     """Execute a notebook and retain its widget state"""
     src_rel = src.relative_to(SRC_IPYNB_ROOT)
-    print("Executing", src.relative_to(SRC_IPYNB_ROOT))
+    print("Executing", src_rel)
 
     with open(src, "r") as f:
         nb = nbformat.read(f, nbformat.NO_CONVERT)
-
-    # Embed any thumbnail.png by displaying it in an injected hidden cell
-    # marked as the thumbnail.
-    # https://nbsphinx.readthedocs.io/en/latest/hidden-cells.html
-    # https://nbsphinx.readthedocs.io/en/latest/gallery/cell-tag.html
-    # TODO: Check that thumbnail rendering works
-    if Path.exists(src.parent / "thumbnail.png"):
-        insert_cell(
-            nb,
-            source=["display(thumbnail.png)"],
-            metadata={"nbsphinx": "hidden", "tags": ["nbsphinx-thumbnail"]},
-        )
 
     # TODO: See if we can convince this to do each notebook single-threaded?
     executor = ExecutePreprocessor(
@@ -189,10 +177,18 @@ def execute_notebook(src: Path):
         raise ValueError(f"Exception encountered while executing {src_rel}")
 
     # Write the executed notebook
-    dst = EXEC_IPYNB_ROOT / src.relative_to(SRC_IPYNB_ROOT)
+    dst = EXEC_IPYNB_ROOT / src_rel
     dst.parent.mkdir(parents=True, exist_ok=True)
     with open(dst, "w", encoding="utf-8") as f:
         nbformat.write(nb, f)
+
+    # Copy the thumbnail
+    thumbnail_path = src_rel.with_name(THUMBNAIL_FILENAME)
+    if thumbnail_path.is_file():
+        shutil.copy(
+            SRC_IPYNB_ROOT / thumbnail_path,
+            EXEC_IPYNB_ROOT / thumbnail_path,
+        )
 
     print("Done executing", src.relative_to(SRC_IPYNB_ROOT))
 

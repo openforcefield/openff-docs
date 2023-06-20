@@ -51,19 +51,13 @@ def inject_links(app: Application, notebook: dict, docpath: Path) -> dict:
         f"https://colab.research.google.com/github/{user}/{repo}/blob/main/{path}"
     )
 
-    zip_path = app.builder.get_relative_uri(
-        str(docpath.relative_to(app.srcdir)),
-        str(notebook_zip(docpath).relative_to(app.srcdir)),
-    )
-    # get_relative_uri adds .html, so remove it
-    if zip_path.endswith(".html"):
-        zip_path = zip_path[:-5]
+    zip_path = notebook_zip(docpath).relative_to(app.srcdir)
 
     return insert_cell(
         notebook,
         cell_type="markdown",
         source=[
-            f"[Download Notebook]({zip_path})",
+            f"[Download Notebook](path:/{zip_path})",
             f"[View in GitHub]({github_url})",
             f"[Open in Google Colab]({colab_url})",
         ],
@@ -83,10 +77,10 @@ def process_notebook(app: Application, docname: str, source: list[str]):
     # Copy the modified NGLView JS to the build directory
     # TODO: Remove this once https://github.com/nglviewer/nglview/pull/1064 gets
     #       into a release
+
     out_path = Path(app.outdir) / app.env.doc2path(docname, base=False)
     js_src = Path(__file__).parent / "js/nglview-js-widgets.js"
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    print("Copying", js_src, "to", out_path.parent)
     shutil.copy(js_src, out_path.parent)
 
     # Tell Sphinx we don't expect this notebook to show up in a toctree
@@ -114,9 +108,19 @@ def find_notebook_docnames(app, env, docnames):
 
 @dataclass
 class CookbookEntry:
+    path: Path
+    """The absolute path to the notebook."""
     docname: str
+    """The docname of the notebook."""
     uri: str | None = None
+    """URI of the built notebook."""
     title: str | None = None
+    """Title of the notebook."""
+    # TODO: Set this to the actual path of the thumbnail if it exists
+    thumbnail_uri: str = (
+        "https://openforcefield.org/about/branding/img/openforcefield_v2_full-color.png"
+    )
+    """URI of the notebook's thumbnail for the gallery."""
 
     @classmethod
     def from_path(cls, env: BuildEnvironment, path: Path) -> CookbookEntry:
@@ -127,7 +131,7 @@ class CookbookEntry:
                 "path is not a document in this Sphinx environment.",
             )
 
-        return CookbookEntry(docname)
+        return CookbookEntry(path, docname)
 
 
 class CookbookDirective(SphinxDirective):
@@ -141,7 +145,8 @@ class CookbookDirective(SphinxDirective):
         node = CookbookNode()
 
         for path in find_notebooks(EXEC_IPYNB_ROOT):
-            node.entries.append(CookbookEntry.from_path(self.env, path))
+            entry = CookbookEntry.from_path(self.env, path)
+            node.entries.append(entry)
 
         return [node]
 
@@ -173,12 +178,10 @@ def depart_cookbook_html(translator: HTML5Translator, node: CookbookNode):
     """Render the CookbookNode in HTML"""
     translator.body.append("<div class='notebook-grid'>")
     for entry in node.entries:
-        # TODO: Get the thumbnail from the notebook
-        thumbnail_url = "https://openforcefield.org/about/branding/img/openforcefield_v2_full-color.png"
         translator.body.extend(
             [
                 f"<a class='notebook-grid-elem' href={entry.uri}>",
-                f"<img src={thumbnail_url}>",
+                f"<img src={entry.thumbnail_uri}>",
                 "<div class='caption'>",
                 entry.title,
                 "</div>",
