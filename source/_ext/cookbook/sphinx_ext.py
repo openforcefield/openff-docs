@@ -1,4 +1,4 @@
-from sphinx.application import Sphinx as Application
+from sphinx.application import Sphinx
 
 from ._cookbook import (
     remove_old_notebooks,
@@ -16,7 +16,7 @@ def do_nothing(self, node):
     pass
 
 
-def setup(app: Application):
+def setup(app: Sphinx):
     app.connect("env-before-read-docs", find_notebook_docnames)
     app.connect("env-purge-doc", remove_old_notebooks)
     app.connect("source-read", process_notebook)

@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import shutil
 
-from sphinx.application import Sphinx as Application
+from sphinx.application import Sphinx
 from sphinx.environment import BuildEnvironment
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.fileutil import copy_asset_file
@@ -47,7 +47,7 @@ def inject_tags_index(notebook: dict) -> dict:
     )
 
 
-def inject_links(app: Application, notebook: dict, docpath: Path) -> dict:
+def inject_links(app: Sphinx, notebook: dict, docpath: Path) -> dict:
     user, repo, *path = str(docpath.relative_to(EXEC_IPYNB_ROOT)).split("/")
     path = "/".join(path)
 
@@ -74,7 +74,7 @@ def inject_links(app: Application, notebook: dict, docpath: Path) -> dict:
     )
 
 
-def process_notebook(app: Application, docname: str, source: list[str]):
+def process_notebook(app: Sphinx, docname: str, source: list[str]):
     docpath = Path(app.env.doc2path(docname))
     if docpath.suffix != ".ipynb":
         return
@@ -98,7 +98,7 @@ def process_notebook(app: Application, docname: str, source: list[str]):
     source[0] = json.dumps(notebook)
 
 
-def remove_old_notebooks(app: Application, env: BuildEnvironment, docname: str):
+def remove_old_notebooks(app: Sphinx, env: BuildEnvironment, docname: str):
     """Clean up processed notebooks from outdir"""
     # outdir = Path(app.outdir)
     # colab_path = outdir / "colab" / docname
@@ -169,7 +169,7 @@ class CookbookNode(docutils.nodes.Element):
 
 
 def proc_cookbook_toctree(
-    app: Application,
+    app: Sphinx,
     doctree: sphinx.addnodes.document,
     docname: str,
 ):
@@ -199,13 +199,13 @@ def depart_cookbook_html(translator: HTML5Translator, node: CookbookNode):
     translator.body.append("</div>")
 
 
-def include_css_files(app: Application):
+def include_css_files(app: Sphinx):
     """Include all the CSS files in the `cookbook/css` directory"""
     srcdir = Path(__file__).parent / "css"
 
     filenames = [str(fn) for fn in srcdir.glob("**/*.css")]
 
-    def copy_custom_css_file(application: Application, exc):
+    def copy_custom_css_file(application: Sphinx, exc):
         if application.builder.format == "html" and not exc:
             staticdir = Path(app.builder.outdir) / "_static"
             for filename in filenames:
