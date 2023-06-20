@@ -4,6 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from pathlib import Path
+import shutil
 
 from sphinx.application import Sphinx as Application
 from sphinx.environment import BuildEnvironment
@@ -78,6 +79,15 @@ def process_notebook(app: Application, docname: str, source: list[str]):
 
     notebook = inject_links(app, notebook, docpath)
     notebook = inject_tags_index(notebook)
+
+    # Copy the modified NGLView JS to the build directory
+    # TODO: Remove this once https://github.com/nglviewer/nglview/pull/1064 gets
+    #       into a release
+    out_path = Path(app.outdir) / app.env.doc2path(docname, base=False)
+    js_src = Path(__file__).parent / "js/nglview-js-widgets.js"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    print("Copying", js_src, "to", out_path.parent)
+    shutil.copy(js_src, out_path.parent)
 
     # Tell Sphinx we don't expect this notebook to show up in a toctree
     set_metadata(notebook, "orphan", True)
@@ -181,7 +191,7 @@ def include_css_files(app: Application):
     """Include all the CSS files in the `cookbook/css` directory"""
     srcdir = Path(__file__).parent / "css"
 
-    filenames = [str(fn) for fn in srcdir.iterdir() if fn.suffix == ".css"]
+    filenames = [str(fn) for fn in srcdir.glob("**/*.css")]
 
     def copy_custom_css_file(application: Application, exc):
         if application.builder.format == "html" and not exc:

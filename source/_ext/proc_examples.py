@@ -175,7 +175,6 @@ def execute_notebook(src: Path):
         )
 
     # TODO: See if we can convince this to do each notebook single-threaded?
-    # TODO: Work out how to store widget state for nglview
     executor = ExecutePreprocessor(
         kernel_name="python3",
         timeout=600,
