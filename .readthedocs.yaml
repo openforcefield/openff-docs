@@ -6,5 +6,18 @@ build:
   os: ubuntu-20.04
   tools:
     python: "mambaforge-4.10"
+  jobs:
+    post_checkout:
+      - git clone                                             \
+            -v                                                \
+            --depth=1                                         \
+            --sparse                                          \
+            --no-checkout                                     \
+            --branch=_cookbook_data                           \
+            --                                                \
+            https://github.com/openforcefield/openff-docs.git \
+            build/_cookbook_data
+      - mv build/_cookbook_data/* .
+      - ls
 conda:
   environment: devtools/conda-envs/rtd_env.yml
