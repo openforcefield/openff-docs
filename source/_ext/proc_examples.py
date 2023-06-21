@@ -1,5 +1,5 @@
 """Script to execute and pre-process example notebooks"""
-from typing import Tuple, List
+from typing import Tuple, List, Final
 from zipfile import ZIP_DEFLATED, ZipFile
 from pathlib import Path
 import json
@@ -217,7 +217,7 @@ def clean_up_notebook(notebook: Path):
     exec_notebook.unlink()
 
 
-def main(do_proc=True, do_exec=True):
+def main(do_proc=True, do_exec=True, prefix: Path | None = None):
     print("Working in", Path().resolve())
 
     notebooks: List[Tuple[Path, str]] = []
@@ -256,6 +256,20 @@ def main(do_proc=True, do_exec=True):
             # Workaround https://github.com/jupyter/nbconvert/issues/1066
             _ = [*pool.imap_unordered(execute_notebook, delay_iterator(notebooks))]
 
+    if isinstance(prefix, Path):
+        prefix.mkdir(parents=True, exist_ok=True)
+
+        for directory in [
+            COLAB_IPYNB_ROOT,
+            EXEC_IPYNB_ROOT,
+            ZIPPED_IPYNB_ROOT,
+            SRC_IPYNB_ROOT,
+        ]:
+            shutil.move(
+                directory,
+                prefix / directory.relative_to(OPENFF_DOCS_ROOT),
+            )
+
 
 if __name__ == "__main__":
     import sys, os
@@ -267,7 +281,13 @@ if __name__ == "__main__":
     # it they hit a road bump.
     os.environ["INTERCHANGE_EXPERIMENTAL"] = "1"
 
+    prefix = None
+    for arg in sys.argv:
+        if arg.startswith("--prefix="):
+            prefix = Path(arg[9:])
+
     main(
         do_proc=not "--skip-proc" in sys.argv,
         do_exec=not "--skip-exec" in sys.argv,
+        prefix=prefix,
     )
