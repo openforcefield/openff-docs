@@ -5,6 +5,7 @@ from typing import Generator, Union
 from tempfile import TemporaryDirectory
 from importlib import import_module
 
+from git.cmd import Git
 from git.repo import Repo
 import requests
 from packaging.version import Version
@@ -18,6 +19,7 @@ def download_dir(
 ):
     """Download the contents of src_path from GitHub src_repo to dst_path."""
     with TemporaryDirectory() as local_repo_path:
+        print("Git version:", Git().version_info)
         # Clone without downloading anything
         repo = Repo.clone_from(
             url=f"https://github.com/{src_repo}.git",
