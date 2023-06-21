@@ -28,6 +28,8 @@ jobs:
         shell: bash -l {0}
         run: |
           cd deploy
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git rm -r .
 
       - name: Pre-process and execute notebooks
