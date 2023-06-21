@@ -124,7 +124,6 @@ def download_cached_notebooks(app: Sphinx, config: Config):
         COLAB_IPYNB_ROOT,
         EXEC_IPYNB_ROOT,
         ZIPPED_IPYNB_ROOT,
-        SRC_IPYNB_ROOT,
     ]:
         for repo in GITHUB_REPOS:
             repo_directory = directory / repo

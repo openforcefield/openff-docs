@@ -13,6 +13,7 @@ dependencies:
     - packaging
     # Examples
     - openff-toolkit-examples
+    - openff-interchange==0.3.5 # Pin Interchange 0.3.5 because 0.3.6 has a broken example
     - gromacs
     - lammps
     - rich

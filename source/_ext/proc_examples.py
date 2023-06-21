@@ -222,11 +222,13 @@ def main(do_proc=True, do_exec=True, prefix: Path | None = None):
 
     notebooks: List[Tuple[Path, str]] = []
     # Download the examples from latest releases on GitHub
+    shutil.rmtree(SRC_IPYNB_ROOT, ignore_errors=True)
     for repo in GITHUB_REPOS:
         dst_path = SRC_IPYNB_ROOT / repo
-        print("Downloading", repo, "to", dst_path.resolve())
-
         tag = get_tag_matching_installed_version(repo)
+
+        print("Downloading", f"{repo}#{tag}", "to", dst_path.resolve())
+
         download_dir(
             repo,
             REPO_EXAMPLES_DIR,
