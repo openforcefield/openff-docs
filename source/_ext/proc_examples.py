@@ -129,9 +129,9 @@ def create_colab_notebook(src: Path):
     base_uri = f"https://raw.github.com/openforcefield/openff-docs/{CACHE_BRANCH}"
     colab_root_rel = COLAB_IPYNB_ROOT.relative_to(OPENFF_DOCS_ROOT)
     wget_files = [
-        f"wget {base_uri}/{colab_root_rel}/{rel_path}"
-        for _, rel_path in files
-        if rel_path.suffix != ".ipynb"
+        f"!wget {base_uri}/{colab_root_rel}/{path.relative_to(SRC_IPYNB_ROOT)}"
+        for path, _ in files
+        if path.suffix != ".ipynb"
     ]
 
     # Add a cell that installs the notebook's dependencies
