@@ -115,6 +115,25 @@ def create_colab_notebook(src: Path):
     with open(src) as file:
         notebook = json.load(file)
 
+    files = needed_files(src)
+
+    # Decide where we're going to write this modified notebook
+    dst = notebook_colab(src)
+    dst.parent.mkdir(parents=True, exist_ok=True)
+
+    # Copy over all the files Colab will need
+    for path, rel_path in files:
+        shutil.copy(path, dst.parent / rel_path)
+
+    # Get a list of the wget commands we'll need to download the files
+    base_uri = f"https://raw.github.com/openforcefield/openff-docs/{CACHE_BRANCH}"
+    colab_root_rel = COLAB_IPYNB_ROOT.relative_to(OPENFF_DOCS_ROOT)
+    wget_files = [
+        f"wget {base_uri}/{colab_root_rel}/{rel_path}"
+        for _, rel_path in files
+        if rel_path.suffix != ".ipynb"
+    ]
+
     # Add a cell that installs the notebook's dependencies
     notebook = insert_cell(
         notebook,
@@ -124,17 +143,10 @@ def create_colab_notebook(src: Path):
             "!pip install -q condacolab",
             "import condacolab",
             "condacolab.install_mambaforge()",
-            f"!mamba env update -q -n base -f {PACKAGED_ENV_NAME}",
+            *wget_files,
+            f"!mamba env update -q --name=base --file={PACKAGED_ENV_NAME}",
         ],
     )
-
-    # Decide where we're going to write this modified notebook
-    dst = notebook_colab(src)
-    dst.parent.mkdir(parents=True, exist_ok=True)
-
-    # Copy over all the files Colab will need
-    for path, rel_path in needed_files(src):
-        shutil.copy(path, dst.parent / rel_path)
 
     # Make sure the environment file doesn't include a name, as this seems to
     # break condacolab
@@ -227,7 +239,7 @@ def main(do_proc=True, do_exec=True, prefix: Path | None = None):
         dst_path = SRC_IPYNB_ROOT / repo
         tag = get_tag_matching_installed_version(repo)
 
-        print("Downloading", f"{repo}#{tag}", "to", dst_path.resolve())
+        print(f"Downloading {repo}#{tag} to {dst_path.resolve()}")
 
         download_dir(
             repo,
