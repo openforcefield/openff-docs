@@ -110,6 +110,12 @@ def download_cached_notebooks(app: Sphinx, config: Config):
     Note that the cache is not checked for changes; if you want to refresh the
     cache, you must manually delete it.
     """
+    from multiping import MultiPing
+
+    mp = MultiPing(["8.8.8.8", "github.com", "127.0.0.1"])
+    mp.send()
+    print(mp.receive(1))
+
     for directory in [
         COLAB_IPYNB_ROOT,
         EXEC_IPYNB_ROOT,
