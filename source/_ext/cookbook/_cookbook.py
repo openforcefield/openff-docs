@@ -11,7 +11,6 @@ from sphinx.config import Config
 from sphinx.environment import BuildEnvironment
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.fileutil import copy_asset_file
-from sphinx.directives.other import TocTree
 import sphinx.addnodes
 import docutils.nodes
 import docutils.parsers.rst.directives
@@ -32,7 +31,6 @@ from .globals import (
     COLAB_IPYNB_ROOT,
     OPENFF_DOCS_ROOT,
     ZIPPED_IPYNB_ROOT,
-    SRC_IPYNB_ROOT,
     GITHUB_REPOS,
 )
 
