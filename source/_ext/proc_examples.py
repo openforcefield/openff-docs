@@ -115,6 +115,24 @@ def create_colab_notebook(src: Path):
     with open(src) as file:
         notebook = json.load(file)
 
+    files = needed_files(src)
+
+    # Decide where we're going to write this modified notebook
+    dst = notebook_colab(src)
+    dst.parent.mkdir(parents=True, exist_ok=True)
+
+    # Copy over all the files Colab will need
+    for path, rel_path in files:
+        shutil.copy(path, dst.parent / rel_path)
+
+    # Get a list of the wget commands we'll need to download the files
+    repo = "openforcefield/openff-docs"
+    wget_files = [
+        f"wget https://github.com/{repo}/blob/{CACHE_BRANCH}/{COLAB_IPYNB_ROOT}/{rel_path}"
+        for _, rel_path in files
+        if rel_path.suffix != ".ipynb"
+    ]
+
     # Add a cell that installs the notebook's dependencies
     notebook = insert_cell(
         notebook,
@@ -124,17 +142,10 @@ def create_colab_notebook(src: Path):
             "!pip install -q condacolab",
             "import condacolab",
             "condacolab.install_mambaforge()",
-            f"!mamba env update -q -n base -f {PACKAGED_ENV_NAME}",
+            *wget_files,
+            f"!mamba env update -q --name=base --file={PACKAGED_ENV_NAME}",
         ],
     )
-
-    # Decide where we're going to write this modified notebook
-    dst = notebook_colab(src)
-    dst.parent.mkdir(parents=True, exist_ok=True)
-
-    # Copy over all the files Colab will need
-    for path, rel_path in needed_files(src):
-        shutil.copy(path, dst.parent / rel_path)
 
     # Make sure the environment file doesn't include a name, as this seems to
     # break condacolab
