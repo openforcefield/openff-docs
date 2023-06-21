@@ -58,8 +58,8 @@ def inject_links(app: Sphinx, notebook: dict, docpath: Path) -> dict:
     )
 
     # TODO: Test colab
-    colab_path = COLAB_IPYNB_ROOT.relative_to(OPENFF_DOCS_ROOT) / path
-    colab_uri = f"https://colab.research.google.com/github/{user}/{repo}/blob/{CACHE_BRANCH}/{colab_path}"
+    colab_path = COLAB_IPYNB_ROOT.relative_to(OPENFF_DOCS_ROOT) / user / repo / path
+    colab_uri = f"https://colab.research.google.com/github/openforcefield/openff-docs/blob/{CACHE_BRANCH}/{colab_path}"
 
     zip_path = notebook_zip(docpath).relative_to(app.srcdir)
 
