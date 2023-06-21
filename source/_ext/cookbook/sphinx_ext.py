@@ -1,7 +1,6 @@
 from sphinx.application import Sphinx
 
 from ._cookbook import (
-    remove_old_notebooks,
     process_notebook,
     find_notebook_docnames,
     CookbookDirective,
@@ -20,7 +19,6 @@ def do_nothing(self, node):
 def setup(app: Sphinx):
     app.connect("config-inited", download_cached_notebooks)
     app.connect("env-before-read-docs", find_notebook_docnames)
-    app.connect("env-purge-doc", remove_old_notebooks)
     app.connect("source-read", process_notebook)
     app.connect("doctree-resolved", proc_cookbook_toctree)
     app.add_directive("cookbook", CookbookDirective)

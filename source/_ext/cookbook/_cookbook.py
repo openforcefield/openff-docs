@@ -103,16 +103,6 @@ def process_notebook(app: Sphinx, docname: str, source: list[str]):
     source[0] = json.dumps(notebook)
 
 
-def remove_old_notebooks(app: Sphinx, env: BuildEnvironment, docname: str):
-    """Clean up processed notebooks from outdir"""
-    # outdir = Path(app.outdir)
-    # colab_path = outdir / "colab" / docname
-    # colab_path = colab_path.with_suffix(".ipynb")
-    # # We check is_relative_to just in case docname is absolute
-    # if colab_path.exists() and colab_path.is_relative_to(outdir / "colab"):
-    #     colab_path.unlink()
-
-
 def download_cached_notebooks(app: Sphinx, config: Config):
     """
     Download notebooks from the cache iff they do not exist.
