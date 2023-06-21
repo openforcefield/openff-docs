@@ -8,15 +8,7 @@ build:
     python: "mambaforge-4.10"
   jobs:
     post_checkout:
-      - git clone                                             \
-            -v                                                \
-            --depth=1                                         \
-            --sparse                                          \
-            --no-checkout                                     \
-            --branch=_cookbook_data                           \
-            --                                                \
-            https://github.com/openforcefield/openff-docs.git \
-            build/_cookbook_data
+      - git clone -v --depth=1 --single-branch --branch=_cookbook_data -- https://github.com/openforcefield/openff-docs.git build/_cookbook_data
       - mv build/_cookbook_data/* .
       - ls
 conda:
