@@ -17,12 +17,18 @@ jobs:
         with:
           environment-file: devtools/conda-envs/examples_env.yml
 
-      - name: Checkout _cookbook_data
+      - name: Checkout deployment branch
         uses: actions/checkout@v3
         with:
           ref: _cookbook_data
           path: 'deploy'
           clean: false
+
+      - name: Prepare cache deployment directory
+        shell: bash -l {0}
+        run: |
+          cd deploy
+          git rm -r .
 
       - name: Pre-process and execute notebooks
         shell: bash -l {0}
@@ -33,6 +39,5 @@ jobs:
         shell: bash -l {0}
         run: |
           cd deploy
-          git rm -r .
           git commit -a -m "Deploy pre-processed notebook cache"
           git push origin _cookbook_data
