@@ -221,14 +221,15 @@ def include_css_files(app: Sphinx):
     """Include all the CSS files in the `cookbook/css` directory"""
     srcdir = Path(__file__).parent / "css"
 
-    filenames = [str(fn) for fn in srcdir.glob("**/*.css")]
+    filenames = [*srcdir.glob("**/*.css")]
+
+    staticdir = Path(app.outdir) / "_static/css"
 
     def copy_custom_css_file(application: Sphinx, exc):
         if application.builder.format == "html" and not exc:
-            staticdir = Path(app.builder.outdir) / "_static"
             for filename in filenames:
-                copy_asset_file(filename, str(staticdir))
+                copy_asset_file(str(filename), str(staticdir))
 
     app.connect("build-finished", copy_custom_css_file)
     for filename in filenames:
-        app.add_css_file(filename)
+        app.add_css_file(str(staticdir / filename.name))
