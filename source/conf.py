@@ -106,6 +106,11 @@ codelinter_languages = {
     # Language: command to pass codeblock as stdin
     "python": "python",
 }
+# Tell MyST-NB about codelinter builder
+nb_mime_priority_overrides = [
+    ("codelinter", "text/plain", 0),
+]
+
 
 # Cookbook stuff
 import sys
@@ -119,7 +124,6 @@ extensions.extend(
 )
 nbsphinx_execute = "never"
 nb_execution_mode = "off"
-
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 html_static_path = ["_static"]
