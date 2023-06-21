@@ -41,5 +41,6 @@ jobs:
         shell: bash -l {0}
         run: |
           cd deploy
-          git commit -a -m "Deploy pre-processed notebook cache"
+          git add .
+          git commit -m "Deploy pre-processed notebook cache"
           git push origin _cookbook_data
