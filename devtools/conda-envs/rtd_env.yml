@@ -14,7 +14,6 @@ dependencies:
     - gitpython
     - nbconvert
     - nbformat
-    - multiping
     # Theme
     - pip:
         # Theme
