@@ -1,0 +1,19 @@
+channels:
+    - conda-forge
+    - bioconda
+dependencies:
+    - pip
+    - python=3.10
+    # Cookbook
+    - gitpython
+    - nbconvert
+    - nbformat
+    - requests
+    - packaging
+    # Examples
+    - openff-toolkit-examples
+    - gromacs
+    - lammps
+    - rich
+    - jax
+    - pint<0.22

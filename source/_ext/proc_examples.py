@@ -1,0 +1,273 @@
+"""Script to execute and pre-process example notebooks"""
+from typing import Tuple, List
+from zipfile import ZIP_DEFLATED, ZipFile
+from pathlib import Path
+import json
+import shutil
+from multiprocessing import Pool
+from time import sleep
+import sys
+
+import nbformat
+from nbconvert.preprocessors.execute import ExecutePreprocessor
+import yaml
+
+sys.path.append(str(Path(__file__).parent))
+
+from cookbook.notebook import (
+    notebook_zip,
+    notebook_colab,
+    get_metadata,
+    insert_cell,
+    find_notebooks,
+    is_bare_notebook,
+    set_metadata,
+)
+from cookbook.github import download_dir, get_tag_matching_installed_version
+from cookbook.globals import *
+
+
+def needed_files(notebook_path: Path) -> List[Tuple[Path, Path]]:
+    """
+    Get the files needed to run the notebook
+
+    Returns a list of 2-tuples of paths. The first path in each tuple is the
+    path to the existing file, the second is where the file should go relative
+    to the notebook directory.
+
+    If ``notebook_path`` is a bare notebook
+    (see :func:`_notebook.is_bare_notebook`), the returned list begins with
+    only the notebook itself. Otherwise, it begins with all the files from
+    inside ``notebook_path.parent``, except for any with names in
+    ``IGNORED_FILES``.  The list is guaranteed to include a file with the name
+    given by ``PACKAGED_ENV_NAME``. This is a Conda-environment from within the
+    ``notebook_path``, or if there are no Conda environments it is the
+    environment specified by ``UNIVERSAL_ENV_PATH``.
+    """
+    if is_bare_notebook(notebook_path):
+        src_paths = [notebook_path]
+    else:
+        src_paths = [
+            path
+            for path in notebook_path.parent.iterdir()
+            if path.name not in IGNORED_FILES
+        ]
+
+    # Get the relative and absolute paths, except if its a file we don't want
+    files: dict[Path, Path] = {
+        path: path.relative_to(notebook_path.parent) for path in src_paths
+    }
+    # Detect any already-included candidate environment files
+    environment_files = [
+        path
+        for path in src_paths
+        if Path(path.name)
+        in (
+            PACKAGED_ENV_NAME.with_suffix(".yaml"),
+            PACKAGED_ENV_NAME.with_suffix(".yml"),
+        )
+    ]
+    # Make sure an environment file is included and named correctly
+    if len(environment_files) == 0:
+        # If no environment file is included, include the universal one
+        files[UNIVERSAL_ENV_PATH] = PACKAGED_ENV_NAME
+    elif len(environment_files) == 1:
+        # If exactly one environment file is already included, make sure it has
+        # the correct name
+        files[environment_files[0]] = PACKAGED_ENV_NAME
+    elif PACKAGED_ENV_NAME in environment_files:
+        # If multiple environment files are included and one of them has the
+        # right name, do nothing
+        # This is unnecessary now as there are only two acceptable file names,
+        # but this'll save us a bug if that list ever expands
+        pass
+    else:
+        raise ValueError(
+            f"Could not choose a Conda environment file from multiple candidates:"
+            + "".join("\n  " + str(path) for path in environment_files)
+            + f"\nName the intended Conda environment '{PACKAGED_ENV_NAME}'."
+        )
+
+    return list(files.items())
+
+
+def create_zip(notebook_path: Path):
+    """
+    Create a zip file with all needed files from a jupyter notebook path
+    """
+    zip_path = notebook_zip(notebook_path)
+    zip_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with ZipFile(
+        file=zip_path,
+        mode="w",
+        compression=ZIP_DEFLATED,
+        compresslevel=9,
+    ) as zip_file:
+        for path, arcname in needed_files(notebook_path):
+            zip_file.write(path, arcname=arcname)
+
+
+def create_colab_notebook(src: Path):
+    """
+    Create a copy of the notebook at src for Google Colab and save it to dst.
+    """
+    with open(src) as file:
+        notebook = json.load(file)
+
+    # Add a cell that installs the notebook's dependencies
+    notebook = insert_cell(
+        notebook,
+        cell_type="code",
+        source=[
+            "# Execute this cell to make this notebook's dependencies available",
+            "!pip install -q condacolab",
+            "import condacolab",
+            "condacolab.install_mambaforge()",
+            f"!mamba env update -q -n base -f {PACKAGED_ENV_NAME}",
+        ],
+    )
+
+    # Decide where we're going to write this modified notebook
+    dst = notebook_colab(src)
+    dst.parent.mkdir(parents=True, exist_ok=True)
+
+    # Copy over all the files Colab will need
+    for path, rel_path in needed_files(src):
+        shutil.copy(path, dst.parent / rel_path)
+
+    # Make sure the environment file doesn't include a name, as this seems to
+    # break condacolab
+    with open(dst.parent / PACKAGED_ENV_NAME, "r+") as env_file:
+        env_yaml = yaml.safe_load(env_file)
+        if "name" in env_yaml:
+            del env_yaml["name"]
+            env_file.seek(0)
+            yaml.dump(env_yaml, env_file)
+            env_file.truncate()
+
+    # Write the file
+    with open(dst, "w") as file:
+        json.dump(notebook, file)
+
+
+def execute_notebook(src_and_tag: Tuple[Path, str]):
+    """Execute a notebook and retain its widget state"""
+    # Unpack the argument
+    src, tag = src_and_tag
+
+    # Get the source
+    src_rel = src.relative_to(SRC_IPYNB_ROOT)
+    print("Executing", src_rel)
+
+    with open(src, "r") as f:
+        nb = nbformat.read(f, nbformat.NO_CONVERT)
+
+    # TODO: See if we can convince this to do each notebook single-threaded?
+    executor = ExecutePreprocessor(
+        kernel_name="python3",
+        timeout=600,
+    )
+    executor.store_widget_state = True
+    # Execute the notebook
+    # TODO: Run in the notebook-specific Conda environment?
+    try:
+        executor.preprocess(nb, {"metadata": {"path": src.parent}})
+    except Exception as e:
+        raise ValueError(f"Exception encountered while executing {src_rel}")
+
+    # Store the tag used to execute the notebook in metadata
+    set_metadata(nb, "src_repo_tag", tag)
+
+    # Write the executed notebook
+    dst = EXEC_IPYNB_ROOT / src_rel
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    with open(dst, "w", encoding="utf-8") as f:
+        nbformat.write(nb, f)
+
+    # Copy the thumbnail
+    thumbnail_path = src_rel.with_name(THUMBNAIL_FILENAME)
+    if thumbnail_path.is_file():
+        shutil.copy(
+            SRC_IPYNB_ROOT / thumbnail_path,
+            EXEC_IPYNB_ROOT / thumbnail_path,
+        )
+
+    print("Done executing", src.relative_to(SRC_IPYNB_ROOT))
+
+
+def delay_iterator(iterator, seconds=1.0):
+    """Introduce a delay to iteration.
+
+    This may be helpful to avoid race conditions with process pools."""
+    for item in iterator:
+        yield item
+        sleep(seconds)
+
+
+def clean_up_notebook(notebook: Path):
+    """
+    Delete processed versions of the notebook.
+
+    Note that this does not delete the source notebook.
+    """
+    notebook_zip(notebook).unlink()
+    shutil.rmtree(notebook_colab(notebook).parent)
+    exec_notebook = EXEC_IPYNB_ROOT / notebook.relative_to(SRC_IPYNB_ROOT)
+    exec_notebook.unlink()
+
+
+def main(do_proc=True, do_exec=True):
+    print("Working in", Path().resolve())
+
+    notebooks: List[Tuple[Path, str]] = []
+    # Download the examples from latest releases on GitHub
+    for repo in GITHUB_REPOS:
+        dst_path = SRC_IPYNB_ROOT / repo
+        print("Downloading", repo, "to", dst_path.resolve())
+
+        tag = get_tag_matching_installed_version(repo)
+        download_dir(
+            repo,
+            REPO_EXAMPLES_DIR,
+            dst_path,
+            refspec=tag,
+        )
+
+        # Find the notebooks we need to process
+        notebooks.extend((notebook, tag) for notebook in find_notebooks(dst_path))
+
+    # Create Colab and downloadable versions of the notebooks
+    if do_proc:
+        shutil.rmtree(COLAB_IPYNB_ROOT, ignore_errors=True)
+        shutil.rmtree(ZIPPED_IPYNB_ROOT, ignore_errors=True)
+        for notebook, _ in notebooks:
+            print("Processing", notebook)
+            create_colab_notebook(notebook)
+            create_zip(notebook)
+
+    # Execute notebooks in parallel for rendering as HTML
+    if do_exec:
+        shutil.rmtree(EXEC_IPYNB_ROOT, ignore_errors=True)
+        # Context manager ensures the pool is correctly terminated if there's
+        # an exception
+        with Pool() as pool:
+            # Wait a second between launching subprocesses
+            # Workaround https://github.com/jupyter/nbconvert/issues/1066
+            _ = [*pool.imap_unordered(execute_notebook, delay_iterator(notebooks))]
+
+
+if __name__ == "__main__":
+    import sys, os
+
+    # TODO: Implement special handling for experimental notebooks?
+    # Set the INTERCHANGE_EXPERIMENTAL environment variable
+    # It kinda makes sense to do this here - it means users can see our
+    # experimental stuff without being bothered by it, but if they want to *use*
+    # it they hit a road bump.
+    os.environ["INTERCHANGE_EXPERIMENTAL"] = "1"
+
+    main(
+        do_proc=not "--skip-proc" in sys.argv,
+        do_exec=not "--skip-exec" in sys.argv,
+    )
