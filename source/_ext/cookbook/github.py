@@ -18,6 +18,15 @@ def download_dir(
     refspec: Union[str, None] = None,
 ):
     """Download the contents of src_path from GitHub src_repo to dst_path."""
+    import os
+
+    hostname = "github.com"
+    response = os.system("ping -c 1 " + hostname)
+    if response == 0:
+        print(f"{hostname} is up!")
+    else:
+        print(f"{hostname} is down!")
+
     with TemporaryDirectory() as local_repo_path:
         print("Git version:", Git().version_info)
         # Clone without downloading anything
