@@ -125,6 +125,7 @@ templates_path = ["_templates"]
 html_static_path = ["_static"]
 html_css_files = [
     "css/deflist-flowchart.css",
+    "css/notebook-grid.css",
 ]
 
 # List of patterns, relative to source directory, that match files and

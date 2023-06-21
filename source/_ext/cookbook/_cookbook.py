@@ -213,21 +213,3 @@ def depart_cookbook_html(translator: HTML5Translator, node: CookbookNode):
             ]
         )
     translator.body.append("</div>")
-
-
-def include_css_files(app: Sphinx):
-    """Include all the CSS files in the `cookbook/css` directory"""
-    srcdir = Path(__file__).parent / "css"
-
-    filenames = [*srcdir.glob("**/*.css")]
-
-    staticdir = Path(app.outdir) / "_static/css"
-
-    def copy_custom_css_file(application: Sphinx, exc):
-        if application.builder.format == "html" and not exc:
-            for filename in filenames:
-                copy_asset_file(str(filename), str(staticdir))
-
-    app.connect("build-finished", copy_custom_css_file)
-    for filename in filenames:
-        app.add_css_file(str(staticdir / filename.name))

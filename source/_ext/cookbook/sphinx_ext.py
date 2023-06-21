@@ -4,7 +4,6 @@ from ._cookbook import (
     process_notebook,
     find_notebook_docnames,
     CookbookDirective,
-    include_css_files,
     CookbookNode,
     depart_cookbook_html,
     proc_cookbook_toctree,
@@ -22,7 +21,6 @@ def setup(app: Sphinx):
     app.connect("source-read", process_notebook)
     app.connect("doctree-resolved", proc_cookbook_toctree)
     app.add_directive("cookbook", CookbookDirective)
-    include_css_files(app)
 
     app.add_node(
         CookbookNode,
