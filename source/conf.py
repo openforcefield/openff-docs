@@ -120,11 +120,6 @@ extensions.extend(
 nbsphinx_execute = "never"
 nb_execution_mode = "off"
 
-# Don't check examples for broken links
-linkcheck_exclude_documents = [str(doc) for doc in Path("_cookbook").glob("**/*")]
-print(linkcheck_exclude_documents)
-print(Path("_cookbook").resolve(), Path("source/_cookbook").resolve())
-
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 html_static_path = ["_static"]

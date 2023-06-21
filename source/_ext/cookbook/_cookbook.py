@@ -123,6 +123,12 @@ def download_cached_notebooks(app: Sphinx, config: Config):
                     refspec=CACHE_BRANCH,
                 )
 
+    # Exclude notebooks from linkcheck
+    config.linkcheck_exclude_documents.extend(
+        str(doc.relative_to(Path().absolute()))
+        for doc in Path(EXEC_IPYNB_ROOT).glob("**/*")
+    )
+
 
 def find_notebook_docnames(app, env, docnames):
     """Find the downloaded notebooks and make sure Sphinx sees them"""
