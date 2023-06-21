@@ -126,9 +126,10 @@ def create_colab_notebook(src: Path):
         shutil.copy(path, dst.parent / rel_path)
 
     # Get a list of the wget commands we'll need to download the files
-    repo = "openforcefield/openff-docs"
+    base_uri = f"https://raw.github.com/openforcefield/openff-docs/{CACHE_BRANCH}"
+    colab_root_rel = COLAB_IPYNB_ROOT.relative_to(OPENFF_DOCS_ROOT)
     wget_files = [
-        f"wget https://github.com/{repo}/blob/{CACHE_BRANCH}/{COLAB_IPYNB_ROOT}/{rel_path}"
+        f"wget {base_uri}/{colab_root_rel}/{rel_path}"
         for _, rel_path in files
         if rel_path.suffix != ".ipynb"
     ]
@@ -233,11 +234,13 @@ def main(do_proc=True, do_exec=True, prefix: Path | None = None):
 
     notebooks: List[Tuple[Path, str]] = []
     # Download the examples from latest releases on GitHub
+    shutil.rmtree(SRC_IPYNB_ROOT, ignore_errors=True)
     for repo in GITHUB_REPOS:
         dst_path = SRC_IPYNB_ROOT / repo
-        print("Downloading", repo, "to", dst_path.resolve())
-
         tag = get_tag_matching_installed_version(repo)
+
+        print(f"Downloading {repo}#{tag} to {dst_path.resolve()}")
+
         download_dir(
             repo,
             REPO_EXAMPLES_DIR,

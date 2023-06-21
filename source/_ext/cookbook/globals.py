@@ -92,5 +92,5 @@ default thumbnail will be used.
 REPO_EXAMPLES_DIR = "examples"
 """Directory in source repositories where the examples are stored."""
 
-CACHE_BRANCH = "examples-cache"
+CACHE_BRANCH = "_cookbook_data"
 """Branch of the openff-docs repository where cached notebooks are stored."""
