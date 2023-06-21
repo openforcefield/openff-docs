@@ -9,6 +9,7 @@ from ._cookbook import (
     CookbookNode,
     depart_cookbook_html,
     proc_cookbook_toctree,
+    download_cached_notebooks,
 )
 
 
@@ -17,6 +18,7 @@ def do_nothing(self, node):
 
 
 def setup(app: Sphinx):
+    app.connect("config-inited", download_cached_notebooks)
     app.connect("env-before-read-docs", find_notebook_docnames)
     app.connect("env-purge-doc", remove_old_notebooks)
     app.connect("source-read", process_notebook)
