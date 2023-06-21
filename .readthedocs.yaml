@@ -9,7 +9,7 @@ build:
   jobs:
     post_checkout:
       - git clone -v --depth=1 --single-branch --branch=_cookbook_data -- https://github.com/openforcefield/openff-docs.git build/_cookbook_data
-      - mv build/_cookbook_data/* .
+      - rsync -a build/_cookbook_data/ ./
       - ls
 conda:
   environment: devtools/conda-envs/rtd_env.yml
