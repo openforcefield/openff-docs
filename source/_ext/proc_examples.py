@@ -126,9 +126,11 @@ def create_colab_notebook(src: Path):
         shutil.copy(path, dst.parent / rel_path)
 
     # Get a list of the wget commands we'll need to download the files
-    base_uri = f"https://raw.github.com/openforcefield/openff-docs/{CACHE_BRANCH}"
+    base_uri = (
+        f"https://raw.githubusercontent.com/openforcefield/openff-docs/{CACHE_BRANCH}"
+    )
     wget_files = [
-        f"!wget {base_uri}/{dst.parent.relative_to(OPENFF_DOCS_ROOT)}/{relative_path}"
+        f"!wget -q {base_uri}/{dst.parent.relative_to(OPENFF_DOCS_ROOT)}/{relative_path}"
         for _, relative_path in files
         if relative_path.suffix != ".ipynb"
     ]
