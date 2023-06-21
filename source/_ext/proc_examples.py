@@ -285,6 +285,8 @@ if __name__ == "__main__":
     for arg in sys.argv:
         if arg.startswith("--prefix="):
             prefix = Path(arg[9:])
+    if "--prefix" in sys.argv:
+        raise ValueError("Specify prefix in a single argument: `--prefix=<prefix>`")
 
     main(
         do_proc=not "--skip-proc" in sys.argv,
