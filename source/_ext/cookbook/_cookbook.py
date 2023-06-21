@@ -124,9 +124,8 @@ def download_cached_notebooks(app: Sphinx, config: Config):
                 )
 
     # Exclude notebooks from linkcheck
-    config.linkcheck_exclude_documents.extend(
-        str(doc.relative_to(Path().absolute()))
-        for doc in Path(EXEC_IPYNB_ROOT).glob("**/*")
+    config["linkcheck_exclude_documents"].extend(
+        str(doc.relative_to(app.srcdir)) for doc in Path(EXEC_IPYNB_ROOT).glob("**/*")
     )
 
 
