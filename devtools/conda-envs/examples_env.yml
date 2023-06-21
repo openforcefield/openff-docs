@@ -1,3 +1,4 @@
+name: openff-docs-examples
 channels:
     - conda-forge
     - bioconda
