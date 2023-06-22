@@ -90,21 +90,22 @@ if [[ ! -f ./micromamba ]]; then
         | tar -xvj --strip-components=1 bin/micromamba
 fi
 
-# Unset environment variables that might confuse Micromamba
-unset PYTHONPATH
-unset PYTHONHOME
+# Hook Micromamba into the script's subshell (this only lasts for as long as the
+# script is running)
+eval "$(./micromamba shell hook --shell=bash)"
 
 # Create the new environment, or install packages into it from the YAML file if
 # it already exists
 if [[ -d $PREFIX/conda-meta/ ]]; then
-    ./micromamba update --file $ENV_FILE --prefix "$PREFIX"
+    micromamba update --file $ENV_FILE --prefix "$PREFIX"
 else
-    ./micromamba create --file $ENV_FILE --prefix "$PREFIX"
+    micromamba create --file $ENV_FILE --prefix "$PREFIX"
 fi
 
-# Hook Micromamba into the script's subshell (this only lasts for as long as the
-# script is running)
-eval "$(./micromamba shell hook --shell=bash)"
+# Unset environment variables that might confuse Micromamba
+unset PYTHONPATH
+unset PYTHONHOME
+
 # Activate the new environment
 micromamba activate "$PREFIX"
 # Open the notebook in the new environment
