@@ -3,6 +3,10 @@
 set -Ee -o pipefail
 shopt -s failglob
 
+# Make sure we're in the same directory as this script,
+# the environment file, and the notebook
+cd "${0%/*}"
+
 ARCH="64"
 OS=$(uname)
 
