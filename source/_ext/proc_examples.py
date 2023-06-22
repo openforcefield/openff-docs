@@ -28,10 +28,7 @@ from cookbook.github import download_dir, get_tag_matching_installed_version
 from cookbook.globals import *
 
 
-def needed_files(
-    notebook_path: Path,
-    include_micromamba: bool = False,
-) -> List[Tuple[Path, Path]]:
+def needed_files(notebook_path: Path) -> List[Tuple[Path, Path]]:
     """
     Get the files needed to run the notebook
 
@@ -92,21 +89,6 @@ def needed_files(
             + f"\nName the intended Conda environment '{PACKAGED_ENV_NAME}'."
         )
 
-    # If requested, include the micromamba runtime
-    if include_micromamba:
-        micromamba_root = Path(__file__).parent / "micromamba"
-        micromamba_files = [path for path in micromamba_root.glob("*")]
-
-        repo = Repo(micromamba_root, search_parent_directories=True)
-        ignored = set(repo.ignored(micromamba_files))
-
-        for path in micromamba_files:
-            if str(path) in ignored or path.name == ".gitignore":
-                continue
-
-            files[path] = path.relative_to(micromamba_root)
-        repo.close()
-
     return list(files.items())
 
 
@@ -123,8 +105,12 @@ def create_zip(notebook_path: Path):
         compression=ZIP_DEFLATED,
         compresslevel=9,
     ) as zip_file:
-        for path, arcname in needed_files(notebook_path, include_micromamba=True):
+        for path, arcname in needed_files(notebook_path):
             zip_file.write(path, arcname=arcname)
+
+        # Also include the run_notebook.sh script
+        path = Path(__file__).parent / "run_notebook.sh"
+        zip_file.write(path, arcname=path.name)
 
 
 def create_colab_notebook(src: Path):
