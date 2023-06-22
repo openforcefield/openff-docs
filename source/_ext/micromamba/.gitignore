@@ -1,0 +1,4 @@
+# Files for testing
+environment.yaml
+*.ipynb
+env/
