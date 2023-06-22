@@ -102,7 +102,7 @@ else
     micromamba create --file $ENV_FILE --prefix "$PREFIX"
 fi
 
-# Unset environment variables that might confuse Micromamba
+# Unset environment variables that might confuse Python
 unset PYTHONPATH
 unset PYTHONHOME
 
