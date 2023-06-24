@@ -237,8 +237,10 @@ def main(do_proc=True, do_exec=True, prefix: Path | None = None):
     # Download the examples from latest releases on GitHub
     shutil.rmtree(SRC_IPYNB_ROOT, ignore_errors=True)
     for repo in GITHUB_REPOS:
+        repo, _, tag = repo.partition("#")
+
         dst_path = SRC_IPYNB_ROOT / repo
-        tag = get_tag_matching_installed_version(repo)
+        tag = tag or get_tag_matching_installed_version(repo)
 
         print(f"Downloading {repo}#{tag} to {dst_path.resolve()}")
 
