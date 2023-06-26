@@ -42,7 +42,6 @@ Should be given as ``username/repo-name``.
 
 DO_NOT_SEARCH = [
     "deprecated",
-    "external",
 ]
 """Directory names to not descend into when searching for notebooks."""
 
