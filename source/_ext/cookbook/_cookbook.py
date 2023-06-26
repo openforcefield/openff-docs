@@ -114,6 +114,7 @@ def download_cached_notebooks(app: Sphinx, config: Config):
         ZIPPED_IPYNB_ROOT,
     ]:
         for repo in GITHUB_REPOS:
+            repo, _, tag = repo.partition("#")
             repo_directory = directory / repo
             if not repo_directory.exists():
                 download_dir(
