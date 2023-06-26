@@ -32,6 +32,7 @@ IGNORED_FILES: Final = [
 GITHUB_REPOS: Final = [
     "openforcefield/openff-toolkit",
     "openforcefield/openff-interchange",
+    "openforcefield/openff-nagl#v0.2.2",
 ]
 """
 GitHub repos to download example notebooks from.
@@ -41,7 +42,6 @@ Should be given as ``username/repo-name``.
 
 DO_NOT_SEARCH = [
     "deprecated",
-    "external",  # TODO: Do we really want to skip these?
 ]
 """Directory names to not descend into when searching for notebooks."""
 

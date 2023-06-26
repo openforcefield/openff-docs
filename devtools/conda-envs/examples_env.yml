@@ -1,7 +1,6 @@
 name: openff-docs-examples
 channels:
     - conda-forge
-    - bioconda
 dependencies:
     - pip
     - python=3.10
@@ -14,8 +13,10 @@ dependencies:
     # Examples
     - openff-toolkit-examples
     - openff-interchange==0.3.5 # Pin Interchange 0.3.5 because 0.3.6 has a broken example
-    - gromacs
+    - openff-nagl==0.2.2
+    - gromacs >=2021=nompi*
     - lammps
     - rich
     - jax
-    - pint<0.22
+    - dglteam/label/cu118::dgl
+    - parmed<4
