@@ -81,14 +81,6 @@ def process_notebook(app: Sphinx, docname: str, source: list[str]):
     notebook = inject_links(app, notebook, docpath)
     notebook = inject_tags_index(notebook)
 
-    # Copy the modified NGLView JS to the build directory
-    # TODO: Remove this once https://github.com/nglviewer/nglview/pull/1064 gets
-    #       into a release
-    out_path = Path(app.outdir) / app.env.doc2path(docname, base=False)
-    js_src = Path(__file__).parent / "js/nglview-js-widgets.js"
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy(js_src, out_path.parent)
-
     # Tell Sphinx we don't expect this notebook to show up in a toctree
     set_metadata(notebook, "orphan", True)
 

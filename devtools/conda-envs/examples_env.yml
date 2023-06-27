@@ -20,3 +20,4 @@ dependencies:
     - jax
     - dglteam/label/cu118::dgl
     - parmed<4
+    - nglview>=3.0.6
