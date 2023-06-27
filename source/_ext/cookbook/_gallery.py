@@ -5,11 +5,11 @@ from sphinx.util.docutils import SphinxDirective
 import sphinx.addnodes
 import docutils.nodes
 from sphinx.writers.html5 import HTML5Translator
-import docutils.parsers.rst.directives
+from docutils.parsers.rst.directives import choice
 from sphinx.application import Sphinx
 
 from ._cookbook import find_notebooks
-from .globals import EXEC_IPYNB_ROOT
+from .globals import EXEC_IPYNB_ROOT, CATEGORIES
 
 
 class CookbookDirective(SphinxDirective):
@@ -17,10 +17,14 @@ class CookbookDirective(SphinxDirective):
     Directive to draw thumbnails of the cookbook.
     """
 
+    optional_arguments = 1
+    option_spec = {
+        "category": lambda x: choice(x, [*CATEGORIES, "uncategorized"]),
+    }
     has_content = False
 
     def run(self):
-        node = CookbookNode()
+        node = CookbookNode(category=self.options.get("category", None))
 
         for path in find_notebooks(EXEC_IPYNB_ROOT):
             entry = CookbookEntryNode.from_path(self.env, path)
@@ -32,7 +36,13 @@ class CookbookDirective(SphinxDirective):
 class CookbookNode(docutils.nodes.Element):
     """Docutils node representing the cookbook directive"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(
+        self,
+        category: str | None = None,
+        *args,
+        **kwargs,
+    ):
+        self.category = category
         self.children: list[CookbookEntryNode]
         return super().__init__(*args, **kwargs)
 
@@ -118,7 +128,19 @@ def proc_cookbook_toctree(
     docname: str,
 ):
     """Update the cookbook with URIs and titles"""
+    metadata = app.env.metadata
+
     for cookbook_node in doctree.findall(CookbookNode):
+        cookbook_category = cookbook_node.category
+
+        if cookbook_category is not None:
+            cookbook_node.children = [
+                entry
+                for entry in cookbook_node.children
+                if metadata[entry.docname].get("category", "uncategorized")
+                == cookbook_category
+            ]
+
         for entry in cookbook_node.children:
             entry.title = app.env.titles[entry.docname].astext()
             if entry.title == "<no title>":

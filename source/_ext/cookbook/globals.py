@@ -30,7 +30,7 @@ IGNORED_FILES: Final = [
 """File names to exclude from zipped download files and Colab folders."""
 
 GITHUB_REPOS: Final = [
-    "openforcefield/openff-toolkit",
+    "openforcefield/openff-toolkit#central-examples",
     "openforcefield/openff-interchange",
     "openforcefield/openff-nagl#v0.2.2",
 ]
@@ -94,3 +94,10 @@ REPO_EXAMPLES_DIR = "examples"
 
 CACHE_BRANCH = "_cookbook_data"
 """Branch of the openff-docs repository where cached notebooks are stored."""
+
+CATEGORIES = [
+    "ff_manip",
+    "showcase",
+    "mixing_ffs",
+]
+"""Categories that notebooks may be placed in"""
