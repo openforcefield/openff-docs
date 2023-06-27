@@ -2,7 +2,7 @@
 build/
 
 # Cookbook files
-source/_cookbook/
+source/examples/
 
 # Python stuff
 __pycache__/
