@@ -5,7 +5,7 @@ from ._cookbook import (
     find_notebook_docnames,
     CookbookDirective,
     CookbookNode,
-    depart_cookbook_html,
+    CookbookEntryNode,
     proc_cookbook_toctree,
     download_cached_notebooks,
 )
@@ -24,7 +24,13 @@ def setup(app: Sphinx):
 
     app.add_node(
         CookbookNode,
-        html=(do_nothing, depart_cookbook_html),
+        html=(CookbookNode.visit, CookbookNode.depart),
+        latex=(do_nothing, do_nothing),
+        text=(do_nothing, do_nothing),
+    )
+    app.add_node(
+        CookbookEntryNode,
+        html=(CookbookEntryNode.visit, CookbookEntryNode.depart),
         latex=(do_nothing, do_nothing),
         text=(do_nothing, do_nothing),
     )
