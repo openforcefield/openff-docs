@@ -14,6 +14,8 @@ dependencies:
     - openff-toolkit-examples
     - openff-interchange==0.3.5 # Pin Interchange 0.3.5 because 0.3.6 has a broken example
     - openff-nagl==0.2.2
+    - openff-fragmenter
+    # - openff-qcsubmit
     - gromacs >=2021=nompi*
     - lammps
     - rich
