@@ -3,11 +3,14 @@ from sphinx.application import Sphinx
 from ._cookbook import (
     process_notebook,
     find_notebook_docnames,
+    download_cached_notebooks,
+)
+
+from ._gallery import (
     CookbookDirective,
     CookbookNode,
     CookbookEntryNode,
     proc_cookbook_toctree,
-    download_cached_notebooks,
 )
 
 
