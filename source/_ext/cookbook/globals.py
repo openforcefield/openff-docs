@@ -33,7 +33,7 @@ GITHUB_REPOS: Final = [
     "openforcefield/openff-toolkit#central-examples",
     "openforcefield/openff-interchange",
     "openforcefield/openff-nagl#v0.2.2",
-    "openforcefield/openff-fragmenter",
+    # "openforcefield/openff-fragmenter", # Slow with AmberTools
     # "openforcefield/openff-qcsubmit", # Broken with RDKit (and slow)
 ]
 """
