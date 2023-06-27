@@ -199,11 +199,11 @@ def execute_notebook(src_and_tag: Tuple[Path, str]):
         nbformat.write(nb, f)
 
     # Copy the thumbnail
-    thumbnail_path = src_rel.with_name(THUMBNAIL_FILENAME)
+    thumbnail_path = src.with_name(THUMBNAIL_FILENAME)
     if thumbnail_path.is_file():
         shutil.copy(
-            SRC_IPYNB_ROOT / thumbnail_path,
-            EXEC_IPYNB_ROOT / thumbnail_path,
+            thumbnail_path,
+            EXEC_IPYNB_ROOT / thumbnail_path.relative_to(SRC_IPYNB_ROOT),
         )
 
     print("Done executing", src.relative_to(SRC_IPYNB_ROOT))
