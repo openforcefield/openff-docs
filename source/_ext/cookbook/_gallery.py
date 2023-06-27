@@ -102,7 +102,14 @@ class CookbookEntryNode(docutils.nodes.Element):
     @staticmethod
     def depart(translator: HTML5Translator, node: CookbookNode):
         """Render the CookbookEntryNode in HTML"""
-        translator.body.extend(["<div class='caption'>", node.title, "</div>", "</a>"])
+        translator.body.extend(
+            [
+                "<div class='caption'>",
+                node.title,
+                "</div>",
+                "</a>",
+            ]
+        )
 
 
 def proc_cookbook_toctree(
