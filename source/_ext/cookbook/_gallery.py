@@ -9,22 +9,34 @@ from docutils.parsers.rst.directives import choice
 from sphinx.application import Sphinx
 
 from ._cookbook import find_notebooks
-from .globals import EXEC_IPYNB_ROOT, CATEGORIES
+from .globals import EXEC_IPYNB_ROOT
+from .utils import flatten
 
 
 class CookbookDirective(SphinxDirective):
     """
     Directive to draw thumbnails of the cookbook.
+
+    The "categories" option specifies the categories of notebooks that should be
+    included in this cookbook. It is a comma-separated string listing category
+    names. Omitting this option will include all categories. The
+    names "uncategorized" and "other" are special; "uncategorized" is applied
+    to any notebook without a category, whereas "other" will include all
+    categories not rendered in a cookbook somewhere else on the same page as
+    the current directive (possibly including "uncategorized").
     """
 
     optional_arguments = 1
     option_spec = {
-        "category": lambda x: choice(x, [*CATEGORIES, "uncategorized"]),
+        "categories": lambda x: [
+            s.strip().lower().replace("-", "_").replace(" ", "_")
+            for s in str(x).split(",")
+        ],
     }
     has_content = False
 
     def run(self):
-        node = CookbookNode(category=self.options.get("category", None))
+        node = CookbookNode(categories=self.options.get("categories", []))
 
         for path in find_notebooks(EXEC_IPYNB_ROOT):
             entry = CookbookEntryNode.from_path(self.env, path)
@@ -38,11 +50,11 @@ class CookbookNode(docutils.nodes.Element):
 
     def __init__(
         self,
-        category: str | None = None,
+        categories: list[str] | None = None,
         *args,
         **kwargs,
     ):
-        self.category = category
+        self.categories: list[str] = categories if categories else []
         self.children: list[CookbookEntryNode]
         return super().__init__(*args, **kwargs)
 
@@ -130,15 +142,33 @@ def proc_cookbook_toctree(
     """Update the cookbook with URIs and titles"""
     metadata = app.env.metadata
 
-    for cookbook_node in doctree.findall(CookbookNode):
-        cookbook_category = cookbook_node.category
+    cookbook_nodes = [*doctree.findall(CookbookNode)]
 
-        if cookbook_category is not None:
+    # Get the categories that are in a cookbook directive on this page
+    categories_on_page = {*flatten(node.categories for node in cookbook_nodes)}
+
+    for cookbook_node in cookbook_nodes:
+        cookbook_categories = cookbook_node.categories
+
+        if cookbook_categories:
+            # "uncategorised" is a special category for notebooks whose metadata
+            # doesn't specify a category
+            cookbook_entries_with_categories = (
+                (entry, metadata[entry.docname].get("category", "uncategorized"))
+                for entry in cookbook_node.children
+            )
+            # "other" is a special category for cookbook directives that should
+            # include all notebooks not rendered in any other category on the
+            # current page.
+            # TODO: Make this all notebooks not rendered in the entire project?
             cookbook_node.children = [
                 entry
-                for entry in cookbook_node.children
-                if metadata[entry.docname].get("category", "uncategorized")
-                == cookbook_category
+                for entry, entry_category in cookbook_entries_with_categories
+                if entry_category in cookbook_categories
+                or (
+                    "other" in cookbook_categories
+                    and entry_category not in categories_on_page
+                )
             ]
 
         for entry in cookbook_node.children:

@@ -79,10 +79,3 @@ REPO_EXAMPLES_DIR = "examples"
 
 CACHE_BRANCH = "_cookbook_data"
 """Branch of the openff-docs repository where cached notebooks are stored."""
-
-CATEGORIES = [
-    "ff_manip",
-    "showcase",
-    "mixing_ffs",
-]
-"""Categories that notebooks may be placed in"""
