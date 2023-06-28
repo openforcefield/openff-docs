@@ -29,8 +29,7 @@ class CookbookDirective(SphinxDirective):
     optional_arguments = 1
     option_spec = {
         "categories": lambda x: [
-            s.strip().lower().replace("-", "_").replace(" ", "_")
-            for s in str(x).split(",")
+            s.strip().lower().replace("-", "_") for s in str(x).split(",")
         ],
     }
     has_content = False

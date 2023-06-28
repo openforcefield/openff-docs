@@ -6,7 +6,17 @@ Tutorials describing key workflows from start to finish, with detailed explanati
 
 :::{cookbook}
 ---
-categories: tutorials
+categories: tutorial
+---
+:::
+
+## Parametrization and Evaluation
+
+Quick examples describing use of OpenFF tools for system prep, parametrization, energy evaluation, and simulation.
+
+:::{cookbook}
+---
+categories: parametrization_evaluation
 ---
 :::
 
@@ -20,13 +30,13 @@ categories: force_field_interop
 ---
 :::
 
-## Force Field Modification
+## Force Field Development
 
 Modifying, tweaking, manipulating, inspecting, and re-fitting force fields.
 
 :::{cookbook}
 ---
-categories: force_fields
+categories: force_field_dev
 ---
 :::
 

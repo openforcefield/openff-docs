@@ -12,7 +12,7 @@ dependencies:
     - packaging
     # Examples
     - openff-toolkit-examples
-    - openff-interchange==0.3.5 # Pin Interchange 0.3.5 because 0.3.6 has a broken example
+    - openff-interchange # 0.3.6 has a broken example, but we're loading examples from the central-examples branch where it's fixed
     - openff-nagl==0.2.2
     # - openff-fragmenter
     # - openff-qcsubmit
