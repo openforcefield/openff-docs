@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       pr_number:
-        description: 'Update the cache for this PR (0 if not a PR)'
-        required: true
-        default: "0"
+        description: 'Update the cache for this PR (leave blank if not a PR)'
+        required: false
+        default: ""
         type: string
   schedule:
     - cron: 0 0 * * * # 1/day at midnight UTC
