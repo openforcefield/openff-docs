@@ -4,11 +4,14 @@ from pathlib import Path
 from typing import Generator, Union
 from tempfile import TemporaryDirectory
 from importlib import import_module
+from os import environ
 
 from git.cmd import Git
 from git.repo import Repo
 import requests
 from packaging.version import Version
+
+from .globals import COLAB_IPYNB_ROOT, OPENFF_DOCS_ROOT, CACHE_BRANCH
 
 
 def download_dir(
@@ -85,3 +88,29 @@ def get_tag_matching_installed_version(repo: str) -> str:
         raise ValueError(
             f"Could not find tag for version {version}; found tags {tagnames}"
         )
+
+
+def colab_uri(user, repo, path) -> str:
+    """Get the uri for the notebook at path in Colab.
+
+    In RTD, will get the PR number or branch from the environment; otherwise,
+    defaults to the cache for the ``main`` branch."""
+    if "READTHEDOCS_VERSION_TYPE" in environ:
+        cache_prefix = f"PR{environ['READTHEDOCS_VERSION_NAME']}"
+    elif "READTHEDOCS_GIT_IDENTIFIER" in environ:
+        cache_prefix = environ["READTHEDOCS_GIT_IDENTIFIER"]
+    else:
+        cache_prefix = "main"
+
+    full_path = (
+        cache_prefix
+        / COLAB_IPYNB_ROOT.relative_to(OPENFF_DOCS_ROOT)
+        / user
+        / repo
+        / path
+    )
+
+    base_uri = (
+        "https://colab.research.google.com/github/openforcefield/openff-docs/blob"
+    )
+    return f"{base_uri}/{CACHE_BRANCH}/{full_path}"

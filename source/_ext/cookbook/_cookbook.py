@@ -10,7 +10,7 @@ import shutil
 from sphinx.application import Sphinx
 from sphinx.config import Config
 
-from .github import download_dir
+from .github import download_dir, colab_uri
 from .notebook import (
     insert_cell,
     get_metadata,
@@ -53,11 +53,6 @@ def inject_links(app: Sphinx, notebook: dict, docpath: Path) -> dict:
     github_uri = (
         f"https://github.com/{user}/{repo}/blob/{tag}/{REPO_EXAMPLES_DIR}/{path}"
     )
-
-    # TODO: Test colab
-    colab_path = COLAB_IPYNB_ROOT.relative_to(OPENFF_DOCS_ROOT) / user / repo / path
-    colab_uri = f"https://colab.research.google.com/github/openforcefield/openff-docs/blob/{CACHE_BRANCH}/{colab_path}"
-
     zip_path = notebook_zip(docpath).relative_to(app.srcdir)
 
     return insert_cell(
@@ -66,7 +61,7 @@ def inject_links(app: Sphinx, notebook: dict, docpath: Path) -> dict:
         source=[
             f"[Download Notebook](path:/{zip_path})",
             f"[View in GitHub]({github_uri})",
-            f"[Open in Google Colab]({colab_uri})",
+            f"[Open in Google Colab]({colab_uri(user, repo, path)})",
         ],
     )
 
