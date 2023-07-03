@@ -8,11 +8,8 @@ build:
     python: "mambaforge-4.10"
   apt_packages:
     - rsync
-    - git
-    - tree
   jobs:
     post_install:
-      - tree
       - git clone -v --depth=1 --single-branch --branch=_cookbook_data -- https://github.com/openforcefield/openff-docs.git build/_cookbook_data
       - |
         if [ "$READTHEDOCS_VERSION_TYPE" = "external" ]; then
@@ -22,8 +19,6 @@ build:
           # This is not a PR, so use the Git reference
           SOURCE_PATH="build/_cookbook_data/${READTHEDOCS_GIT_IDENTIFIER}"
         fi
-        tree "$SOURCE_PATH"
         rsync -a "${SOURCE_PATH}"/* ./
-      - tree
 conda:
   environment: devtools/conda-envs/rtd_env.yml
