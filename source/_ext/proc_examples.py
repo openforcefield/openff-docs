@@ -321,7 +321,7 @@ if __name__ == "__main__":
     cache_prefix = None
     for arg in sys.argv:
         if arg.startswith("--cache-prefix="):
-            cache_prefix = arg[9:]
+            cache_prefix = arg[15:]
     if "--prefix" in sys.argv:
         raise ValueError(
             "Specify Colab prefix in a single argument: `--cache-prefix=<prefix>`"
