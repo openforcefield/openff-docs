@@ -48,7 +48,7 @@ jobs:
           cd deploy/$DEPLOY_SUBDIR
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git rm -r .
+          git rm -r --ignore-unmatch .
 
       - name: Pre-process and execute notebooks
         shell: bash -l {0}
