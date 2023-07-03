@@ -1,0 +1,22 @@
+channels:
+- conda-forge
+dependencies:
+- pip
+- python=3.10
+- jupyterlab>=4
+- ipywidgets>=8
+- gitpython
+- nbconvert
+- nbformat
+- requests
+- packaging
+- openff-toolkit-examples>=0.14.0
+- openff-interchange>=0.3.7
+- openff-nagl==0.2.2
+- gromacs >=2021=nompi*
+- lammps
+- rich
+- jax
+- dglteam/label/cu118::dgl
+- parmed<4
+- nglview>=3.0.6
