@@ -1,16 +1,13 @@
 """Implementation of the cookbook Sphinx extension"""
 from __future__ import annotations
 
-from dataclasses import dataclass
 import json
-from os import stat
 from pathlib import Path
-import shutil
 
 from sphinx.application import Sphinx
 from sphinx.config import Config
 
-from .github import download_dir, colab_uri
+from .github import download_dir
 from .notebook import (
     insert_cell,
     get_metadata,
@@ -27,6 +24,7 @@ from .globals import (
     ZIPPED_IPYNB_ROOT,
     GITHUB_REPOS,
 )
+from .utils import get_cache_prefix
 
 
 def inject_tags_index(notebook: dict) -> dict:
@@ -55,13 +53,25 @@ def inject_links(app: Sphinx, notebook: dict, docpath: Path) -> dict:
     )
     zip_path = notebook_zip(docpath).relative_to(app.srcdir)
 
+    colab_path = (
+        get_cache_prefix(default="main")
+        / COLAB_IPYNB_ROOT.relative_to(OPENFF_DOCS_ROOT)
+        / user
+        / repo
+        / path
+    )
+    colab_uri = (
+        "https://colab.research.google.com/github/openforcefield/openff-docs/blob"
+    )
+    colab_uri = colab_uri + f"/{CACHE_BRANCH}/{colab_path}"
+
     return insert_cell(
         notebook,
         cell_type="markdown",
         source=[
             f"[Download Notebook](path:/{zip_path})",
             f"[View in GitHub]({github_uri})",
-            f"[Open in Google Colab]({colab_uri(user, repo, path)})",
+            f"[Open in Google Colab]({colab_uri})",
         ],
     )
 
