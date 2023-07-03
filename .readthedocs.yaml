@@ -17,13 +17,13 @@ build:
       - |
         if [ "$READTHEDOCS_VERSION_TYPE" = "external" ]; then
           # This is a PR, so use the PR number
-          SOURCE_PATH="build/_cookbook_data/PR${READTHEDOCS_VERSION_NAME}/*"
+          SOURCE_PATH="build/_cookbook_data/PR${READTHEDOCS_VERSION_NAME}"
         else
           # This is not a PR, so use the Git reference
-          SOURCE_PATH="build/_cookbook_data/${READTHEDOCS_GIT_IDENTIFIER}/*"
+          SOURCE_PATH="build/_cookbook_data/${READTHEDOCS_GIT_IDENTIFIER}"
         fi
         tree "$SOURCE_PATH"
-        rsync -a "${SOURCE_PATH}" ./
+        rsync -a "${SOURCE_PATH}"/* ./
       - tree
 conda:
   environment: devtools/conda-envs/rtd_env.yml
