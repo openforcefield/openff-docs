@@ -14,7 +14,7 @@ build:
       - env
       - git clone -v --depth=1 --single-branch --branch=_cookbook_data -- https://github.com/openforcefield/openff-docs.git build/_cookbook_data
       - |
-        if [[ "$READTHEDOCS_VERSION_TYPE" == "external" ]]; then
+        if [ "$READTHEDOCS_VERSION_TYPE" -eq "external" ]; then
           # This is a PR, so use the PR number
           rsync -a "build/_cookbook_data/PR${READTHEDOCS_VERSION_NAME}" ./
         else
