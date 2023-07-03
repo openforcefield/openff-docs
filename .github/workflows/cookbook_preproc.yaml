@@ -3,7 +3,7 @@ name: Pre-process example notebooks
 on:
   workflow_dispatch:
     inputs:
-      pr-number:
+      pr_number:
         description: 'Update the cache for this PR (0 if not a PR)'
         required: true
         default: "0"
@@ -35,10 +35,10 @@ jobs:
         run: |
           if [[ ${{ github.event_name }} != "workflow_dispatch" ]]; then
             echo "DEPLOY_SUBDIR=$GITHUB_REF" >> "$GITHUB_ENV"
-          elif [[ ${{ inputs.logLevel }} == 0 ]]; then
+          elif [[ ${{ inputs.pr_number }} == 0 ]]; then
             echo "DEPLOY_SUBDIR=$GITHUB_REF" >> "$GITHUB_ENV"
           else
-            echo "DEPLOY_SUBDIR=PR${{ inputs.logLevel }}" >> "$GITHUB_ENV"
+            echo "DEPLOY_SUBDIR=PR${{ inputs.pr_number }}" >> "$GITHUB_ENV"
           fi
 
       - name: Prepare cache deployment directory
