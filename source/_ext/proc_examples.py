@@ -146,6 +146,8 @@ def create_colab_notebook(src: Path):
             "condacolab.install_mambaforge()",
             *wget_files,
             f"!mamba env update -q --name=base --file={PACKAGED_ENV_NAME}",
+            "from google.colab import output",
+            "output.enable_custom_widget_manager()",
         ],
     )
 
