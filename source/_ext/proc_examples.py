@@ -108,7 +108,7 @@ def create_zip(notebook_path: Path):
             zip_file.write(path, arcname=arcname)
 
 
-def create_colab_notebook(src: Path):
+def create_colab_notebook(src: Path, cache_uri_prefix: str | None = None):
     """
     Create a copy of the notebook at src for Google Colab and save it to dst.
     """
@@ -125,10 +125,14 @@ def create_colab_notebook(src: Path):
     for path, rel_path in files:
         shutil.copy(path, dst.parent / rel_path)
 
-    # Get a list of the wget commands we'll need to download the files
+    # Get the base URI to download files from the cache
     base_uri = (
         f"https://raw.githubusercontent.com/openforcefield/openff-docs/{CACHE_BRANCH}"
     )
+    if cache_uri_prefix is not None:
+        base_uri = base_uri + "/" + cache_uri_prefix
+
+    # Get a list of the wget commands we'll need to download the files
     wget_files = [
         f"!wget -q {base_uri}/{dst.parent.relative_to(OPENFF_DOCS_ROOT)}/{relative_path}"
         for _, relative_path in files
@@ -232,7 +236,12 @@ def clean_up_notebook(notebook: Path):
     exec_notebook.unlink()
 
 
-def main(do_proc=True, do_exec=True, prefix: Path | None = None):
+def main(
+    do_proc=True,
+    do_exec=True,
+    prefix: Path | None = None,
+    cache_prefix: str | None = None,
+):
     print("Working in", Path().resolve())
 
     notebooks: List[Tuple[Path, str]] = []
@@ -262,7 +271,7 @@ def main(do_proc=True, do_exec=True, prefix: Path | None = None):
         shutil.rmtree(ZIPPED_IPYNB_ROOT, ignore_errors=True)
         for notebook, _ in notebooks:
             print("Processing", notebook)
-            create_colab_notebook(notebook)
+            create_colab_notebook(notebook, cache_prefix)
             create_zip(notebook)
 
     # Execute notebooks in parallel for rendering as HTML
@@ -300,6 +309,7 @@ if __name__ == "__main__":
     # it they hit a road bump.
     os.environ["INTERCHANGE_EXPERIMENTAL"] = "1"
 
+    # --prefix is the path to store the output in
     prefix = None
     for arg in sys.argv:
         if arg.startswith("--prefix="):
@@ -307,8 +317,19 @@ if __name__ == "__main__":
     if "--prefix" in sys.argv:
         raise ValueError("Specify prefix in a single argument: `--prefix=<prefix>`")
 
+    # --cache-prefix is the path that the output will be stored in within the cache
+    cache_prefix = None
+    for arg in sys.argv:
+        if arg.startswith("--cache-prefix="):
+            cache_prefix = arg[9:]
+    if "--prefix" in sys.argv:
+        raise ValueError(
+            "Specify Colab prefix in a single argument: `--cache-prefix=<prefix>`"
+        )
+
     main(
         do_proc=not "--skip-proc" in sys.argv,
         do_exec=not "--skip-exec" in sys.argv,
         prefix=prefix,
+        cache_prefix=cache_prefix,
     )

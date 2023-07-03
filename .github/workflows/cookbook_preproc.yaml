@@ -53,7 +53,7 @@ jobs:
       - name: Pre-process and execute notebooks
         shell: bash -l {0}
         run: |
-          python source/_ext/proc_examples.py --prefix=deploy/$DEPLOY_SUBDIR
+          python source/_ext/proc_examples.py --prefix=deploy/$DEPLOY_SUBDIR --cache-prefix=$DEPLOY_SUBDIR
 
       - name: Deploy cache
         shell: bash -l {0}
