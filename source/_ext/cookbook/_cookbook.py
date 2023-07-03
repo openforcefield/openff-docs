@@ -105,7 +105,7 @@ def download_cached_notebooks(app: Sphinx, config: Config):
             if not repo_directory.exists():
                 download_dir(
                     "openforcefield/openff-docs",
-                    str(repo_directory.relative_to(OPENFF_DOCS_ROOT) / "main"),
+                    str("main" / repo_directory.relative_to(OPENFF_DOCS_ROOT)),
                     repo_directory,
                     refspec=CACHE_BRANCH,
                 )
