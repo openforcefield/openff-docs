@@ -13,6 +13,12 @@ build:
     post_install:
       - env
       - git clone -v --depth=1 --single-branch --branch=_cookbook_data -- https://github.com/openforcefield/openff-docs.git build/_cookbook_data
-      - rsync -a build/_cookbook_data/ ./
+      - if [[ "$READTHEDOCS_VERSION_TYPE" == "external" ]]; then
+          # This is a PR, so use the PR number
+      -   rsync -a "build/_cookbook_data/PR${READTHEDOCS_VERSION_NAME}" ./
+      - else
+          # This is not a PR, so use the Git reference
+      -   rsync -a "build/_cookbook_data/${READTHEDOCS_GIT_IDENTIFIER}" ./
+      - fi
 conda:
   environment: devtools/conda-envs/rtd_env.yml

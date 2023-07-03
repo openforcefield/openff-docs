@@ -2,8 +2,14 @@ name: Pre-process example notebooks
 
 on:
   workflow_dispatch:
-  # TODO: Run when source repo releases are available on Conda Forge
-  # TODO: Run when the examples Conda environment is changed
+    inputs:
+      pr-number:
+        description: 'Update the cache for this PR (0 if not a PR)'
+        required: true
+        default: "0"
+        type: string
+  schedule:
+    - cron: 0 0 * * * # 1/day at midnight UTC
 
 jobs:
   preprocess:
@@ -24,10 +30,21 @@ jobs:
           path: 'deploy'
           clean: false
 
+      - name: Choose deployment subdirectory
+        shell: bash -l {0}
+        run: |
+          if [[ ${{ github.event_name }} != "workflow_dispatch" ]]; then
+            echo "DEPLOY_SUBDIR=$GITHUB_REF" >> "$GITHUB_ENV"
+          elif [[ ${{ inputs.logLevel }} == 0 ]]; then
+            echo "DEPLOY_SUBDIR=$GITHUB_REF" >> "$GITHUB_ENV"
+          else
+            echo "DEPLOY_SUBDIR=PR${{ inputs.logLevel }}" >> "$GITHUB_ENV"
+          fi
+
       - name: Prepare cache deployment directory
         shell: bash -l {0}
         run: |
-          cd deploy
+          cd deploy/$DEPLOY_SUBDIR
           git config user.name github-actions
           git config user.email github-actions@github.com
           git rm -r .
@@ -35,12 +52,12 @@ jobs:
       - name: Pre-process and execute notebooks
         shell: bash -l {0}
         run: |
-          python source/_ext/proc_examples.py --prefix=deploy
+          python source/_ext/proc_examples.py --prefix=deploy/$DEPLOY_SUBDIR
 
       - name: Deploy cache
         shell: bash -l {0}
         run: |
-          cd deploy
+          cd deploy/$DEPLOY_SUBDIR
           git add .
-          git commit -m "Deploy pre-processed notebook cache"
-          git push origin _cookbook_data
+          git commit --amend -m "Deploy pre-processed notebook cache"
+          git push --force origin _cookbook_data
