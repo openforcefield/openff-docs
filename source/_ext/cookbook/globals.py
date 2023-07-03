@@ -30,11 +30,11 @@ IGNORED_FILES: Final = [
 """File names to exclude from zipped download files and Colab folders."""
 
 GITHUB_REPOS: Final = [
-    "openforcefield/openff-toolkit#central-examples",
-    "openforcefield/openff-interchange#central-examples",
+    "openforcefield/openff-toolkit",
+    "openforcefield/openff-interchange",
     "openforcefield/openff-nagl#v0.2.2",
     # "openforcefield/openff-fragmenter", # Slow with AmberTools
-    # "openforcefield/openff-qcsubmit", # Broken with RDKit (and slow)
+    # "openforcefield/openff-qcsubmit",  # Broken with RDKit (and slow)
 ]
 """
 GitHub repos to download example notebooks from.

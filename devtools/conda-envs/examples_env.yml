@@ -11,8 +11,8 @@ dependencies:
     - requests
     - packaging
     # Examples
-    - openff-toolkit-examples
-    - openff-interchange # 0.3.6 has a broken example, but we're loading examples from the central-examples branch where it's fixed
+    - openff-toolkit-examples>=0.14.0
+    - openff-interchange>=0.3.7
     - openff-nagl==0.2.2
     # - openff-fragmenter
     # - openff-qcsubmit
