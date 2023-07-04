@@ -109,4 +109,4 @@ unset PYTHONHOME
 # Activate the new environment
 micromamba activate "$PREFIX"
 # Open the notebook in the new environment
-jupyter notebook $NOTEBOOK
+jupyter lab $NOTEBOOK
