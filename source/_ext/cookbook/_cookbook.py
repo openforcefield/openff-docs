@@ -69,9 +69,10 @@ def inject_links(app: Sphinx, notebook: dict, docpath: Path) -> dict:
         notebook,
         cell_type="markdown",
         source=[
-            f"[Download Notebook](path:/{zip_path})",
-            f"[View in GitHub]({github_uri})",
-            f"[Open in Google Colab]({colab_uri})",
+            f"{{ .notebook-links }}",
+            f"[Download Notebook](path:/{zip_path}){{ .button }}",
+            f"[View in GitHub]({github_uri}){{ .button }}",
+            f"[Open in Google Colab]({colab_uri}){{ .button }}",
         ],
     )
 

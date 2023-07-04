@@ -1,7 +1,6 @@
 .notebook-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(15ex, 1fr));
-/*    grid-auto-rows: 1fr;*/
     gap: 1em;
 }
 
@@ -31,4 +30,25 @@
 .notebook-grid .notebook-grid-elem .source_repo {
     font-size: 70%;
     color: #00bc4e;
+}
+
+.notebook-links {
+    display: flex;
+    justify-content: space-between;
+}
+
+.notebook-links .button {
+    background-color: #f8f8f8;
+    font-size: 90%;
+    padding: 0.5em 1.0em;
+    border-radius: 8px;
+    box-shadow: 0 2px 2px  0   rgba(1,84,128,0.14),
+                0 1px 5px  0   rgba(1,84,128,0.12),
+                0 3px 1px -2px rgba(1,84,128,0.20);
+}
+
+.notebook-links .button:hover {
+    box-shadow: 0 3px 4px  0   rgba(47,158,210,0.14),
+                0 1px 8px  0   rgba(47,158,210,0.12),
+                0 3px 3px -2px rgba(47,158,210,0.20);
 }
