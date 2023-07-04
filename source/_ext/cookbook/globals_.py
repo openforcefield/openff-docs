@@ -61,7 +61,7 @@ COLAB_IPYNB_ROOT: Final[Path] = OPENFF_DOCS_ROOT / "build/cookbook/colab"
 Path to store notebooks and their required files for Colab.
 """
 
-ZIPPED_IPYNB_ROOT: Final[Path] = OPENFF_DOCS_ROOT / "source/_cookbook/downloads"
+DOWNLOAD_IPYNB_ROOT: Final[Path] = OPENFF_DOCS_ROOT / "source/_cookbook/downloads"
 """
 Path to store zips of notebooks and their required files.
 """

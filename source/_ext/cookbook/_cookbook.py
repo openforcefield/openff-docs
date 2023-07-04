@@ -12,7 +12,7 @@ from .notebook import (
     insert_cell,
     get_metadata,
     find_notebooks,
-    notebook_zip,
+    notebook_download,
     set_metadata,
 )
 from .globals_ import (
@@ -51,7 +51,7 @@ def inject_links(app: Sphinx, notebook: dict, docpath: Path) -> dict:
     github_uri = (
         f"https://github.com/{user}/{repo}/blob/{tag}/{REPO_EXAMPLES_DIR}/{path}"
     )
-    zip_path = notebook_zip(docpath).relative_to(app.srcdir)
+    zip_path = notebook_download(docpath).relative_to(app.srcdir)
 
     colab_path = (
         get_cache_prefix(default="main")

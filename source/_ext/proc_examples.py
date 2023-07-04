@@ -7,6 +7,7 @@ import shutil
 from multiprocessing import Pool
 from time import sleep
 import sys
+import tarfile
 
 import nbformat
 from nbconvert.preprocessors.execute import ExecutePreprocessor
@@ -16,7 +17,7 @@ from git.repo import Repo
 sys.path.append(str(Path(__file__).parent))
 
 from cookbook.notebook import (
-    notebook_zip,
+    notebook_download,
     notebook_colab,
     get_metadata,
     insert_cell,
@@ -92,25 +93,23 @@ def needed_files(notebook_path: Path) -> List[Tuple[Path, Path]]:
     return list(files.items())
 
 
-def create_zip(notebook_path: Path):
+def create_download(notebook_path: Path):
     """
-    Create a zip file with all needed files from a jupyter notebook path
+    Create a tgz file with all needed files from a jupyter notebook path
     """
-    zip_path = notebook_zip(notebook_path)
-    zip_path.parent.mkdir(parents=True, exist_ok=True)
+    tgz_path = notebook_download(notebook_path)
+    tgz_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with ZipFile(
-        file=zip_path,
-        mode="w",
-        compression=ZIP_DEFLATED,
-        compresslevel=9,
-    ) as zip_file:
+    with tarfile.open(
+        name=tgz_path,
+        mode="w:gz",
+    ) as tgz_file:
         for path, arcname in needed_files(notebook_path):
-            zip_file.write(path, arcname=arcname)
+            tgz_file.add(path, arcname=arcname)
 
         # Also include the run_notebook.sh script
         path = Path(__file__).parent / "run_notebook.sh"
-        zip_file.write(path, arcname=path.name)
+        tgz_file.add(path, arcname=path.name)
 
 
 def create_colab_notebook(src: Path, cache_uri_prefix: str | None = None):
@@ -235,7 +234,7 @@ def clean_up_notebook(notebook: Path):
 
     Note that this does not delete the source notebook.
     """
-    notebook_zip(notebook).unlink()
+    notebook_download(notebook).unlink()
     shutil.rmtree(notebook_colab(notebook).parent)
     exec_notebook = EXEC_IPYNB_ROOT / notebook.relative_to(SRC_IPYNB_ROOT)
     exec_notebook.unlink()
@@ -273,11 +272,11 @@ def main(
     # Create Colab and downloadable versions of the notebooks
     if do_proc:
         shutil.rmtree(COLAB_IPYNB_ROOT, ignore_errors=True)
-        shutil.rmtree(ZIPPED_IPYNB_ROOT, ignore_errors=True)
+        shutil.rmtree(DOWNLOAD_IPYNB_ROOT, ignore_errors=True)
         for notebook, _ in notebooks:
             print("Processing", notebook)
             create_colab_notebook(notebook, cache_prefix)
-            create_zip(notebook)
+            create_download(notebook)
 
     # Execute notebooks in parallel for rendering as HTML
     if do_exec:
@@ -295,7 +294,7 @@ def main(
         for directory in [
             COLAB_IPYNB_ROOT,
             EXEC_IPYNB_ROOT,
-            ZIPPED_IPYNB_ROOT,
+            DOWNLOAD_IPYNB_ROOT,
             SRC_IPYNB_ROOT,
         ]:
             shutil.move(
