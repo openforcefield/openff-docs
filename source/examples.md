@@ -54,9 +54,16 @@ categories: uncategorized, other
 
 ## Running examples locally
 
-Each example (links above) provides a "Download notebook" link, which downloads a ZIP file including the notebook, all the files needed to run it, a [Conda environment specification] YAML file, and a script called `run_notebook.sh`. Extracting the entire file and executing this script will download all the software needed to run the notebook into a virtual environment and then run the notebook. For more information, see the comments in the script itself.
+Each example (links above) provides a "Download notebook" link, which downloads a ZIP file including the notebook, all the files needed to run it, a [Conda environment specification] YAML file, and a script called `run_notebook.sh`. Extracting the entire file and executing this script will download all the software needed to run the notebook into a virtual environment and then run the notebook:
 
-If you have a Mamba installation already, you can prepare the environment by hand:
+```shell
+mkdir <notebook>
+tar -xvfz <notebook>.tgz -C <notebook>
+cd <notebook>
+./run_notebook.sh
+```
+
+For more information, see the comments in the script itself. If you have a Mamba installation already (see [](install)), you can prepare the environment by hand:
 
 ```shell
 mamba env create --file environment.yaml --name openff-examples
