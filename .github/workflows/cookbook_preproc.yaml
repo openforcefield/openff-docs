@@ -34,9 +34,9 @@ jobs:
         shell: bash -l {0}
         run: |
           if [[ ${{ github.event_name }} != "workflow_dispatch" ]]; then
-            echo "DEPLOY_SUBDIR=$GITHUB_REF" >> "$GITHUB_ENV"
+            echo "DEPLOY_SUBDIR=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
           elif [[ "${{ inputs.pr_number }}" == "" ]]; then
-            echo "DEPLOY_SUBDIR=$GITHUB_REF" >> "$GITHUB_ENV"
+            echo "DEPLOY_SUBDIR=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
           else
             echo "DEPLOY_SUBDIR=PR${{ inputs.pr_number }}" >> "$GITHUB_ENV"
           fi
@@ -62,3 +62,10 @@ jobs:
           git add .
           git commit --amend -m "Deploy pre-processed notebook cache"
           git push --force origin _cookbook_data
+
+      - name: Trigger RTD build
+        # RTD doesn't offer a way to manually trigger builds in PRs, so we'll just do this for other builds
+        if: github.event_name == "schedule" || (github.event_name == "workflow_dispatch" && inputs.pr_number == "")
+        shell: bash -l {0}
+        run: |
+          curl -X POST -d "branches=$GITHUB_REF_NAME" -d "token=${{ secrets.RTD_WEBHOOK_TOKEN }}" https://readthedocs.org/api/v2/webhook/openff-docs/243876/
