@@ -7,7 +7,7 @@ from hashlib import sha1
 
 from .globals_ import (
     EXEC_IPYNB_ROOT,
-    ZIPPED_IPYNB_ROOT,
+    DOWNLOAD_IPYNB_ROOT,
     COLAB_IPYNB_ROOT,
     DO_NOT_SEARCH,
     SRC_IPYNB_ROOT,
@@ -85,10 +85,10 @@ def notebook_download(docpath: Path) -> Path:
     # Get the zip file path
     if is_bare_notebook(docpath):
         # Notebook has no needed files, just zip the notebook itself
-        return ZIPPED_IPYNB_ROOT / docpath.with_suffix(".tgz")
+        return DOWNLOAD_IPYNB_ROOT / docpath.with_suffix(".tgz")
     else:
         # Zip the entire containing folder
-        return ZIPPED_IPYNB_ROOT / docpath.parent.with_suffix(".tgz")
+        return DOWNLOAD_IPYNB_ROOT / docpath.parent.with_suffix(".tgz")
 
 
 def notebook_colab(docpath: Path) -> Path:

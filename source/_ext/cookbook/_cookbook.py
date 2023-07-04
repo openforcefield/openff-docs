@@ -21,7 +21,7 @@ from .globals_ import (
     CACHE_BRANCH,
     COLAB_IPYNB_ROOT,
     OPENFF_DOCS_ROOT,
-    ZIPPED_IPYNB_ROOT,
+    DOWNLOAD_IPYNB_ROOT,
     GITHUB_REPOS,
 )
 from .utils import get_cache_prefix
@@ -119,7 +119,7 @@ def download_cached_notebooks(app: Sphinx, config: Config):
     for directory in [
         COLAB_IPYNB_ROOT,
         EXEC_IPYNB_ROOT,
-        ZIPPED_IPYNB_ROOT,
+        DOWNLOAD_IPYNB_ROOT,
     ]:
         for repo in GITHUB_REPOS:
             repo, _, tag = repo.partition("#")
