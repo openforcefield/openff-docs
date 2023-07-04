@@ -1,9 +1,10 @@
-name: Pre-process example notebooks
+name: Generate PR cache by copying main
 
 on:
   pull_request:
     types:
       - opened
+      - reopened
     branches:
       - main
 
