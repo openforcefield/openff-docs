@@ -57,9 +57,6 @@ categories: uncategorized, other
 Each example (links above) provides a "Download notebook" link, which downloads a ZIP file including the notebook, all the files needed to run it, a [Conda environment specification] YAML file, and a script called `run_notebook.sh`. Extracting the entire file and executing this script will download all the software needed to run the notebook into a virtual environment and then run the notebook:
 
 ```shell
-mkdir <notebook>
-tar -xvfz <notebook>.tgz -C <notebook>
-cd <notebook>
 ./run_notebook.sh
 ```
 
