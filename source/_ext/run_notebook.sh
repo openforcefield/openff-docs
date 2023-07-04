@@ -6,7 +6,7 @@
 # Run a notebook in the specified Conda environment, even if Conda/Mamba is not
 # installed.
 #
-# `uname` and `curl` must be available.
+# `bash`, `uname`, `dirname`, `tar`, `curl`, and `grep` must be available.
 #
 # `run_notebook.sh` should work on MacOS and most Linux distros. Windows and
 # other OSes are not supported. Architectures other than x86_64/AMD64 should
@@ -21,7 +21,7 @@
 #    fails)
 #
 # This saves storage space and network activity when installing the same package
-# in multiple environments. As a result, deleting the generated `env` directory
+# in multiple environments. As a result, deleting the generated environment
 # will not delete the micromamba package cache, which may be several gigabytes
 # in size. To remove unused packages from the cache after deleting an
 # environment, run:
@@ -48,15 +48,14 @@ shopt -s failglob
 
 # Make sure we're in the same directory as this script,
 # the environment file, and the notebook
-cd "${0%/*}"
+cd "$(dirname "$0")"
 
 ################################     CONFIG     ################################
 
-# Choose a prefix for the new environment
-# Choosing a prefix in the working directory means that deleting the working
-# directory will clean up the environment. Note that it will not clean up the
-# micromamba cache, which may be substantial.
-PREFIX='./env'
+# Choose a name for the new environment
+# Note that deleting this will not clean up the micromamba cache, which may be
+# substantial.
+ENVNAME='__openff_examples__'
 
 # The filename of the Conda environment file to run the notebook in
 ENV_FILE='environment.yaml'
@@ -94,12 +93,13 @@ fi
 # script is running)
 eval "$(./micromamba shell hook --shell=bash)"
 
-# Create the new environment, or install packages into it from the YAML file if
-# it already exists
-if [[ -d $PREFIX/conda-meta/ ]]; then
-    micromamba update --file $ENV_FILE --prefix "$PREFIX"
+# Create the new environment, or install and update packages from the YAML file
+# if it already exists
+if micromamba env list | grep "^\s*${ENVNAME}\s*"; then
+    micromamba install --file "$ENV_FILE" --name "$ENVNAME" --yes
+    micromamba update --file "$ENV_FILE" --name "$ENVNAME" --yes
 else
-    micromamba create --file $ENV_FILE --prefix "$PREFIX"
+    micromamba create --file "$ENV_FILE" --name "$ENVNAME" --yes
 fi
 
 # Unset environment variables that might confuse Python
@@ -107,6 +107,6 @@ unset PYTHONPATH
 unset PYTHONHOME
 
 # Activate the new environment
-micromamba activate "$PREFIX"
+micromamba activate "$ENVNAME"
 # Open the notebook in the new environment
 jupyter lab $NOTEBOOK
