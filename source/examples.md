@@ -1,5 +1,7 @@
 # Examples
 
+This page assembles examples drawn from throughout the OpenFF stack. Each example is provided in the form of a notebook; that is, as annotated code blocks alongside their output. You can download the corresponding notebook file and run it yourself either locally or in Google Colab with the links at the top of each page.
+
 ## Tutorials
 
 Tutorials describing key workflows from start to finish, with detailed explanations of what's going on.
@@ -49,3 +51,17 @@ Notebooks that don't fit in to the above categories.
 categories: uncategorized, other
 ---
 :::
+
+## Running examples locally
+
+Each example (links above) provides a "Download notebook" link, which downloads a ZIP file including the notebook, all the files needed to run it, a [Conda environment specification] YAML file, and a script called `run_notebook.sh`. Extracting the entire file and executing this script will download all the software needed to run the notebook into a virtual environment and then run the notebook. For more information, see the comments in the script itself.
+
+If you have a Mamba installation already, you can prepare the environment by hand:
+
+```shell
+mamba env create --file environment.yaml --name openff-examples
+mamba activate openff-examples
+jupyter lab *.ipynb
+```
+
+[Conda environment specification]: managing_environments
