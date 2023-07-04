@@ -10,7 +10,7 @@ from docutils.parsers.rst.directives import choice
 from sphinx.application import Sphinx
 
 from ._cookbook import find_notebooks
-from .globals import EXEC_IPYNB_ROOT
+from .globals_ import EXEC_IPYNB_ROOT
 from .utils import flatten
 
 

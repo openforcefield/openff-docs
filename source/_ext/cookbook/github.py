@@ -11,7 +11,7 @@ from git.repo import Repo
 import requests
 from packaging.version import Version
 
-from .globals import COLAB_IPYNB_ROOT, OPENFF_DOCS_ROOT, CACHE_BRANCH
+from .globals_ import COLAB_IPYNB_ROOT, OPENFF_DOCS_ROOT, CACHE_BRANCH
 
 
 def download_dir(

@@ -15,7 +15,7 @@ from .notebook import (
     notebook_zip,
     set_metadata,
 )
-from .globals import (
+from .globals_ import (
     EXEC_IPYNB_ROOT,
     REPO_EXAMPLES_DIR,
     CACHE_BRANCH,

@@ -25,7 +25,7 @@ from cookbook.notebook import (
     set_metadata,
 )
 from cookbook.github import download_dir, get_tag_matching_installed_version
-from cookbook.globals import *
+from cookbook.globals_ import *
 
 
 def needed_files(notebook_path: Path) -> List[Tuple[Path, Path]]:

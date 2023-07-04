@@ -5,7 +5,7 @@ from copy import deepcopy
 from pathlib import Path
 from hashlib import sha1
 
-from .globals import (
+from .globals_ import (
     EXEC_IPYNB_ROOT,
     ZIPPED_IPYNB_ROOT,
     COLAB_IPYNB_ROOT,
