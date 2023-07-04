@@ -1,3 +1,4 @@
+from multiprocessing import Value
 from pathlib import Path
 
 from sphinx.environment import BuildEnvironment
@@ -72,13 +73,15 @@ class CookbookEntryNode(docutils.nodes.Element):
     def __init__(
         self,
         docname: str,
-        thumbnail_uri: str = "https://openforcefield.org/about/branding/img/openforcefield_v2_full-color.png",
+        source_repo: str | None = None,
+        thumbnail_uri: str | None = None,
         *args,
         **kwargs,
     ):
-        """The absolute path to the notebook."""
         self.docname: str = docname
         """The docname of the notebook."""
+        self.source_repo: str | None = source_repo
+        """The GitHub repository the notebook was sourced from."""
         self.uri: str | None = None
         """URI of the built notebook."""
         self.title: str | None = None
@@ -86,14 +89,18 @@ class CookbookEntryNode(docutils.nodes.Element):
 
         super().__init__(*args, **kwargs)
 
-        self.append(
-            docutils.nodes.image(
-                "",
-                uri=thumbnail_uri,
-                alt="",
-                candidates={"?": ""},
-                classes=["output", "image_png"],
-            )
+        self.extend(
+            [
+                docutils.nodes.image(
+                    "",
+                    uri="https://openforcefield.org/about/branding/img/openforcefield_v2_full-color.png"
+                    if thumbnail_uri is None
+                    else thumbnail_uri,
+                    alt="",
+                    candidates={"?": ""},
+                    classes=["output", "image_png"],
+                )
+            ]
         )
 
     @classmethod
@@ -107,9 +114,14 @@ class CookbookEntryNode(docutils.nodes.Element):
 
         if path.with_name("thumbnail.png").is_file():
             thumbnail_uri = str(path.with_name("thumbnail.png").relative_to(env.srcdir))
-            return cls(docname=docname, thumbnail_uri=thumbnail_uri)
+        else:
+            thumbnail_uri = None
 
-        return cls(docname=docname)
+        _, source_repo, *_ = str(path.relative_to(EXEC_IPYNB_ROOT)).split("/")
+
+        return cls(
+            docname=docname, source_repo=source_repo, thumbnail_uri=thumbnail_uri
+        )
 
     @staticmethod
     def visit(translator: HTML5Translator, node: CookbookNode):
@@ -127,6 +139,9 @@ class CookbookEntryNode(docutils.nodes.Element):
             [
                 "<div class='caption'>",
                 node.title,
+                "</div>",
+                "<div class='source_repo caption'>",
+                f"{'unknown source' if node.source_repo is None else node.source_repo}",
                 "</div>",
                 "</a>",
             ]

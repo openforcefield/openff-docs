@@ -8,6 +8,7 @@
 .notebook-grid .notebook-grid-elem {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 1em;
     background-color: #f8f8f8;
     padding: 0.5em;
@@ -24,7 +25,10 @@
 }
 
 .notebook-grid .notebook-grid-elem .caption {
-    margin-top: auto;
-    margin-bottom: auto;
     text-align: center;
+}
+
+.notebook-grid .notebook-grid-elem .source_repo {
+    font-size: 70%;
+    color: #00bc4e;
 }
