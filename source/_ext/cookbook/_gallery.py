@@ -135,13 +135,22 @@ class CookbookEntryNode(docutils.nodes.Element):
     @staticmethod
     def depart(translator: HTML5Translator, node: CookbookNode):
         """Render the CookbookEntryNode in HTML"""
+        badges = []
+        if "/experimental/" in node.docname:
+            badges.append(("experimental", "red"))
+        if node.source_repo:
+            badges.append((node.source_repo, "#00bc4e"))
+
         translator.body.extend(
             [
                 "<div class='caption'>",
                 node.title,
                 "</div>",
-                "<div class='source_repo caption'>",
-                f"{'unknown source' if node.source_repo is None else node.source_repo}",
+                "<div class='badges'>",
+                *(
+                    f"<span class='badge' style='color:{color};'>{badge}</span>"
+                    for badge, color in badges
+                ),
                 "</div>",
                 "</a>",
             ]

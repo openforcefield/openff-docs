@@ -9,45 +9,58 @@
     flex-direction: column;
     justify-content: space-between;
     gap: 1em;
-    background-color: #f8f8f8;
     padding: 0.5em;
     border-radius: 4px;
-    box-shadow: 0 2px 2px  0   rgba(0,0,0,0.14),
-                0 1px 5px  0   rgba(0,0,0,0.12),
-                0 3px 1px -2px rgba(0,0,0,0.20);
+    background-color: rgba(1,84,128,0.05);
+    box-shadow: 0 2px 2px  0   rgba(1,84,128,0.14),
+                0 1px 5px  0   rgba(1,84,128,0.12),
+                0 3px 1px -2px rgba(1,84,128,0.20);
 }
 
 .notebook-grid a.notebook-grid-elem:hover {
-    box-shadow: 0 6px 10px  0   rgba(0,0,0,0.14),
-                0 1px 18px  0   rgba(0,0,0,0.12),
-                0 3px  5px -1px rgba(0,0,0,0.4);
+    background-color: rgba(47,158,210,0.05);
+    box-shadow: 0 6px 10px  0   rgba(47,158,210,0.14),
+                0 1px 18px  0   rgba(47,158,210,0.12),
+                0 3px  5px -1px rgba(47,158,210,0.4);
 }
 
 .notebook-grid .notebook-grid-elem .caption {
     text-align: center;
+    hyphens: auto;
 }
 
-.notebook-grid .notebook-grid-elem .source_repo {
+.notebook-grid .notebook-grid-elem .badges {
+    text-align: center;
+    line-height: 1.0;
+}
+
+.notebook-grid .notebook-grid-elem .badge {
     font-size: 70%;
-    color: #00bc4e;
+    display: inline-block;
+    padding: 0.1em 0.5em;
 }
 
 .notebook-links {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
+    gap: 1em 2em;
 }
 
 .notebook-links .button {
-    background-color: #f8f8f8;
+    flex: 1 auto;
     font-size: 90%;
+    text-align: center;
     padding: 0.5em 1.0em;
     border-radius: 8px;
+    background-color: rgba(1,84,128,0.05);
     box-shadow: 0 2px 2px  0   rgba(1,84,128,0.14),
                 0 1px 5px  0   rgba(1,84,128,0.12),
                 0 3px 1px -2px rgba(1,84,128,0.20);
 }
 
 .notebook-links .button:hover {
+    background-color: rgba(47,158,210,0.05);
     box-shadow: 0 3px 4px  0   rgba(47,158,210,0.14),
                 0 1px 8px  0   rgba(47,158,210,0.12),
                 0 3px 3px -2px rgba(47,158,210,0.20);

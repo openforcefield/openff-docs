@@ -77,6 +77,19 @@ def inject_links(app: Sphinx, notebook: dict, docpath: Path) -> dict:
     )
 
 
+def inject_experimental_warning(notebook: dict) -> dict:
+    return insert_cell(
+        notebook,
+        cell_type="markdown",
+        source=[
+            "```{admonition} Experimental",
+            "This notebook is experimental. It may use private or unstable",
+            "APIs, break suddenly, or produce scientifically unsound results.",
+            "```",
+        ],
+    )
+
+
 def process_notebook(app: Sphinx, docname: str, source: list[str]):
     docpath = Path(app.env.doc2path(docname))
     if docpath.suffix != ".ipynb":
@@ -86,6 +99,9 @@ def process_notebook(app: Sphinx, docname: str, source: list[str]):
 
     notebook = inject_links(app, notebook, docpath)
     notebook = inject_tags_index(notebook)
+
+    if "/experimental/" in docname:
+        notebook = inject_experimental_warning(notebook)
 
     # Tell Sphinx we don't expect this notebook to show up in a toctree
     set_metadata(notebook, "orphan", True)
