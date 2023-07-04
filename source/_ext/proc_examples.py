@@ -11,6 +11,7 @@ import sys
 import nbformat
 from nbconvert.preprocessors.execute import ExecutePreprocessor
 import yaml
+from git.repo import Repo
 
 sys.path.append(str(Path(__file__).parent))
 
@@ -106,6 +107,10 @@ def create_zip(notebook_path: Path):
     ) as zip_file:
         for path, arcname in needed_files(notebook_path):
             zip_file.write(path, arcname=arcname)
+
+        # Also include the run_notebook.sh script
+        path = Path(__file__).parent / "run_notebook.sh"
+        zip_file.write(path, arcname=path.name)
 
 
 def create_colab_notebook(src: Path):
