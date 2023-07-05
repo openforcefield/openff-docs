@@ -10,19 +10,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: khan/pull-request-comment-trigger@v1.1.0
-        id: check
-        with:
-          trigger: '/regenerate-cache'
-          reaction: rocket
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-
       - name: Dispatch preproc
-        if: steps.check.outputs.triggered == 'true'
+        if: ${{ github.event.issue.pull_request }}
         uses: actions/github-script@v6
         with:
           script: |
+            const comment = context.payload.comment
+
+            // Return early if trigger phrase is not in the comment
+            if !comment.body.includes('/regenerate-cache') {
+              return
+            }
+
+            const collaborators = await github.rest.collaborators.get({
+              owner: owner,
+              repo: repo,
+              permission: "push"
+            })
+
+            const push_usernames = collaborators.map(user => user.login)
+
+            // Return early if comment sender doesn't have push rights
+            if !push_usernames.includes(comment.sender) {
+              return
+            }
+
             const owner = context.repo.owner
             const repo = context.repo.repo
             const pr_number = context.issue.number
@@ -42,6 +54,7 @@ jobs:
 
             console.log(payload)
 
+            // We didn't return early, so dispatch the workflow
             const dispatchResp = await github.request(
               `POST /repos/${owner}/${repo}/actions/workflows/cookbook_preproc.yaml/dispatches`,
               payload
