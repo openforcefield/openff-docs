@@ -27,14 +27,12 @@ jobs:
               return
             }
 
-            console.log(comment)
-
             const commenter = await github.request(
               'GET /repos/{owner}/{repo}/collaborators/{username}/permission',
               {
                 owner: owner,
                 repo: repo,
-                username: comment.sender
+                username: comment.user.login
               }
             )
 
