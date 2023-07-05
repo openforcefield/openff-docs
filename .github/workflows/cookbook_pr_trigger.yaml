@@ -1,0 +1,28 @@
+name: Trigger preproc on comment with "/regenerate-cache"
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  trigger:
+    if: ${{ github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: khan/pull-request-comment-trigger@v1.1.0
+        id: check
+        with:
+          trigger: '/regenerate-cache'
+          reaction: rocket
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+
+      - name: Trigger preproc
+        if: steps.check.outputs.triggered == 'true'
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: cookbook_preproc.yaml
+          ref: ${{ github.ref_name }}
+          inputs: '{"pr_number": "${{ github.event.issue.number }}"}'
+          token:  ${{ secrets.github_token }}
