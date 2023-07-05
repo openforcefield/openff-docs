@@ -26,18 +26,13 @@ jobs:
           script: |
             const pr_number = context.issue.number
 
-            console.log(pr_number)
-
             const pr = await github.rest.pulls.get({
               pull_number: pr_number,
               owner: context.repo.owner,
               repo: context.repo.repo,
             })
 
-            console.log(pr)
-            console.log(JSON.stringify(pr))
-
-            return pr.head.ref
+            return pr.data.head.ref
 
       - name: Trigger preproc
         if: steps.check.outputs.triggered == 'true'
