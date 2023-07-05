@@ -50,8 +50,10 @@ jobs:
             `cookbook_preproc` action has finished for its results to be
             visible, which can be done from the appropriate [build page].
 
+
             If this PR makes any changes to how the cache is generated, the cache
             must be manually regenerated when it is merged.
+
 
             [`cookbook_preproc` action]: https://github.com/openforcefield/openff-docs/actions/workflows/cookbook_preproc.yaml
 
