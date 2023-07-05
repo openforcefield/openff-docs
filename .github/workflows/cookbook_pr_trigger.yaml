@@ -25,7 +25,7 @@ jobs:
           result-encoding: string
           script: |
             return github.rest.pulls.get({
-              pull_number: context.github.event.issue.number,
+              pull_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
             }).head.ref
