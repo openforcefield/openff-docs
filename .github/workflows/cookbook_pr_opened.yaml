@@ -40,7 +40,8 @@ jobs:
             copied over to this PR's cache.
 
 
-            To regenerate the cache for this PR, comment on this PR with the string:
+            To regenerate the cache for this PR, create a comment on this PR
+            consisting only of the string:
 
             ```
             /regenerate-cache
