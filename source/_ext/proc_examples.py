@@ -7,6 +7,7 @@ import shutil
 from multiprocessing import Pool
 from time import sleep
 import sys
+import tarfile
 
 import nbformat
 from nbconvert.preprocessors.execute import ExecutePreprocessor
@@ -16,7 +17,7 @@ from git.repo import Repo
 sys.path.append(str(Path(__file__).parent))
 
 from cookbook.notebook import (
-    notebook_zip,
+    notebook_download,
     notebook_colab,
     get_metadata,
     insert_cell,
@@ -25,7 +26,7 @@ from cookbook.notebook import (
     set_metadata,
 )
 from cookbook.github import download_dir, get_tag_matching_installed_version
-from cookbook.globals import *
+from cookbook.globals_ import *
 
 
 def needed_files(notebook_path: Path) -> List[Tuple[Path, Path]]:
@@ -92,28 +93,26 @@ def needed_files(notebook_path: Path) -> List[Tuple[Path, Path]]:
     return list(files.items())
 
 
-def create_zip(notebook_path: Path):
+def create_download(notebook_path: Path):
     """
-    Create a zip file with all needed files from a jupyter notebook path
+    Create a tgz file with all needed files from a jupyter notebook path
     """
-    zip_path = notebook_zip(notebook_path)
-    zip_path.parent.mkdir(parents=True, exist_ok=True)
+    tgz_path = notebook_download(notebook_path)
+    tgz_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with ZipFile(
-        file=zip_path,
-        mode="w",
-        compression=ZIP_DEFLATED,
-        compresslevel=9,
-    ) as zip_file:
+    with tarfile.open(
+        name=tgz_path,
+        mode="w:gz",
+    ) as tgz_file:
         for path, arcname in needed_files(notebook_path):
-            zip_file.write(path, arcname=arcname)
+            tgz_file.add(path, arcname=arcname)
 
         # Also include the run_notebook.sh script
         path = Path(__file__).parent / "run_notebook.sh"
-        zip_file.write(path, arcname=path.name)
+        tgz_file.add(path, arcname=path.name)
 
 
-def create_colab_notebook(src: Path):
+def create_colab_notebook(src: Path, cache_uri_prefix: str | None = None):
     """
     Create a copy of the notebook at src for Google Colab and save it to dst.
     """
@@ -130,10 +129,14 @@ def create_colab_notebook(src: Path):
     for path, rel_path in files:
         shutil.copy(path, dst.parent / rel_path)
 
-    # Get a list of the wget commands we'll need to download the files
+    # Get the base URI to download files from the cache
     base_uri = (
         f"https://raw.githubusercontent.com/openforcefield/openff-docs/{CACHE_BRANCH}"
     )
+    if cache_uri_prefix is not None:
+        base_uri = base_uri + "/" + cache_uri_prefix
+
+    # Get a list of the wget commands we'll need to download the files
     wget_files = [
         f"!wget -q {base_uri}/{dst.parent.relative_to(OPENFF_DOCS_ROOT)}/{relative_path}"
         for _, relative_path in files
@@ -151,6 +154,8 @@ def create_colab_notebook(src: Path):
             "condacolab.install_mambaforge()",
             *wget_files,
             f"!mamba env update -q --name=base --file={PACKAGED_ENV_NAME}",
+            "from google.colab import output",
+            "output.enable_custom_widget_manager()",
         ],
     )
 
@@ -204,11 +209,11 @@ def execute_notebook(src_and_tag: Tuple[Path, str]):
         nbformat.write(nb, f)
 
     # Copy the thumbnail
-    thumbnail_path = src_rel.with_name(THUMBNAIL_FILENAME)
+    thumbnail_path = src.with_name(THUMBNAIL_FILENAME)
     if thumbnail_path.is_file():
         shutil.copy(
-            SRC_IPYNB_ROOT / thumbnail_path,
-            EXEC_IPYNB_ROOT / thumbnail_path,
+            thumbnail_path,
+            EXEC_IPYNB_ROOT / thumbnail_path.relative_to(SRC_IPYNB_ROOT),
         )
 
     print("Done executing", src.relative_to(SRC_IPYNB_ROOT))
@@ -229,13 +234,18 @@ def clean_up_notebook(notebook: Path):
 
     Note that this does not delete the source notebook.
     """
-    notebook_zip(notebook).unlink()
+    notebook_download(notebook).unlink()
     shutil.rmtree(notebook_colab(notebook).parent)
     exec_notebook = EXEC_IPYNB_ROOT / notebook.relative_to(SRC_IPYNB_ROOT)
     exec_notebook.unlink()
 
 
-def main(do_proc=True, do_exec=True, prefix: Path | None = None):
+def main(
+    do_proc=True,
+    do_exec=True,
+    prefix: Path | None = None,
+    cache_prefix: str | None = None,
+):
     print("Working in", Path().resolve())
 
     notebooks: List[Tuple[Path, str]] = []
@@ -262,11 +272,11 @@ def main(do_proc=True, do_exec=True, prefix: Path | None = None):
     # Create Colab and downloadable versions of the notebooks
     if do_proc:
         shutil.rmtree(COLAB_IPYNB_ROOT, ignore_errors=True)
-        shutil.rmtree(ZIPPED_IPYNB_ROOT, ignore_errors=True)
+        shutil.rmtree(DOWNLOAD_IPYNB_ROOT, ignore_errors=True)
         for notebook, _ in notebooks:
             print("Processing", notebook)
-            create_colab_notebook(notebook)
-            create_zip(notebook)
+            create_colab_notebook(notebook, cache_prefix)
+            create_download(notebook)
 
     # Execute notebooks in parallel for rendering as HTML
     if do_exec:
@@ -284,7 +294,7 @@ def main(do_proc=True, do_exec=True, prefix: Path | None = None):
         for directory in [
             COLAB_IPYNB_ROOT,
             EXEC_IPYNB_ROOT,
-            ZIPPED_IPYNB_ROOT,
+            DOWNLOAD_IPYNB_ROOT,
             SRC_IPYNB_ROOT,
         ]:
             shutil.move(
@@ -303,6 +313,7 @@ if __name__ == "__main__":
     # it they hit a road bump.
     os.environ["INTERCHANGE_EXPERIMENTAL"] = "1"
 
+    # --prefix is the path to store the output in
     prefix = None
     for arg in sys.argv:
         if arg.startswith("--prefix="):
@@ -310,8 +321,19 @@ if __name__ == "__main__":
     if "--prefix" in sys.argv:
         raise ValueError("Specify prefix in a single argument: `--prefix=<prefix>`")
 
+    # --cache-prefix is the path that the output will be stored in within the cache
+    cache_prefix = None
+    for arg in sys.argv:
+        if arg.startswith("--cache-prefix="):
+            cache_prefix = arg[15:]
+    if "--prefix" in sys.argv:
+        raise ValueError(
+            "Specify Colab prefix in a single argument: `--cache-prefix=<prefix>`"
+        )
+
     main(
         do_proc=not "--skip-proc" in sys.argv,
         do_exec=not "--skip-exec" in sys.argv,
         prefix=prefix,
+        cache_prefix=cache_prefix,
     )

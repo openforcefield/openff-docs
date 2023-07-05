@@ -30,10 +30,12 @@ author = "The Open Force Field Initiative"
 extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.intersphinx",
-    "myst_parser",
+    # "nbsphinx",
+    "myst_nb",
     "openff_sphinx_theme",
+    "sphinx_design",
 ]
-
+source_suffix = [".rst", ".md"]
 # Extensions for the myst parser
 myst_enable_extensions = [
     "dollarmath",
@@ -49,6 +51,9 @@ myst_url_schemes = (
     "http",
     "https",
 )
+suppress_warnings = [
+    "myst.header",
+]
 _python_doc_base = "https://docs.python.org/3.6"
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3.6", None),
@@ -101,18 +106,36 @@ codelinter_languages = {
     # Language: command to pass codeblock as stdin
     "python": "python",
 }
+# Tell MyST-NB about codelinter builder
+nb_mime_priority_overrides = [
+    ("codelinter", "text/plain", 0),
+]
 
+
+# Cookbook stuff
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path("./_ext").resolve()))
+extensions.extend(
+    [
+        "cookbook.sphinx_ext",
+    ]
+)
+nbsphinx_execute = "never"
+nb_execution_mode = "off"
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 html_static_path = ["_static"]
 html_css_files = [
     "css/deflist-flowchart.css",
+    "css/cookbook.css",
 ]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["Thumbs.db", ".DS_Store"]
+exclude_patterns = ["Thumbs.db", ".DS_Store", "_*"]
 
 
 # -- Options for HTML output -------------------------------------------------

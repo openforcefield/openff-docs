@@ -2,6 +2,7 @@
 build/
 
 # Cookbook files
+source/examples/
 source/_cookbook/
 
 # Python stuff

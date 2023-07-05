@@ -6,7 +6,13 @@ dependencies:
     # readthedocs dependencies
     - sphinx>=5,<7
     - myst-parser>=1,<2
+    # - myst-nb
     - sphinx-notfound-page
+    - ipython >=8.8
+    - sphinx-design
+    - gitpython
+    - nbconvert
+    - nbformat
     # Code example deps
     - openff-toolkit-base
     - openff-interchange-base
@@ -18,3 +24,5 @@ dependencies:
         - git+https://github.com/openforcefield/openff-sphinx-theme.git@main
         # Lints
         - sphinxawesome-codelinter
+        # Sphinx
+        - git+https://github.com/Yoshanuikabundi/MyST-NB.git@upgrade-to-1

@@ -2,8 +2,14 @@ name: Pre-process example notebooks
 
 on:
   workflow_dispatch:
-  # TODO: Run when source repo releases are available on Conda Forge
-  # TODO: Run when the examples Conda environment is changed
+    inputs:
+      pr_number:
+        description: 'Update the cache for PR#: (leave blank if not a PR)'
+        required: false
+        default: ""
+        type: string
+  schedule:
+    - cron: 0 0 * * * # 1/day at midnight UTC
 
 jobs:
   preprocess:
@@ -24,23 +30,42 @@ jobs:
           path: 'deploy'
           clean: false
 
+      - name: Choose deployment subdirectory
+        shell: bash -l {0}
+        run: |
+          if [[ ${{ github.event_name }} != "workflow_dispatch" ]]; then
+            echo "DEPLOY_SUBDIR=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+          elif [[ "${{ inputs.pr_number }}" == "" ]]; then
+            echo "DEPLOY_SUBDIR=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+          else
+            echo "DEPLOY_SUBDIR=PR${{ inputs.pr_number }}" >> "$GITHUB_ENV"
+          fi
+
       - name: Prepare cache deployment directory
         shell: bash -l {0}
         run: |
-          cd deploy
+          mkdir -p deploy/$DEPLOY_SUBDIR
+          cd deploy/$DEPLOY_SUBDIR
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git rm -r .
+          git rm -r --ignore-unmatch .
 
       - name: Pre-process and execute notebooks
         shell: bash -l {0}
         run: |
-          python source/_ext/proc_examples.py --prefix=deploy
+          python source/_ext/proc_examples.py --prefix=deploy/$DEPLOY_SUBDIR --cache-prefix=$DEPLOY_SUBDIR
 
       - name: Deploy cache
         shell: bash -l {0}
         run: |
-          cd deploy
+          cd deploy/$DEPLOY_SUBDIR
           git add .
-          git commit -m "Deploy pre-processed notebook cache"
-          git push origin _cookbook_data
+          git commit --amend -m "Deploy pre-processed notebook cache"
+          git push --force origin _cookbook_data
+
+      - name: Trigger RTD build
+        # RTD doesn't offer a way to manually trigger builds in PRs, so we'll just do this for other builds
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.pr_number == '')
+        shell: bash -l {0}
+        run: |
+          curl -X POST -d "branches=$GITHUB_REF_NAME" -d "token=${{ secrets.RTD_WEBHOOK_TOKEN }}" https://readthedocs.org/api/v2/webhook/openff-docs/243876/

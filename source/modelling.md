@@ -142,10 +142,11 @@ Once you have your MD engine input files from Interchange, you just simulate the
 (ecosystem-bespokefit)=
 ## [Fine-Tuning a Force Field]{.bespokefit}
 
-Sometimes, general force fields like those we publish just aren't good enough, and you need to refine parameters for a new molecule. [OpenFF BespokeFit] is a tool that automatically identifies torsions that could use refinement, computes a quantum chemical torsion drive around those dihedrals, and refines a force field to reproduce that accurate torsion drive. It uses all sorts of clever tricks like fragmentation, multithreading, and caching to make this refinement fast, reproducible, and restartable. It has the flexibility to work with a variety of quantum chemical engines. It use a general SMIRNOFF force field as its starting point, and adds new terms to describe the new torsions. If you refine a torsion that's common to a line of molecules that you're interested in, you can use the resulting force field for the entire line!
+Sometimes, general force fields like those we publish just aren't good enough, and you need to refine parameters for a new molecule. [OpenFF BespokeFit] is a tool that automatically identifies torsions that could use refinement, computes a quantum chemical torsion drive around those dihedrals, and refines a force field to reproduce that accurate torsion drive. It uses all sorts of clever tricks like fragmentation, multithreading, and caching to make this refinement fast, reproducible, and restartable, as well as to avoid repeating work on molecules that share chemistry. BespokeFit has the flexibility to work with a variety of quantum chemical engines via [QCEngine]. It uses a general SMIRNOFF force field as its starting point, and adds new terms to describe the new torsions. If you refine a torsion that's common to a line of molecules that you're interested in, you can use the resulting force field for the entire line!
 
 BespokeFit uses a CLI interface to make it easy to use. It can be a bit involved, so to get started, see the [](inv:openff.bespokefit#getting-started/quick-start) or our [YouTube tutorial]. BespokeFit is distributed in the 
 [`openff-bespokefit`] package and is represented in [orange]{.bespokefit} on the [flowchart].
 
+[QCEngine]: https://github.com/MolSSI/QCEngine
 [YouTube tutorial]: https://www.youtube.com/watch?v=jI1t7QGir98&t=1s&pp=ygUOb3BlbmZvcmNlZmllbGQ%3D
 [`openff-bespokefit`]: inv:openff.bespokefit#getting-started/installation

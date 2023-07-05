@@ -5,9 +5,9 @@ from copy import deepcopy
 from pathlib import Path
 from hashlib import sha1
 
-from .globals import (
+from .globals_ import (
     EXEC_IPYNB_ROOT,
-    ZIPPED_IPYNB_ROOT,
+    DOWNLOAD_IPYNB_ROOT,
     COLAB_IPYNB_ROOT,
     DO_NOT_SEARCH,
     SRC_IPYNB_ROOT,
@@ -75,7 +75,7 @@ def is_bare_notebook(docpath: Path) -> bool:
     return docpath.parent.name in ["examples", "experimental", "deprecated"]
 
 
-def notebook_zip(docpath: Path) -> Path:
+def notebook_download(docpath: Path) -> Path:
     """Get the name of the zip file for the notebook at ``docpath``"""
     # Strip off any leading SRC_IPYNB_ROOT or EXEC_IPYNB_ROOT
     if str(docpath).startswith(str(SRC_IPYNB_ROOT) + "/"):
@@ -85,10 +85,10 @@ def notebook_zip(docpath: Path) -> Path:
     # Get the zip file path
     if is_bare_notebook(docpath):
         # Notebook has no needed files, just zip the notebook itself
-        return ZIPPED_IPYNB_ROOT / docpath.with_suffix(".zip")
+        return DOWNLOAD_IPYNB_ROOT / docpath.with_suffix(".tgz")
     else:
         # Zip the entire containing folder
-        return ZIPPED_IPYNB_ROOT / docpath.parent.with_suffix(".zip")
+        return DOWNLOAD_IPYNB_ROOT / docpath.parent.with_suffix(".tgz")
 
 
 def notebook_colab(docpath: Path) -> Path:
