@@ -34,6 +34,7 @@ jobs:
               repo: context.repo.repo,
             })
 
+            console.log(pr)
             console.log(JSON.stringify(pr))
 
             return pr.head.ref
