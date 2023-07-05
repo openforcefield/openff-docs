@@ -40,16 +40,12 @@ jobs:
             copied over to this PR's cache.
 
 
-            To regenerate the cache, navigate to the [`cookbook_preproc`
-            action], click "Run workflow", select the current branch and enter
-            the PR number (`${{ github.event.number }}`), and then click the
-            green "Run workflow" button.
+            To regenerate the cache for this PR, create a comment on this PR
+            consisting only of the string:
 
 
-            Note that the RTD build must be executed after the
-            `cookbook_preproc` action has finished for its results to be
-            visible, which can be done from the appropriate [build page].
+            ```
 
-
-            [`cookbook_preproc` action]: https://github.com/openforcefield/openff-docs/actions/workflows/cookbook_preproc.yaml
-            [build page]: https://readthedocs.org/projects/openff-docs/builds/
+            /regenerate-cache
+            
+            ```
