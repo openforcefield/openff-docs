@@ -22,20 +22,22 @@ def download_dir(
 ):
     """Download the contents of src_path from GitHub src_repo to dst_path."""
     with TemporaryDirectory() as local_repo_path:
-        # Clone without downloading anything
+        # Clone metadata of entire history, but no blobs (file data)
+        # "--depth=1" is not an optimization, because it prevents us from
+        # checking out commits other than HEAD. f"--branch={refspec}" is not an
+        # optimization, because it prevents us from checking out commits by hash
         repo = Repo.clone_from(
             url=f"https://github.com/{src_repo}.git",
             to_path=local_repo_path,
             multi_options=[
-                "--depth=1",
-                "--sparse",
                 "--no-checkout",
-                f"--branch={refspec}",
+                "--filter=blob:none",
             ],
         )
-        # Just checkout the requested directory
+        # Set up sparse checkout of the desired path
         repo.git.sparse_checkout("set", src_path)
-        repo.git.checkout()
+        # Checkout (and therefore download) the desired refspec
+        repo.git.checkout(refspec)
 
         # Move the requested directory to dst_path
         shutil.move(Path(local_repo_path) / src_path, dst_path)
