@@ -22,7 +22,7 @@ jobs:
               return
             }
 
-            const collaborators = await github.rest.collaborators.get({
+            const collaborators = await github.rest.repos.listCollaborators({
               owner: owner,
               repo: repo,
               permission: "push"
