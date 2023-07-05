@@ -24,11 +24,15 @@ jobs:
         with:
           result-encoding: string
           script: |
-            return github.rest.pulls.get({
+            const pr = github.rest.pulls.get({
               pull_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-            }).head.ref
+            })
+
+            console.log(JSON.stringify(pr))
+
+            return pr.head.ref
 
       - name: Trigger preproc
         if: steps.check.outputs.triggered == 'true'
