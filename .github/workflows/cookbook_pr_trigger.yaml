@@ -36,7 +36,6 @@ jobs:
               }
             )
 
-            console.log(commenter)
             const commenter_can_push = commenter.data.user.permissions.push
 
             // Return early if comment sender doesn't have push rights
@@ -53,12 +52,8 @@ jobs:
 
             const ref = pr.data.head.ref
 
-            const payload =
-
-            console.log(payload)
-
             // We didn't return early, so dispatch the workflow
-            const dispatchResp = await github.request(
+            const dispatch = await github.request(
               'POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches',
               {
                 owner: owner,
@@ -69,4 +64,4 @@ jobs:
               }
             )
 
-            console.log(dispatchResp)
+            console.log(dispatch)
