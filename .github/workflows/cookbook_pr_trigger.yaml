@@ -37,9 +37,10 @@ jobs:
             )
 
             console.log(commenter)
+            const commenter_can_push = commenter.data.user.permissions.push
 
             // Return early if comment sender doesn't have push rights
-            if (!commenter.data.permissions.push) {
+            if (!commenter_can_push) {
               console.log("User does not have push permissions")
               return
             }
