@@ -42,7 +42,7 @@ jobs:
 
             console.log(payload)
 
-            const dispatchResp = await octokit.request(
+            const dispatchResp = await github.request(
               `POST /repos/${owner}/${repo}/actions/workflows/cookbook_preproc.yaml/dispatches`,
               payload
             )
