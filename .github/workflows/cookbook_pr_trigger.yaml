@@ -18,11 +18,23 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
+      - name: Get PR ref name
+        uses: actions/github-script@v6
+        id: pull_request_head_ref
+        with:
+          result-encoding: string
+          script: |
+            return github.rest.pulls.get({
+              pull_number: context.github.event.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            }).head.ref
+
       - name: Trigger preproc
         if: steps.check.outputs.triggered == 'true'
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: cookbook_preproc.yaml
-          ref: ${{ github.event.issue.pull_request.head.ref }}
+          ref: ${{ steps.pull_request_head_ref_name.outputs.result }}
           inputs: '{"pr_number": "${{ github.event.issue.number }}"}'
           token:  ${{ secrets.github_token }}
