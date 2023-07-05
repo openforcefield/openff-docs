@@ -18,27 +18,33 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
-      - name: Get PR ref name
+      - name: Dispatch preproc
+        if: steps.check.outputs.triggered == 'true'
         uses: actions/github-script@v6
-        id: pull_request_head_ref
         with:
-          result-encoding: string
           script: |
+            const owner = context.repo.owner
+            const repo = context.repo.repo
             const pr_number = context.issue.number
 
             const pr = await github.rest.pulls.get({
               pull_number: pr_number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              owner: owner,
+              repo: repo,
             })
 
-            return pr.data.head.ref
+            const ref = pr.data.head.ref
 
-      - name: Trigger preproc
-        if: steps.check.outputs.triggered == 'true'
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: cookbook_preproc.yaml
-          ref: ${{ steps.pull_request_head_ref_name.outputs.result }}
-          inputs: '{"pr_number": "${{ github.event.issue.number }}"}'
-          token:  ${{ secrets.github_token }}
+            const payload = {
+              ref: ref,
+              inputs: {pr_number: pr_number}
+            }
+
+            console.log(payload)
+
+            const dispatchResp = await octokit.request(
+              `POST /repos/${owner}/${repo}/actions/workflows/cookbook_preproc.yaml/dispatches`,
+              payload
+            )
+
+            console.log(dispatchResp)
