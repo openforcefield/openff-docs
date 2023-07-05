@@ -63,6 +63,30 @@ jobs:
           git commit --amend -m "Deploy pre-processed notebook cache"
           git push --force origin _cookbook_data
 
+      - name: Report status to PR
+        if: (success() || failure()) && github.event_name == 'workflow_dispatch' && inputs.pr_number != ''
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          pr_number: ${{inputs.pr_number}}
+          message: >
+            A workflow dispatched to regenerate the cookbook cache for this PR has just finished.
+
+
+            - Run ID: [${{github.run_id}}]
+
+            - Triggering actor: ${{github.triggering_actor}}
+
+            - Target branch: ${{github.ref_name}}
+
+            - Status: **${{job.status}}**
+
+
+            If the workflow was successful, changes will be visible in the ReadTheDocs
+            preview only after it has been rebuilt.
+
+
+            [${{github.run_id}}]: https://github.com/openforcefield/${{github.repository}}/runs/${{github.run_id}}
+
       - name: Trigger RTD build
         # RTD doesn't offer a way to manually trigger builds in PRs, so we'll just do this for other builds
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.pr_number == '')
