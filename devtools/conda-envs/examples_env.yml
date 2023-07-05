@@ -15,7 +15,7 @@ dependencies:
     # Examples
     - openff-toolkit-examples>=0.14.0
     - openff-interchange>=0.3.7
-    - openff-nagl==0.2.2
+    - openff-nagl>=0.2.3
     # - openff-fragmenter
     # - openff-qcsubmit
     - gromacs >=2021=nompi*
