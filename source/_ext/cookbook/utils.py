@@ -18,7 +18,7 @@ def get_cache_prefix(*, default=None) -> str:
     defaults to the cache for the branch given as default. If the default is
     None and the prefix cannot be determined, raises ValueError.
     """
-    if "READTHEDOCS_VERSION_TYPE" in environ:
+    if environ.get("READTHEDOCS_VERSION_TYPE") == "external":
         return f"PR{environ['READTHEDOCS_VERSION_NAME']}"
     elif "READTHEDOCS_GIT_IDENTIFIER" in environ:
         return environ["READTHEDOCS_GIT_IDENTIFIER"]
