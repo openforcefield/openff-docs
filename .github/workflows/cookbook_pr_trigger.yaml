@@ -18,7 +18,7 @@ jobs:
             const comment = context.payload.comment
 
             // Return early if trigger phrase is not in the comment
-            if !comment.body.includes('/regenerate-cache') {
+            if (!comment.body.includes('/regenerate-cache')) {
               return
             }
 
@@ -31,7 +31,7 @@ jobs:
             const push_usernames = collaborators.map(user => user.login)
 
             // Return early if comment sender doesn't have push rights
-            if !push_usernames.includes(comment.sender) {
+            if (!push_usernames.includes(comment.sender)) {
               return
             }
 
