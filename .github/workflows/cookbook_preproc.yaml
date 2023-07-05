@@ -16,6 +16,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Report dispatch to PR
+        if: github.event_name == 'workflow_dispatch' && inputs.pr_number != ''
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          pr_number: ${{inputs.pr_number}}
+          message: >
+            A workflow has been dispatched to regenerate the cookbook cache for this PR.
+
+
+            - Run ID: [${{ github.run_id }}]
+
+            - Triggering actor: ${{github.triggering_actor}}
+
+            - Target branch: ${{github.ref_name}}
+
+
+            [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+
       - uses: actions/checkout@v3
 
       - name: Install Conda environment
@@ -72,7 +91,7 @@ jobs:
             A workflow dispatched to regenerate the cookbook cache for this PR has just finished.
 
 
-            - Run ID: [${{github.run_id}}]
+            - Run ID: [${{ github.run_id }}]
 
             - Triggering actor: ${{github.triggering_actor}}
 
@@ -85,7 +104,7 @@ jobs:
             preview only after it has been rebuilt.
 
 
-            [${{github.run_id}}]: https://github.com/openforcefield/${{github.repository}}/runs/${{github.run_id}}
+            [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
       - name: Trigger RTD build
         # RTD doesn't offer a way to manually trigger builds in PRs, so we'll just do this for other builds
