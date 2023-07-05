@@ -1,0 +1,50 @@
+name: Trigger preproc on comment with "/regenerate-cache"
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  trigger:
+    if: ${{ github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: khan/pull-request-comment-trigger@v1.1.0
+        id: check
+        with:
+          trigger: '/regenerate-cache'
+          reaction: rocket
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+
+      - name: Dispatch preproc
+        if: steps.check.outputs.triggered == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const owner = context.repo.owner
+            const repo = context.repo.repo
+            const pr_number = context.issue.number
+
+            const pr = await github.rest.pulls.get({
+              pull_number: pr_number,
+              owner: owner,
+              repo: repo,
+            })
+
+            const ref = pr.data.head.ref
+
+            const payload = {
+              ref: ref,
+              inputs: {pr_number: pr_number.toString()}
+            }
+
+            console.log(payload)
+
+            const dispatchResp = await github.request(
+              `POST /repos/${owner}/${repo}/actions/workflows/cookbook_preproc.yaml/dispatches`,
+              payload
+            )
+
+            console.log(dispatchResp)
