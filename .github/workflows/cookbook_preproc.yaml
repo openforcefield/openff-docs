@@ -62,6 +62,8 @@ jobs:
           id: cookbook_preproc
           status: in_progress
           name: "Regenerate example notebook cache"
+          details_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          title: "cookbook_preproc"
 
       - uses: actions/checkout@v3
 
