@@ -61,22 +61,6 @@ jobs:
         with:
           environment-file: devtools/conda-envs/examples_env.yml
 
-      - name: Checkout deployment branch
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ env.DEPLOY_BRANCH }}
-          path: 'deploy'
-          clean: false
-
-      - name: Prepare cache deployment directory
-        shell: bash -l {0}
-        run: |
-          mkdir -p deploy
-          cd deploy
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git rm -r --ignore-unmatch .
-
       - name: Pre-process and execute notebooks
         shell: bash -l {0}
         run: |
@@ -86,9 +70,16 @@ jobs:
         shell: bash -l {0}
         run: |
           cd deploy
+
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+          git init .
+          git remote add origin ${{ github.repository_url }}
+
           git add .
-          git commit --amend -m "Deploy pre-processed notebook cache"
-          git push --force origin $DEPLOY_BRANCH
+          git commit -m "Deploy pre-processed notebook cache"
+          git push --force origin HEAD:$DEPLOY_BRANCH
 
       - name: Trigger RTD build
         # RTD doesn't offer a way to manually trigger builds in PRs, so we'll just do this for other builds
