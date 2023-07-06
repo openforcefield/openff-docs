@@ -72,7 +72,7 @@ jobs:
                 started_at: new Date().toISOString(),
                 output: {
                   title: 'Regenerate example notebook cache',
-                  summary: '',
+                  summary: 'Results and progress: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
                   text: ''
                 },
                 headers: {
