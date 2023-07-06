@@ -54,6 +54,14 @@ jobs:
 
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+      - name: Create check
+        if: github.event_name == 'workflow_dispatch' && inputs.pr_number != ''
+        uses: dflydev/check-runs-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          id: cookbook_preproc
+          status: in_progress
+
       - uses: actions/checkout@v3
 
       - name: Install Conda environment
@@ -71,8 +79,9 @@ jobs:
         run: |
           cd deploy
 
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+          git config --global init.defaultBranch main
 
           git init .
           git remote add origin ${{ github.repository_url }}
@@ -116,3 +125,11 @@ jobs:
 
             [rebuilt]: https://readthedocs.org/projects/openff-docs/builds/
 
+      - name: Update check
+        if: always() && github.event_name == 'workflow_dispatch' && inputs.pr_number != ''
+        uses: dflydev/check-runs-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          id: cookbook_preproc
+          status: completed
+          conclusion: ${{ job.status }}
