@@ -83,7 +83,7 @@ jobs:
 
             console.log(created_run)
 
-            return created_run.id
+            return created_run.data.id
 
       - uses: actions/checkout@v3
 
