@@ -80,6 +80,9 @@ jobs:
                 }
               }
             )
+
+            console.log(created_run)
+
             return created_run.id
 
       - uses: actions/checkout@v3
