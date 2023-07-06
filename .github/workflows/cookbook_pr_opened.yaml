@@ -41,7 +41,7 @@ jobs:
 
 
             To regenerate the cache for this PR, create a comment on this PR
-            consisting only of the string:
+            including the string:
 
 
             ```

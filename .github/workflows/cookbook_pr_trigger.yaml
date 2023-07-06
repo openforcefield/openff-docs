@@ -21,9 +21,9 @@ jobs:
 
             const comment = context.payload.comment
 
-            // Return early if comment is not the trigger phrase
-            if (comment.body != '/regenerate-cache') {
-              console.log("Comment is not trigger phrase")
+            // Return early if comment does not include the trigger phrase
+            if (!comment.body.includes('/regenerate-cache')) {
+              console.log("Comment does not include trigger phrase")
               return
             }
 
