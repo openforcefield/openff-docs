@@ -23,6 +23,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Choose deployment branch
+        shell: bash -l {0}
+        run: |
+          if [[ ${{ github.event_name }} != "workflow_dispatch" ]]; then
+            echo "DEPLOY_BRANCH=_cookbook_data_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+          elif [[ "${{ inputs.pr_number }}" == "" ]]; then
+            echo "DEPLOY_BRANCH=_cookbook_data_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+          else
+            echo "DEPLOY_BRANCH=_cookbook_data_PR${{ inputs.pr_number }}" >> "$GITHUB_ENV"
+          fi
+
       - name: Report dispatch to PR
         if: github.event_name == 'workflow_dispatch' && inputs.pr_number != ''
         uses: thollander/actions-comment-pull-request@v2
@@ -38,19 +49,10 @@ jobs:
 
             - Target branch: ${{ github.ref_name }}
 
+            - Deployment branch: ${{ env.DEPLOY_BRANCH }}
+
 
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-      - name: Choose deployment branch
-        shell: bash -l {0}
-        run: |
-          if [[ ${{ github.event_name }} != "workflow_dispatch" ]]; then
-            echo "DEPLOY_BRANCH=_cookbook_data_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
-          elif [[ "${{ inputs.pr_number }}" == "" ]]; then
-            echo "DEPLOY_BRANCH=_cookbook_data_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
-          else
-            echo "DEPLOY_BRANCH=_cookbook_data_PR${{ inputs.pr_number }}" >> "$GITHUB_ENV"
-          fi
 
       - uses: actions/checkout@v3
 
@@ -109,6 +111,8 @@ jobs:
             - Triggering actor: ${{ github.triggering_actor }}
 
             - Target branch: ${{ github.ref_name }}
+
+            - Deployment branch: ${{ env.DEPLOY_BRANCH }}
 
             - Status: **${{ job.status }}**
 
