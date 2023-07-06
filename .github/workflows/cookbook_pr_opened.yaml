@@ -16,7 +16,7 @@ jobs:
       - name: Checkout deployment branch
         uses: actions/checkout@v3
         with:
-          ref: _cookbook_data
+          ref: _cookbook_data_main
           clean: false
 
       - name: Copy cache from main to PR branch
