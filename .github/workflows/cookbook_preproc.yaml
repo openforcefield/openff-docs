@@ -89,7 +89,8 @@ jobs:
           git init .
           git remote add origin ${{ github.repositoryUrl }}
 
-          git commit -a -m "Deploy pre-processed notebook cache"
+          git add .
+          git commit -m "Deploy pre-processed notebook cache"
           git push --force origin HEAD:$DEPLOY_BRANCH
 
       - name: Trigger RTD build
