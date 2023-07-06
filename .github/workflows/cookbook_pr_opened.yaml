@@ -24,7 +24,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git push origin _cookbook_data_PR${{ github.event.number }}
+          git push origin HEAD:_cookbook_data_PR${{ github.event.number }}
 
       - name: Add descriptive comment to PR
         uses: thollander/actions-comment-pull-request@v2
