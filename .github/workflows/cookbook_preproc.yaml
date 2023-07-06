@@ -117,9 +117,11 @@ jobs:
             - Status: **${{ job.status }}**
 
 
-            If the workflow was successful, changes will be visible in the ReadTheDocs
-            preview only after it has been rebuilt.
+            If the workflow was successful, changes will only be visible in the ReadTheDocs
+            preview after it has been [rebuilt].
 
 
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            [rebuilt]: https://readthedocs.org/projects/openff-docs/builds/
 
