@@ -61,6 +61,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           id: cookbook_preproc
           status: in_progress
+          name: "Regenerate example notebook cache"
 
       - uses: actions/checkout@v3
 
