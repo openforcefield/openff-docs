@@ -12,18 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout deployment branch
-        uses: actions/checkout@v3
-        with:
-          ref: _cookbook_data
-          clean: false
-
       - name: Clean up PR cache
         shell: bash -l {0}
         run: |
-          rm -r PR${{ github.event.number }}
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add .
-          git commit --amend -m "Deploy pre-processed notebook cache"
-          git push --force origin _cookbook_data
+          git push origin --delete _cookbook_data_PR${{ github.event.number }}

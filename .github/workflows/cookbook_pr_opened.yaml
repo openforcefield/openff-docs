@@ -16,27 +16,24 @@ jobs:
       - name: Checkout deployment branch
         uses: actions/checkout@v3
         with:
-          ref: _cookbook_data
+          ref: _cookbook_data_main
           clean: false
 
-      - name: Copy cache from main to PR folder and deploy
+      - name: Copy cache from main to PR branch
         shell: bash -l {0}
         run: |
-          cp -r main PR${{ github.event.number }}
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add .
-          git commit --amend -m "Deploy pre-processed notebook cache"
-          git push --force origin _cookbook_data
+          git push origin _cookbook_data_PR${{ github.event.number }}
 
       - name: Add descriptive comment to PR
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: >
             This repository caches data generated from notebooks stored in other
-            repositories in the `_cookbook_data` branch. Regenerating this cache
-            takes about half an hour, so it is not done automatically in PRs.
-            The current value of the cache from the `main` branch has been
+            repositories in the `_cookbook_data_*` branches. Regenerating this
+            cache takes about half an hour, so it is not done automatically in
+            PRs. The current value of the cache from the `main` branch has been
             copied over to this PR's cache.
 
 

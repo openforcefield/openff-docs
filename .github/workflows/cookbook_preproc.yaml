@@ -15,7 +15,7 @@ on:
       - main
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}-${{ inputs.pr_number }}
+  group: ${{ github.workflow }}-${{ inputs.pr_number || github.ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
@@ -41,6 +41,16 @@ jobs:
 
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+      - name: Choose deployment branch
+        shell: bash -l {0}
+        run: |
+          if [[ ${{ github.event_name }} != "workflow_dispatch" ]]; then
+            echo "DEPLOY_BRANCH=_cookbook_data_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+          elif [[ "${{ inputs.pr_number }}" == "" ]]; then
+            echo "DEPLOY_BRANCH=_cookbook_data_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+          else
+            echo "DEPLOY_BRANCH=_cookbook_data_PR${{ inputs.pr_number }}" >> "$GITHUB_ENV"
+          fi
 
       - uses: actions/checkout@v3
 
@@ -52,26 +62,15 @@ jobs:
       - name: Checkout deployment branch
         uses: actions/checkout@v3
         with:
-          ref: _cookbook_data
+          ref: ${{ env.DEPLOY_BRANCH }}
           path: 'deploy'
           clean: false
-
-      - name: Choose deployment subdirectory
-        shell: bash -l {0}
-        run: |
-          if [[ ${{ github.event_name }} != "workflow_dispatch" ]]; then
-            echo "DEPLOY_SUBDIR=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
-          elif [[ "${{ inputs.pr_number }}" == "" ]]; then
-            echo "DEPLOY_SUBDIR=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
-          else
-            echo "DEPLOY_SUBDIR=PR${{ inputs.pr_number }}" >> "$GITHUB_ENV"
-          fi
 
       - name: Prepare cache deployment directory
         shell: bash -l {0}
         run: |
-          mkdir -p deploy/$DEPLOY_SUBDIR
-          cd deploy/$DEPLOY_SUBDIR
+          mkdir -p deploy
+          cd deploy
           git config user.name github-actions
           git config user.email github-actions@github.com
           git rm -r --ignore-unmatch .
@@ -79,15 +78,15 @@ jobs:
       - name: Pre-process and execute notebooks
         shell: bash -l {0}
         run: |
-          python source/_ext/proc_examples.py --prefix=deploy/$DEPLOY_SUBDIR --cache-prefix=$DEPLOY_SUBDIR
+          python source/_ext/proc_examples.py --prefix=deploy/
 
       - name: Deploy cache
         shell: bash -l {0}
         run: |
-          cd deploy/$DEPLOY_SUBDIR
+          cd deploy
           git add .
           git commit --amend -m "Deploy pre-processed notebook cache"
-          git push --force origin _cookbook_data
+          git push --force origin $DEPLOY_BRANCH
 
       - name: Trigger RTD build
         # RTD doesn't offer a way to manually trigger builds in PRs, so we'll just do this for other builds
