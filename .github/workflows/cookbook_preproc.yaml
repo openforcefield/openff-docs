@@ -104,9 +104,11 @@ jobs:
           git config --global user.email github-actions@github.com
           git config --global init.defaultBranch main
 
+          // Create an empty repository so we don't have to fetch (guaranteeing atomicity)
           git init .
           git remote add origin "https://github-actions:${{ github.token }}@github.com/${{ github.repository }}.git"
 
+          // Commit the deployment and force push to the deploy branch
           git add .
           git commit -m "Deploy pre-processed notebook cache"
           git push --force origin HEAD:$DEPLOY_BRANCH
