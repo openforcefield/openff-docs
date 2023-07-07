@@ -18,13 +18,12 @@ from .notebook import (
 from .globals_ import (
     EXEC_IPYNB_ROOT,
     REPO_EXAMPLES_DIR,
-    CACHE_BRANCH,
+    DEFAULT_CACHE_BRANCH,
     COLAB_IPYNB_ROOT,
     OPENFF_DOCS_ROOT,
     DOWNLOAD_IPYNB_ROOT,
     GITHUB_REPOS,
 )
-from .utils import get_cache_prefix
 
 
 def inject_tags_index(notebook: dict) -> dict:
@@ -47,23 +46,18 @@ def inject_links(app: Sphinx, notebook: dict, docpath: Path) -> dict:
     path = "/".join(path)
 
     tag = get_metadata(notebook, "src_repo_tag", "main")
+    cache_branch = get_metadata(notebook, "cookbook_cache_branch", DEFAULT_CACHE_BRANCH)
 
     github_uri = (
         f"https://github.com/{user}/{repo}/blob/{tag}/{REPO_EXAMPLES_DIR}/{path}"
     )
     zip_path = notebook_download(docpath).relative_to(app.srcdir)
 
-    colab_path = (
-        get_cache_prefix(default="main")
-        / COLAB_IPYNB_ROOT.relative_to(OPENFF_DOCS_ROOT)
-        / user
-        / repo
-        / path
-    )
+    colab_path = COLAB_IPYNB_ROOT.relative_to(OPENFF_DOCS_ROOT) / user / repo / path
     colab_uri = (
         "https://colab.research.google.com/github/openforcefield/openff-docs/blob"
     )
-    colab_uri = colab_uri + f"/{CACHE_BRANCH}/{colab_path}"
+    colab_uri = colab_uri + f"/{cache_branch}/{colab_path}"
 
     return insert_cell(
         notebook,
@@ -129,7 +123,7 @@ def download_cached_notebooks(app: Sphinx, config: Config):
                     "openforcefield/openff-docs",
                     str("main" / repo_directory.relative_to(OPENFF_DOCS_ROOT)),
                     repo_directory,
-                    refspec=CACHE_BRANCH,
+                    refspec=DEFAULT_CACHE_BRANCH,
                 )
 
     # Exclude notebooks from linkcheck

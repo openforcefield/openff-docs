@@ -8,6 +8,7 @@ from multiprocessing import Pool
 from time import sleep
 import sys
 import tarfile
+from functools import partial
 
 import nbformat
 from nbconvert.preprocessors.execute import ExecutePreprocessor
@@ -112,7 +113,7 @@ def create_download(notebook_path: Path):
         tgz_file.add(path, arcname=path.name)
 
 
-def create_colab_notebook(src: Path, cache_uri_prefix: str | None = None):
+def create_colab_notebook(src: Path, cache_branch: str):
     """
     Create a copy of the notebook at src for Google Colab and save it to dst.
     """
@@ -131,10 +132,8 @@ def create_colab_notebook(src: Path, cache_uri_prefix: str | None = None):
 
     # Get the base URI to download files from the cache
     base_uri = (
-        f"https://raw.githubusercontent.com/openforcefield/openff-docs/{CACHE_BRANCH}"
+        f"https://raw.githubusercontent.com/openforcefield/openff-docs/{cache_branch}"
     )
-    if cache_uri_prefix is not None:
-        base_uri = base_uri + "/" + cache_uri_prefix
 
     # Get a list of the wget commands we'll need to download the files
     wget_files = [
@@ -174,7 +173,10 @@ def create_colab_notebook(src: Path, cache_uri_prefix: str | None = None):
         json.dump(notebook, file)
 
 
-def execute_notebook(src_and_tag: Tuple[Path, str]):
+def execute_notebook(
+    src_and_tag: Tuple[Path, str],
+    cache_branch: str,
+):
     """Execute a notebook and retain its widget state"""
     # Unpack the argument
     src, tag = src_and_tag
@@ -201,6 +203,9 @@ def execute_notebook(src_and_tag: Tuple[Path, str]):
 
     # Store the tag used to execute the notebook in metadata
     set_metadata(nb, "src_repo_tag", tag)
+
+    # Store the branch where this notebook will be saved in metadata
+    set_metadata(nb, "cookbook_cache_branch", cache_branch)
 
     # Write the executed notebook
     dst = EXEC_IPYNB_ROOT / src_rel
@@ -241,10 +246,10 @@ def clean_up_notebook(notebook: Path):
 
 
 def main(
+    cache_branch: str,
     do_proc=True,
     do_exec=True,
     prefix: Path | None = None,
-    cache_prefix: str | None = None,
 ):
     print("Working in", Path().resolve())
 
@@ -275,7 +280,7 @@ def main(
         shutil.rmtree(DOWNLOAD_IPYNB_ROOT, ignore_errors=True)
         for notebook, _ in notebooks:
             print("Processing", notebook)
-            create_colab_notebook(notebook, cache_prefix)
+            create_colab_notebook(notebook, cache_branch)
             create_download(notebook)
 
     # Execute notebooks in parallel for rendering as HTML
@@ -286,7 +291,12 @@ def main(
         with Pool() as pool:
             # Wait a second between launching subprocesses
             # Workaround https://github.com/jupyter/nbconvert/issues/1066
-            _ = [*pool.imap_unordered(execute_notebook, delay_iterator(notebooks))]
+            _ = [
+                *pool.imap_unordered(
+                    partial(execute_notebook, cache_branch=cache_branch),
+                    delay_iterator(notebooks),
+                )
+            ]
 
     if isinstance(prefix, Path):
         prefix.mkdir(parents=True, exist_ok=True)
@@ -321,19 +331,18 @@ if __name__ == "__main__":
     if "--prefix" in sys.argv:
         raise ValueError("Specify prefix in a single argument: `--prefix=<prefix>`")
 
-    # --cache-prefix is the path that the output will be stored in within the cache
-    cache_prefix = None
+    cache_branch = DEFAULT_CACHE_BRANCH
     for arg in sys.argv:
-        if arg.startswith("--cache-prefix="):
-            cache_prefix = arg[15:]
-    if "--prefix" in sys.argv:
+        if arg.startswith("--cache-branch="):
+            cache_branch = arg[15:]
+    if "--cache-branch" in sys.argv:
         raise ValueError(
-            "Specify Colab prefix in a single argument: `--cache-prefix=<prefix>`"
+            "Specify cache branch in a single argument: `--cache-branch=<branch>`"
         )
 
     main(
+        cache_branch=cache_branch,
         do_proc=not "--skip-proc" in sys.argv,
         do_exec=not "--skip-exec" in sys.argv,
         prefix=prefix,
-        cache_prefix=cache_prefix,
     )

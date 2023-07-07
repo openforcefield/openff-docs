@@ -15,7 +15,7 @@ on:
       - main
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}-${{ inputs.pr_number }}
+  group: ${{ github.workflow }}-${{ inputs.pr_number || github.ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
@@ -23,6 +23,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Choose deployment branch
+        shell: bash -l {0}
+        run: |
+          if [[ ${{ github.event_name }} != "workflow_dispatch" ]]; then
+            echo "DEPLOY_BRANCH=_cookbook_data_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+          elif [[ "${{ inputs.pr_number }}" == "" ]]; then
+            echo "DEPLOY_BRANCH=_cookbook_data_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+          else
+            echo "DEPLOY_BRANCH=_cookbook_data_PR${{ inputs.pr_number }}" >> "$GITHUB_ENV"
+          fi
+
       - name: Report dispatch to PR
         if: github.event_name == 'workflow_dispatch' && inputs.pr_number != ''
         uses: thollander/actions-comment-pull-request@v2
@@ -38,9 +49,39 @@ jobs:
 
             - Target branch: ${{ github.ref_name }}
 
+            - Deployment branch: ${{ env.DEPLOY_BRANCH }}
+
 
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+      - name: Create check
+        if: github.event_name == 'workflow_dispatch' && inputs.pr_number != ''
+        id: create-check
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const created_run = await github.request(
+              'POST /repos/{owner}/{repo}/check-runs',
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: '${{ github.job }}',
+                head_sha: '${{ github.sha }}',
+                details_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
+                status: 'in_progress',
+                started_at: new Date().toISOString(),
+                output: {
+                  title: 'Regenerate example notebook cache',
+                  summary: 'Results and progress: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
+                  text: ''
+                },
+                headers: {
+                  'X-GitHub-Api-Version': '2022-11-28'
+                }
+              }
+            )
+
+            return created_run.data.id
 
       - uses: actions/checkout@v3
 
@@ -49,45 +90,28 @@ jobs:
         with:
           environment-file: devtools/conda-envs/examples_env.yml
 
-      - name: Checkout deployment branch
-        uses: actions/checkout@v3
-        with:
-          ref: _cookbook_data
-          path: 'deploy'
-          clean: false
-
-      - name: Choose deployment subdirectory
-        shell: bash -l {0}
-        run: |
-          if [[ ${{ github.event_name }} != "workflow_dispatch" ]]; then
-            echo "DEPLOY_SUBDIR=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
-          elif [[ "${{ inputs.pr_number }}" == "" ]]; then
-            echo "DEPLOY_SUBDIR=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
-          else
-            echo "DEPLOY_SUBDIR=PR${{ inputs.pr_number }}" >> "$GITHUB_ENV"
-          fi
-
-      - name: Prepare cache deployment directory
-        shell: bash -l {0}
-        run: |
-          mkdir -p deploy/$DEPLOY_SUBDIR
-          cd deploy/$DEPLOY_SUBDIR
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git rm -r --ignore-unmatch .
-
       - name: Pre-process and execute notebooks
         shell: bash -l {0}
         run: |
-          python source/_ext/proc_examples.py --prefix=deploy/$DEPLOY_SUBDIR --cache-prefix=$DEPLOY_SUBDIR
+          python source/_ext/proc_examples.py --prefix=deploy/ --cache-branch=${DEPLOY_BRANCH}
 
       - name: Deploy cache
         shell: bash -l {0}
         run: |
-          cd deploy/$DEPLOY_SUBDIR
+          cd deploy
+
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+          git config --global init.defaultBranch main
+
+          # Create an empty repository so we don't have to fetch (guaranteeing atomicity)
+          git init .
+          git remote add origin "https://github-actions:${{ github.token }}@github.com/${{ github.repository }}.git"
+
+          # Commit the deployment and force push to the deploy branch
           git add .
-          git commit --amend -m "Deploy pre-processed notebook cache"
-          git push --force origin _cookbook_data
+          git commit -m "Deploy pre-processed notebook cache"
+          git push --force origin HEAD:$DEPLOY_BRANCH
 
       - name: Trigger RTD build
         # RTD doesn't offer a way to manually trigger builds in PRs, so we'll just do this for other builds
@@ -111,12 +135,35 @@ jobs:
 
             - Target branch: ${{ github.ref_name }}
 
+            - Deployment branch: ${{ env.DEPLOY_BRANCH }}
+
             - Status: **${{ job.status }}**
 
 
-            If the workflow was successful, changes will be visible in the ReadTheDocs
-            preview only after it has been rebuilt.
+            If the workflow was successful, changes will only be visible in the ReadTheDocs
+            preview after it has been [rebuilt].
 
 
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+            [rebuilt]: https://readthedocs.org/projects/openff-docs/builds/
+
+      - name: Update check
+        if: always() && github.event_name == 'workflow_dispatch' && inputs.pr_number != ''
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.request(
+              'PATCH /repos/{owner}/{repo}/check-runs/{check_run_id}',
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                check_run_id: ${{ steps.create-check.outputs.result }},
+                status: 'completed',
+                conclusion: '${{ job.status }}',
+                completed_at: new Date().toISOString(),
+                headers: {
+                  'X-GitHub-Api-Version': '2022-11-28'
+                }
+              }
+            )

@@ -4,14 +4,10 @@ from pathlib import Path
 from typing import Generator, Union
 from tempfile import TemporaryDirectory
 from importlib import import_module
-from os import environ
 
-from git.cmd import Git
 from git.repo import Repo
 import requests
 from packaging.version import Version
-
-from .globals_ import COLAB_IPYNB_ROOT, OPENFF_DOCS_ROOT, CACHE_BRANCH
 
 
 def download_dir(
