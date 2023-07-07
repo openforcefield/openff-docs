@@ -105,7 +105,7 @@ jobs:
           git config --global init.defaultBranch main
 
           git init .
-          git remote add origin "${{ github.server_url }}/${{ github.repository }}.git"
+          git remote add origin "https://github-actions:${{ github.token }}@github.com/${{ github.repository }}.git"
 
           git add .
           git commit -m "Deploy pre-processed notebook cache"
