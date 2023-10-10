@@ -74,7 +74,7 @@ Mamba is a drop-in replacement for the Conda package manager. It is faster and c
 
 If you don't have Conda or Mamba installed, installing MambaForge will give you access to everything you need to install OpenFF software. If you can, we recommend installing MambaForge locally to your user account, rather than system-wide, so that you can freely create and destroy environments and manage your own configuration. If something goes wrong, you can always delete your MambaForge installation and start again, and you'll only lose your installed software.
 
-Mamba can be installed to your own user account without root/sudo access. A system-wide multi-user Conda/Mamba installation is [complicated] and generally not necessary.
+Mamba can be installed to your own user account without root/sudo access. A system-wide multi-user Conda/Mamba installation is [complicated], generally not necessary, and not recommended for individual workstations.
 
 :::{hint}
 If you're running Mamba through MambaForge, you're configured to use the Conda Forge channel by default, and you don't need to pass the `-c conda-forge` argument to the commands in this page. Including this argument does no harm, so we've included it for the benefit of users that don't have this configuration.
@@ -111,12 +111,12 @@ Or you can simply replace any calls to `mamba` with an identical call to `conda`
 + conda env create -c conda-forge -n openff -f environment.yaml
 ```
 
-We recommend installing Mamba, as it can solve OpenFF environments in seconds where Conda would take minutes or hours.
+We recommend installing Mamba, as it can solve environments in seconds where Conda would take minutes or hours. For most commands, it is a drop-in replacement, although some (notably `conda config`) rely on the `conda` executable.
 
 Conda environments that use packages from Conda Forge alongside packages from the default Conda channels run the risk of breaking when an installation or update is attempted. This most commonly happens when a user forgets the `-c conda-forge` switch when installing a package or updating an environment (see [](combining_channels)). If you are using a standard Conda installation, we recommend configuring environments with Forge dependencies to use Forge wherever possible:
 
 ```shell-session
-$ conda activate openff
+$ mamba activate openff
 $ conda config --env --add channels conda-forge
 $ conda config --env --set channel_priority strict 
 ```
@@ -149,7 +149,7 @@ $ mamba env create -n <name> -f <path to .yaml file>
 Any time you want to use software installed in an environment you have created, you must activate it. An environment will stay active until you close the terminal window or shell session:
 
 ```shell-session
-$ conda activate <name>
+$ mamba activate <name>
 $ jupyter notebook .
 ```
 
@@ -166,7 +166,7 @@ If you prefer, you can specify the path to a virtual environment's root director
 
 ```shell-session
 $ mamba create -c conda-forge -p <prefix> <package(s)>
-$ conda activate <prefix>
+$ mamba activate <prefix>
 ```
 
 If you specify neither the name `-n` nor the prefix `-p`, the current active environment will be used.
@@ -248,23 +248,23 @@ WSL2 [does support](https://developer.nvidia.com/cuda/wsl) GPU compute, at least
 (install_arm)=
 ## OpenFF on Apple Silicon and ARM
 
-OpenFF software supports Apple Silicon (M1, M2, etc.), but as of April 2023 some important dependencies such as Ambertools on Conda Forge do not. As a result, we recommend MacOS users of Apple Silicon install the x86_64 version of MambaForge and run all OpenFF software through [Rosetta]. ARM systems without access to a similar emulation layer may not be able to access all of the features of OpenFF software.
+OpenFF software supports Apple Silicon (a.k.a. `osx-arm64`, on M1, M2, etc. chips), but as of October 2023 some optional dependencies such as DGL and GROMACS. As a result, for some **optional** features, MacOS users of Apple Silicon may wish to install the x86_64 version of MambaForge and run all OpenFF software through [Rosetta]. Most OpenFF functionality does **not** require this setup. ARM systems without access to a similar emulation layer may not be able to access all of the features of OpenFF software.
 
-An existing ARM installation of Conda can be configured to [use Rosetta] with the `CONDA_SUBDIR=osx-64` shell environment variable or the `subdir` Conda config variable. We recommend using this on a per-environment basis so that it persists across updates and new installs, but does not affect existing setups:
+An existing ARM installation of Conda/Mamba can be configured to [use Rosetta] with the `CONDA_SUBDIR=osx-64` shell environment variable or the `subdir` Conda config variable. We recommend using this on a per-environment basis so that it persists across updates and new installs, but does not affect existing setups:
 
 ```shell-session
-$ CONDA_SUBDIR=osx-64 conda create --name openff -c conda-forge openff-toolkit
-$ conda activate
+$ CONDA_SUBDIR=osx-64 mamba create --name openff -c conda-forge openff-toolkit
+$ mamba activate
 $ conda config --env --set subdir osx-64
 ```
 
-Alternatively, make this setting the global default by updating the system Conda config:
+Alternatively, make this setting the global default by updating the system Mamba/Conda config:
 
 ```shell-session
 $ conda config --system --set subdir osx-64
 ```
 
-Note that this will affect how Conda behaves with other environments.
+Note that this will affect how Conda/Mamba behaves with other environments.
 
 [Rosetta]: https://support.apple.com/en-au/HT211861
 [use Rosetta]: https://conda-forge.org/docs/user/tipsandtricks.html#installing-apple-intel-packages-on-apple-silicon
