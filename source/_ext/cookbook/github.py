@@ -82,5 +82,6 @@ def get_tag_matching_installed_version(repo: str) -> str:
         return version
     else:
         raise ValueError(
-            f"Could not find tag for version {version}; found tags {tagnames}"
+            f"Could not find tag for version {version} of repo {repo}; "
+            f"found tags {tagnames}"
         )
