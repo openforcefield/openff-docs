@@ -1,4 +1,4 @@
-name: openff-toolkit-docs
+name: openff-docs-lints
 channels:
     - conda-forge
 dependencies:
