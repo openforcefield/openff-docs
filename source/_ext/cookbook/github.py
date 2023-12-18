@@ -59,9 +59,27 @@ def get_stable_tagname(repo: str) -> str:
     return max(get_repo_tagnames(repo), key=Version)
 
 
+def tagname_matches_version(tagname: str, version: str) -> bool:
+    """
+    Check whether the tagname corresponds to the version number.
+
+    Tagnames must match versions exactly, except for the leading `"v"` or `"V"`,
+    which may be omitted in either.
+    """
+    return (
+        tagname == version
+        or "v" + tagname == version
+        or "V" + tagname == version
+        or tagname == "v" + version
+        or tagname == "V" + version
+    )
+
+
 def get_tag_matching_installed_version(repo: str) -> str:
     """
     Get the tag name for the release that matches the installed version.
+
+    If multiple tag names are found, an arbitrary one is returned.
     """
     # Get the module name for the repo
     org, project = repo.split("/")
@@ -78,9 +96,15 @@ def get_tag_matching_installed_version(repo: str) -> str:
 
     # Make sure the tag exists before returning it
     tagnames = [*get_repo_tagnames(repo)]
-    if version in tagnames:
-        return version
+    matching_tag = next(
+        filter(
+            lambda tag: tagname_matches_version(tag, version),
+            tagnames,
+        )
+    )
+    if matching_tag is not None:
+        return matching_tag
     else:
         raise ValueError(
-            f"Could not find tag for version {version}; found tags {tagnames}"
+            f"Could not find tag for version {version} in {repo}; found tags {tagnames}"
         )
