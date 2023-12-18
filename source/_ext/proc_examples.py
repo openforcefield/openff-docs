@@ -191,7 +191,7 @@ def execute_notebook(
     # TODO: See if we can convince this to do each notebook single-threaded?
     executor = ExecutePreprocessor(
         kernel_name="python3",
-        timeout=600,
+        timeout=1200,
     )
     executor.store_widget_state = True
     # Execute the notebook
