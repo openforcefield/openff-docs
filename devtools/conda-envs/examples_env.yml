@@ -13,7 +13,7 @@ dependencies:
     - requests
     - packaging
     # Examples
-    - openff-toolkit-examples>=0.14.0
+    - openff-toolkit-examples>=0.14.5
     - openff-interchange>=0.3.7
     - openff-nagl==0.2.2
     # - openff-fragmenter
