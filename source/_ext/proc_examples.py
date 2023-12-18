@@ -128,7 +128,10 @@ def create_colab_notebook(src: Path, cache_branch: str):
 
     # Copy over all the files Colab will need
     for path, rel_path in files:
-        shutil.copy(path, dst.parent / rel_path)
+        if path.is_dir():
+            shutil.copytree(path, dst.parent / rel_path)
+        else:
+            shutil.copy2(path, dst.parent / rel_path)
 
     # Get the base URI to download files from the cache
     base_uri = (
