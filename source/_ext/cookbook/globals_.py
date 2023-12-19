@@ -32,7 +32,7 @@ IGNORED_FILES: Final = [
 GITHUB_REPOS: Final = [
     "openforcefield/openff-toolkit",
     "openforcefield/openff-interchange",
-    "openforcefield/openff-nagl",
+    "openforcefield/openff-nagl#3623a3a",
     # "openforcefield/openff-fragmenter", # Slow with AmberTools
     # "openforcefield/openff-qcsubmit",  # Broken with RDKit (and slow)
 ]
