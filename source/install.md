@@ -248,7 +248,7 @@ WSL2 [does support](https://developer.nvidia.com/cuda/wsl) GPU compute, at least
 (install_arm)=
 ## OpenFF on Apple Silicon and ARM
 
-As of January 2024, OpenFF software and most of its corner of the computational chemistry ecosystem (OpenMM, RDKit, Psi4, etc.) support Apple Silicon (M1, M2, etc.). However, sometimes, particularly if using old versions of any software, this may not be true. In such ases, we recommend macOS users of Apple Silicon install the x86_64 version of MambaForge and run all OpenFF software through [Rosetta]. ARM systems without access to a similar emulation layer may not be able to access all of the features of OpenFF software.
+As of January 2024, OpenFF software and most of its corner of the computational chemistry ecosystem (OpenMM, RDKit, Psi4, etc.) support Apple Silicon (M1, M2, etc.). However, this may not be true if, for example, using old versions of any software. In such cases, we recommend macOS users of Apple Silicon install the x86_64 version of MambaForge and run all OpenFF software through [Rosetta]. ARM systems without access to a similar emulation layer may not be able to access all of the features of OpenFF software.
 
 An existing ARM installation of Conda can be configured to [use Rosetta] with the `CONDA_SUBDIR=osx-64` shell environment variable or the `subdir` Conda config variable. We recommend using this on a per-environment basis so that it persists across updates and new installs, but does not affect existing setups:
 
