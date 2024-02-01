@@ -5,10 +5,10 @@ SMIRNOFF is an open format for specifying molecular mechanics force fields direc
 This workshop introduces the SMIRNOFF format to familiar MD practitioners and describes how a system can be parametrized from a SMIRNOFF force field for a number of different MD engines. We hope to get both users and developers of molecular mechanics force fields excited about this game changing format.
 
 First Session
-: [2024-2-20 23:00 UTC](https://time.is/1000_21_Feb_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?SMIRNOFF_OpenFF_Workshop)
+: [Feb 20 23:00 UTC](https://time.is/1000_21_Feb_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?SMIRNOFF_OpenFF_Workshop)
 
 Second Session
-: [2024-4-10 12:00 UTC](https://time.is/2200_10_Apr_2024_in_Canberra/Beijing/Berlin/Los_Angeles/Chicago/Phoenix/New_York/London/UTC?SMIRNOFF_OpenFF_Workshop)
+: [Apr 10 12:00 UTC](https://time.is/2200_10_Apr_2024_in_Canberra/Beijing/Berlin/Los_Angeles/Chicago/Phoenix/New_York/London/UTC?SMIRNOFF_OpenFF_Workshop)
 
 Zoom links will be published here 24 hours before the sessions begin.
 
