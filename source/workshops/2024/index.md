@@ -30,9 +30,9 @@ vignettes.md
 | [](vignettes.md)    | [Mar 12 15:00 Los Angeles] \(22:00&nbsp;UTC\) | [Apr 24 14:00 Berlin] \(12:00&nbsp;UTC\) |
 
 
-[Feb 20 15:00 LA]: https://time.is/1000_21_Feb_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?SMIRNOFF_OpenFF_Workshop
-[Feb 27 15:00 LA]: https://time.is/1000_28_Feb_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?Protein_Prep_OpenFF_Workshop
-[Mar 12 15:00 LA]: https://time.is/0900_13_Mar_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?OpenFF_Vignettes_Workshop
+[Feb 20 15:00 Los Angeles]: https://time.is/1000_21_Feb_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?SMIRNOFF_OpenFF_Workshop
+[Feb 27 15:00 Los Angeles]: https://time.is/1000_28_Feb_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?Protein_Prep_OpenFF_Workshop
+[Mar 12 15:00 Los Angeles]: https://time.is/0900_13_Mar_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?OpenFF_Vignettes_Workshop
 [Apr 10 14:00 Berlin]: https://time.is/2200_10_Apr_2024_in_Canberra/Beijing/Berlin/Los_Angeles/Chicago/Phoenix/New_York/London/UTC?SMIRNOFF_OpenFF_Workshop
 [Apr 17 14:00 Berlin]: https://time.is/2200_17_Apr_2024_in_Canberra/Beijing/Berlin/Los_Angeles/Chicago/Phoenix/New_York/London/UTC?Protein_Prep_OpenFF_Workshop
 [Apr 24 14:00 Berlin]: https://time.is/2200_24_Apr_2024_in_Canberra/Beijing/Berlin/Los_Angeles/Chicago/Phoenix/New_York/London/UTC?Vignettes_OpenFF_Workshop
