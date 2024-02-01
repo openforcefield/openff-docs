@@ -4,9 +4,9 @@ orphan: true
 
 # 2024 OpenFF Workshops
 
-OpenFF will be hosting a series of workshops in February-April 2024. These are interactive 3 hour Zoom sessions led by the creators and maintainers of OpenFF tools, focused on specific topics of interest. 
+OpenFF will be hosting a series of workshops in February-April 2024. These are interactive 2 hour Zoom sessions led by the creators and maintainers of OpenFF tools, focused on specific topics of interest. 
 
-Workshops are each oriented around a Jupyter notebook and related materials and software that is intended to be executed by attendees alongside the presenter. Materials to run workshops locally will be provided in advance of the workshop, and notebooks will additionally be executable on Google CoLab. The workshops will begin with a prepared presentation for the first 1-2 hours, and the remainder of the time will be for attendees to try out their ideas with developer support. 
+Workshops are each oriented around a Jupyter notebook and related materials and software that is intended to be executed by attendees alongside the presenter. Materials to run workshops locally will be provided in advance of the workshop, and notebooks will additionally be executable on Google CoLab. The workshops will begin with a prepared presentation for roughly the first hour, and the remainder of the time will be for attendees to try out their ideas with developer support. 
 
 Each workshop will be held twice, once in late February or early March for time zones around Australia and the US West Coast, and again in April for time zones around the US East Coast and Europe.
 
