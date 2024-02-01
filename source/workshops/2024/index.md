@@ -23,11 +23,11 @@ vignettes.md
 
 :::
 
-| Workshop            | First session                        | Second session                           |
-| ------------------- | ------------------------------------ | ---------------------------------------- |
-| [](smirnoff.md)     | [Feb 20 15:00 LA] \(23:00&nbsp;UTC\) | [Apr 10 14:00 Berlin] \(12:00&nbsp;UTC\) |
-| [](protein_prep.md) | [Feb 27 15:00 LA] \(23:00&nbsp;UTC\) | [Apr 17 14:00 Berlin] \(12:00&nbsp;UTC\) | 
-| [](vignettes.md)    | [Mar 12 15:00 LA] \(23:00&nbsp;UTC\) | [Apr 24 14:00 Berlin] \(12:00&nbsp;UTC\) |
+| Workshop            | First session                                 | Second session                           |
+| ------------------- | --------------------------------------------- | ---------------------------------------- |
+| [](smirnoff.md)     | [Feb 20 15:00 Los Angeles] \(23:00&nbsp;UTC\) | [Apr 10 14:00 Berlin] \(12:00&nbsp;UTC\) |
+| [](protein_prep.md) | [Feb 27 15:00 Los Angeles] \(23:00&nbsp;UTC\) | [Apr 17 14:00 Berlin] \(12:00&nbsp;UTC\) | 
+| [](vignettes.md)    | [Mar 12 15:00 Los Angeles] \(22:00&nbsp;UTC\) | [Apr 24 14:00 Berlin] \(12:00&nbsp;UTC\) |
 
 
 [Feb 20 15:00 LA]: https://time.is/1000_21_Feb_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?SMIRNOFF_OpenFF_Workshop
