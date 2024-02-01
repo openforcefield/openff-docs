@@ -5,10 +5,10 @@ Today, Jupyter notebooks are everything you need to prepare a molecular dynamics
 This workshop covers the preparation of a protein system from a structure downloaded from the PDB, entirely in the Jupyter notebook, complete with 3D visualizations at every step of the way. We hope to make it accessible even to new MD practitioners, assuming they have some familiarity with Python. 
 
 First session
-: [2024-2-27 23:00 UTC](https://time.is/1000_28_Feb_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?Protein_Prep_OpenFF_Workshop)
+: [Feb 27 23:00 UTC](https://time.is/1000_28_Feb_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?Protein_Prep_OpenFF_Workshop)
 
 Second Session
-: [2024-4-17 12:00 UTC](https://time.is/2200_17_Apr_2024_in_Canberra/Beijing/Berlin/Los_Angeles/Chicago/Phoenix/New_York/London/UTC?Protein_Prep_OpenFF_Workshop)
+: [Apr 17 12:00 UTC](https://time.is/2200_17_Apr_2024_in_Canberra/Beijing/Berlin/Los_Angeles/Chicago/Phoenix/New_York/London/UTC?Protein_Prep_OpenFF_Workshop)
 
 Zoom links will be published here 24 hours before the sessions begin.
 
