@@ -51,5 +51,5 @@ mamba create -n smirnoff-workshop -f env.yml
 And run Jupyter Lab in the new environment:
 
 ```shell
-mamba run -n smirnoff-workshop jupyter-lab
+mamba run -n smirnoff-workshop jupyter-lab smirnoff.ipynb
 ```
