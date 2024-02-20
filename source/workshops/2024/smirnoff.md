@@ -45,11 +45,11 @@ For better performance and to keep any artifacts produced, you can install the r
 Extract the zip file and open a terminal in the extracted directory. Then, create the environment:
 
 ```shell
-micromamba create -n smirnoff-workshop -f env.yml
+mamba create -n smirnoff-workshop -f env.yml
 ```
 
 And run Jupyter Lab in the new environment:
 
 ```shell
-micromamba run -n smirnoff-workshop jupyter-lab
+mamba run -n smirnoff-workshop jupyter-lab
 ```
