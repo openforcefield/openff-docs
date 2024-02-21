@@ -267,4 +267,4 @@ $ conda config --system --set subdir osx-64
 Note that this will affect how Conda behaves with other environments.
 
 [Rosetta]: https://support.apple.com/en-au/HT211861
-[use Rosetta]: https://conda-forge.org/docs/user/tipsandtricks.html#installing-apple-intel-packages-on-apple-silicon
+[use Rosetta]: https://conda-forge.org/docs/user/tipsandtricks/#installing-apple-intel-packages-on-apple-silicon
