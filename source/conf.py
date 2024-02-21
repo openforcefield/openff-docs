@@ -135,7 +135,13 @@ html_css_files = [
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["Thumbs.db", ".DS_Store", "_*"]
+exclude_patterns = [
+    "Thumbs.db",
+    ".DS_Store",
+    "_*",
+    # Don't render this, but keep the exclude path specific so that /workshops/2024/ is rendered
+    "workshops/2024/smirnoff/colab-smirnoff.ipynb",
+]
 
 
 # -- Options for HTML output -------------------------------------------------
