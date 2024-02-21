@@ -139,7 +139,8 @@ exclude_patterns = [
     "Thumbs.db",
     ".DS_Store",
     "_*",
-    "workshops/2024/*",
+    # Don't render this, but keep the exclude path specific so that /workshops/2024/ is rendered
+    "workshops/2024/smirnoff/colab-smirnoff.ipynb",
 ]
 
 
