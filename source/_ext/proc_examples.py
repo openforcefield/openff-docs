@@ -245,6 +245,14 @@ def clean_up_notebook(notebook: Path):
     exec_notebook.unlink()
 
 
+def print_versions():
+    import importlib
+    for module in [
+        'openff.toolkit',
+        'openff.interchange',
+    ]:
+        print(f"{module}:\n\t{importlib.import_module(module).__version__}")
+
 def main(
     cache_branch: str,
     do_proc=True,
@@ -340,9 +348,13 @@ if __name__ == "__main__":
             "Specify cache branch in a single argument: `--cache-branch=<branch>`"
         )
 
-    main(
-        cache_branch=cache_branch,
-        do_proc=not "--skip-proc" in sys.argv,
-        do_exec=not "--skip-exec" in sys.argv,
-        prefix=prefix,
-    )
+    try:
+        main(
+            cache_branch=cache_branch,
+            do_proc=not "--skip-proc" in sys.argv,
+            do_exec=not "--skip-exec" in sys.argv,
+            prefix=prefix,
+        )
+    except Exception as error:
+        print_versions()
+        raise error
