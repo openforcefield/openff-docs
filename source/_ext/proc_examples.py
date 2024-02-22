@@ -247,9 +247,15 @@ def clean_up_notebook(notebook: Path):
 
 def print_versions():
     import importlib
+
     for module in [
+        'openff.models',
         'openff.toolkit',
         'openff.interchange',
+        'openff.nagl',
+        'openmm',
+        'pydantic',
+        'dgl',
     ]:
         print(f"{module}:\n\t{importlib.import_module(module).__version__}")
 
