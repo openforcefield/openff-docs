@@ -280,7 +280,10 @@ def main(
         )
 
         # Find the notebooks we need to process
-        notebooks.extend((notebook, tag) for notebook in find_notebooks(dst_path))
+        notebooks.extend(
+            (notebook, tag) for notebook in find_notebooks(dst_path)
+            if "gaff" not in str(notebook)
+        )
 
     # Create Colab and downloadable versions of the notebooks
     if do_proc:
