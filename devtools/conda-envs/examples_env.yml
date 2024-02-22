@@ -15,13 +15,11 @@ dependencies:
     # Examples
     - openff-toolkit-examples =0.15
     - openff-interchange =0.3.21
-    - openff-nagl==0.2.2
-    # - openff-fragmenter
-    # - openff-qcsubmit
+    - openff-nagl =0.3
     - gromacs >=2021=nompi*
     - lammps
     - rich
     - jax
-    - dglteam/label/cu118::dgl
+    - dgl
     - parmed<4
     - nglview>=3.0.6
