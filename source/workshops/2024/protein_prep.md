@@ -24,7 +24,7 @@ This workshop is a live demonstration designed to be followed along with on your
 
 For better performance and to keep any artifacts produced, you can install the relevant software locally and execute the notebook there. This requires an installation of Mamba, Micromamba, or similar conda-forge compatible package manager (see [](/install.md)). First, download the workshop materials:
 
-[2024_protein_prep_workshop_materials.zip](path:smirnoff/2024_protein_prep_workshop_materials.zip)
+[2024_protein_prep_workshop_materials.zip](path:protein_prep/2024_protein_prep_workshop_materials.zip)
 
 Extract the zip file and open a terminal in the extracted directory. Then, create the environment:
 
