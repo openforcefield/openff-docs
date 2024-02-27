@@ -20,11 +20,11 @@ Materials and Google Colab links can be found below.
 
 This workshop is a live demonstration designed to be followed along with on your own computer. The entire workshop can be executed in your browser without installing anything using Google Colab:
 
-[🤝 SMIRNOFF Workshop at Google Colab](https://colab.research.google.com/github/openforcefield/openff-docs/blob/main/source/workshops/2024/protein_prep/colab-protein_prep.ipynb)
+[🤝 Protein Prep Workshop at Google Colab](https://colab.research.google.com/github/openforcefield/openff-docs/blob/main/source/workshops/2024/protein_prep/colab-protein_prep.ipynb)
 
 For better performance and to keep any artifacts produced, you can install the relevant software locally and execute the notebook there. This requires an installation of Mamba, Micromamba, or similar conda-forge compatible package manager (see [](/install.md)). First, download the workshop materials:
 
-[2024_protein_prep_workshop_materials.zip](path:smirnoff/2024_smirnoff_workshop_materials.zip)
+[2024_protein_prep_workshop_materials.zip](path:smirnoff/2024_protein_prep_workshop_materials.zip)
 
 Extract the zip file and open a terminal in the extracted directory. Then, create the environment:
 
