@@ -1,0 +1,34 @@
+name: 2024_protein_prep_workshop
+channels:
+    - conda-forge
+dependencies:
+    - ipywidgets=7.6.0
+    # Cookbook
+    - gitpython
+    - nbconvert
+    - nbformat
+    - requests
+    - packaging
+    # Examples
+    - openff-toolkit-examples>=0.15.2
+    - openff-interchange>=0.3.7
+    - openff-nagl
+    # - openff-bespokefit
+    # - openff-fragmenter
+    # - openff-qcsubmit
+    # - openff-recharge
+    - gromacs >=2021=nompi*
+    - lammps
+    - rich
+    - jax
+    - dgl
+    - nglview=3.0.3
+    - xtb-python
+    - pdbfixer
+    - mdtraj
+    - propka
+    - pdb2pqr
+    - openmmtools
+    - chemper
+    - dockstring
+    - mdanalysis
