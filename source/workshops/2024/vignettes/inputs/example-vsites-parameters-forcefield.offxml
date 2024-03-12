@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SMIRNOFF version="0.3" aromaticity_model="OEAroModel_MDL">
+    <VirtualSites version="0.3" exclusion_policy="parents">
+        <!-- A chlorine bound to (any) carbon, for fixing sigma holes -->
+        <VirtualSite
+            smirks="[#6:2]-[#17X1:1]"
+            epsilon="0.0 * kilojoules_per_mole ** 1"
+            type="BondCharge"
+            match="all_permutations"
+            distance="1.5 * angstrom ** 1"
+            outOfPlaneAngle="None"
+            inPlaneAngle="None"
+            charge_increment1="0.0 * elementary_charge ** 1"
+            charge_increment2="0.0 * elementary_charge ** 1"
+            sigma="0.0 * angstrom ** 1"
+            name="sigma_hole">
+        </VirtualSite>
+        <!-- An oxygen in a carbonyl group, flip outOfPlaneAngle to 41 -->
+        <VirtualSite
+            smirks="[#8:1]=[#6X3+0:2]-[*:3]"
+            epsilon="0.0 * kilocalories_per_mole ** 1"
+            type="MonovalentLonePair"
+            match="all_permutations"
+            distance="0.5 * angstrom ** 1"
+            outOfPlaneAngle="0 * degree ** 1"
+            inPlaneAngle="110 * degree ** 1"
+            charge_increment1="0.0 * elementary_charge ** 1"
+            charge_increment2="0.0 * elementary_charge ** 1"
+            charge_increment3="0.0 * elementary_charge ** 1"
+            sigma="0.0 * angstrom ** 1"
+            name="planar_carbonyl">
+        </VirtualSite>
+        <!-- A trivalent nitrogen, occupying the location of the lone pair -->
+        <!-- 5 nm distance looks comically large - can we do 0.5 or 1 A? -->
+        <VirtualSite
+            smirks="[*:2][#7:1]([*:3])[*:4]"
+            epsilon="0.0 * kilojoules_per_mole ** 1"
+            type="TrivalentLonePair"
+            match="once"
+            distance="1 * angstrom ** 1"
+            outOfPlaneAngle="None"
+            inPlaneAngle="None"
+            charge_increment1="0.0 * elementary_charge ** 1"
+            charge_increment2="0.0 * elementary_charge ** 1"
+            charge_increment3="0.0 * elementary_charge ** 1"
+            charge_increment4="0.0 * elementary_charge ** 1"
+            sigma="0.0 * angstrom ** 1"
+            name="trivalent_nitrogen">
+        </VirtualSite>
+    </VirtualSites>
+</SMIRNOFF>
