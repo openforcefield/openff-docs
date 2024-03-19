@@ -1,4 +1,5 @@
 """Script to execute and pre-process example notebooks"""
+
 from typing import Tuple, List, Final
 from zipfile import ZIP_DEFLATED, ZipFile
 from pathlib import Path
@@ -275,7 +276,11 @@ def main(
         )
 
         # Find the notebooks we need to process
-        notebooks.extend((notebook, tag) for notebook in find_notebooks(dst_path))
+        notebooks.extend(
+            (notebook, tag)
+            for notebook in find_notebooks(dst_path)
+            if str(notebook.relative_to(SRC_IPYNB_ROOT)) not in SKIP_NOTEBOOKS
+        )
 
     # Create Colab and downloadable versions of the notebooks
     if do_proc:
