@@ -16,6 +16,7 @@ from nbconvert.preprocessors.execute import ExecutePreprocessor
 import yaml
 from git.repo import Repo
 
+
 sys.path.append(str(Path(__file__).parent))
 
 from cookbook.notebook import (
@@ -29,6 +30,7 @@ from cookbook.notebook import (
 )
 from cookbook.github import download_dir, get_tag_matching_installed_version
 from cookbook.globals_ import *
+from cookbook.utils import set_env
 
 
 def needed_files(notebook_path: Path) -> List[Tuple[Path, Path]]:
@@ -193,17 +195,21 @@ def execute_notebook(
         nb = nbformat.read(f, nbformat.NO_CONVERT)
 
     # TODO: See if we can convince this to do each notebook single-threaded?
-    executor = ExecutePreprocessor(
-        kernel_name="python3",
-        timeout=1200,
-    )
-    executor.store_widget_state = True
-    # Execute the notebook
-    # TODO: Run in the notebook-specific Conda environment?
-    try:
-        executor.preprocess(nb, {"metadata": {"path": src.parent}})
-    except Exception as e:
-        raise ValueError(f"Exception encountered while executing {src_rel}")
+    with set_env(
+        OPENMM_CPU_THREADS="1",
+        OMP_NUM_THREADS="1",
+    ):
+        executor = ExecutePreprocessor(
+            kernel_name="python3",
+            timeout=1200,
+        )
+        executor.store_widget_state = True
+        # Execute the notebook
+        # TODO: Run in the notebook-specific Conda environment?
+        try:
+            executor.preprocess(nb, {"metadata": {"path": src.parent}})
+        except Exception as e:
+            raise ValueError(f"Exception encountered while executing {src_rel}")
 
     # Store the tag used to execute the notebook in metadata
     set_metadata(nb, "src_repo_tag", tag)
@@ -254,6 +260,7 @@ def main(
     do_proc=True,
     do_exec=True,
     prefix: Path | None = None,
+    processes: int | None = None,
 ):
     print("Working in", Path().resolve())
 
@@ -281,6 +288,7 @@ def main(
             for notebook in find_notebooks(dst_path)
             if str(notebook.relative_to(SRC_IPYNB_ROOT)) not in SKIP_NOTEBOOKS
         )
+    print(notebooks, SKIP_NOTEBOOKS)
 
     # Create Colab and downloadable versions of the notebooks
     if do_proc:
@@ -296,7 +304,7 @@ def main(
         shutil.rmtree(EXEC_IPYNB_ROOT, ignore_errors=True)
         # Context manager ensures the pool is correctly terminated if there's
         # an exception
-        with Pool() as pool:
+        with Pool(processes=processes) as pool:
             # Wait a second between launching subprocesses
             # Workaround https://github.com/jupyter/nbconvert/issues/1066
             _ = [
@@ -339,6 +347,16 @@ if __name__ == "__main__":
     if "--prefix" in sys.argv:
         raise ValueError("Specify prefix in a single argument: `--prefix=<prefix>`")
 
+    # --processes is the number of processes to multitask notebook execution over
+    processes = None
+    for arg in sys.argv:
+        if arg.startswith("--processes="):
+            processes = int(arg[12:])
+    if "--processes" in sys.argv:
+        raise ValueError(
+            "Specify processes in a single argument: `--processes=<processes>`"
+        )
+
     cache_branch = DEFAULT_CACHE_BRANCH
     for arg in sys.argv:
         if arg.startswith("--cache-branch="):
@@ -353,4 +371,5 @@ if __name__ == "__main__":
         do_proc=not "--skip-proc" in sys.argv,
         do_exec=not "--skip-exec" in sys.argv,
         prefix=prefix,
+        processes=processes,
     )
