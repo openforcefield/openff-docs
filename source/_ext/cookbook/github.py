@@ -1,4 +1,5 @@
 """Code for working with GitHub in both the Sphinx extension and proc_examples.py"""
+
 import shutil
 from pathlib import Path
 from typing import Generator, Union
@@ -8,6 +9,8 @@ from importlib import import_module
 from git.repo import Repo
 import requests
 from packaging.version import Version
+
+from .utils import next_or_none
 
 
 def download_dir(
@@ -40,16 +43,16 @@ def download_dir(
 def get_repo_tagnames(repo: str) -> Generator[str, None, None]:
     """Get a list of tagnames in a GitHub repository"""
     r = requests.get(
-        f"https://api.github.com/repos/{repo}/releases",
+        f"https://api.github.com/repos/{repo}/tags",
         params={"per_page": "100"},
     )
     r.raise_for_status()
-    yield from (release["tag_name"] for release in r.json())
+    yield from (tag["name"] for tag in r.json())
 
     while "next" in r.links:
         r = requests.get(r.links["next"]["url"])
         r.raise_for_status()
-        yield from (release["tag_name"] for release in r.json())
+        yield from (tag["name"] for tag in r.json())
 
 
 def get_stable_tagname(repo: str) -> str:
@@ -90,25 +93,24 @@ def get_tag_matching_installed_version(repo: str) -> str:
 
     # Get the version from the available module
     try:
-        version = import_module(module).__version__
+        version = str(import_module(module).__version__)
     except Exception:
         raise ValueError(f"Error encountered while getting version for repo {repo}")
 
-    # Make sure the tag exists before returning it
+    # Find a matching tag
     tagnames = [*get_repo_tagnames(repo)]
-    matching_tag = next(
-        filter(
-            lambda tag: tagname_matches_version(tag, version),
-            tagnames,
-        )
-    )
-    if matching_tag is not None:
-        return matching_tag
+    if version in tagnames:
+        matching_tag = version
     else:
-        if any([tag.startswith('v') for tag in tagnames]):
-            if f"v{version}" in tagnames:
-                return f"v{version}"
+        matching_tag = next_or_none(
+            filter(
+                lambda tag: tagname_matches_version(tag, version),
+                tagnames,
+            )
+        )
 
-    raise ValueError(
-            f"Could not find tag for version {version} or v{version}; found tags {tagnames}"
-    )
+    if matching_tag is None:
+        raise ValueError(
+            f"Could not find tag for version {version} of repo {repo}; found tags {tagnames}"
+        )
+    return matching_tag
