@@ -105,6 +105,10 @@ def get_tag_matching_installed_version(repo: str) -> str:
     if matching_tag is not None:
         return matching_tag
     else:
-        raise ValueError(
-            f"Could not find tag for version {version} in {repo}; found tags {tagnames}"
-        )
+        if any([tag.startswith('v') for tag in tagnames]):
+            if f"v{version}" in tagnames:
+                return f"v{version}"
+
+    raise ValueError(
+            f"Could not find tag for version {version} or v{version}; found tags {tagnames}"
+    )

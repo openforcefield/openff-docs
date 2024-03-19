@@ -88,6 +88,8 @@ def process_notebook(app: Sphinx, docname: str, source: list[str]):
     docpath = Path(app.env.doc2path(docname))
     if docpath.suffix != ".ipynb":
         return
+    if not str(docpath.resolve()).startswith(str(EXEC_IPYNB_ROOT.resolve())):
+        return
 
     notebook = json.loads(source[0])
 

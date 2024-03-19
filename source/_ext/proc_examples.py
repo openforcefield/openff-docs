@@ -151,7 +151,7 @@ def create_colab_notebook(src: Path, cache_branch: str):
         cell_type="code",
         source=[
             "# Execute this cell to make this notebook's dependencies available",
-            "!pip install -q condacolab",
+            "!pip install -U https://github.com/conda-incubator/condacolab/archive/cuda-version-12.tar.gz",
             "import condacolab",
             "condacolab.install_mambaforge()",
             *wget_files,
