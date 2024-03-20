@@ -197,7 +197,7 @@ def execute_notebook(
     # TODO: See if we can convince this to do each notebook single-threaded?
     with set_env(
         OPENMM_CPU_THREADS="1",
-        OMP_NUM_THREADS="1",
+        OMP_NUM_THREADS="2",
     ):
         executor = ExecutePreprocessor(
             kernel_name="python3",
