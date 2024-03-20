@@ -13,15 +13,14 @@ dependencies:
     - requests
     - packaging
     # Examples
-    - openff-toolkit-examples>=0.14.0
+    - openff-toolkit-examples>=0.15.2
     - openff-interchange>=0.3.18
-    - openff-nagl==0.2.2
+    - openff-nagl
     # - openff-fragmenter
     # - openff-qcsubmit
     - gromacs >=2021=nompi*
     - lammps
     - rich
     - jax
-    - dglteam/label/cu118::dgl  # This probably can be conda-forge ...
     - parmed<4
     - nglview>=3.0.6

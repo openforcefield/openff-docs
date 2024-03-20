@@ -1,5 +1,7 @@
-from typing import Iterable, TypeVar, Generator
-from os import environ
+from types import FunctionType
+from typing import Callable, Iterable, Iterator, Optional, TypeVar, Generator
+import contextlib
+import os
 
 T = TypeVar("T")
 
@@ -8,3 +10,47 @@ def flatten(iterable: Iterable[Iterable[T]]) -> Generator[T, None, None]:
     for inner in iterable:
         for element in inner:
             yield element
+
+
+def next_or_none(iterator: Iterator[T]) -> Optional[T]:
+    try:
+        ret = next(iterator)
+    except StopIteration:
+        ret = None
+    return ret
+
+
+def result(fn, exception=Exception):
+    def ret(*args, **kwargs):
+        try:
+            return fn(*args, **kwargs)
+        except exception as e:
+            return e
+
+    return ret
+
+
+@contextlib.contextmanager
+def set_env(**environ):
+    """
+    Temporarily set the process environment variables.
+
+    >>> with set_env(PLUGINS_DIR='test/plugins'):
+    ...   "PLUGINS_DIR" in os.environ
+    True
+
+    >>> "PLUGINS_DIR" in os.environ
+    False
+
+    :type environ: dict[str, unicode]
+    :param environ: Environment variables to set
+
+    From https://stackoverflow.com/a/34333710
+    """
+    old_environ = dict(os.environ)
+    os.environ.update(environ)
+    try:
+        yield
+    finally:
+        os.environ.clear()
+        os.environ.update(old_environ)
