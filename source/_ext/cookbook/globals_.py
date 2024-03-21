@@ -82,10 +82,8 @@ DEFAULT_CACHE_BRANCH = "_cookbook_data_main"
 """Branch of the openff-docs repository where cached notebooks are stored."""
 
 SKIP_NOTEBOOKS: set[str] = {
-    "openforcefield/openff-nagl/train-multi-objective-gnn/train-gnn-notebook.ipynb",
     "openforcefield/openff-interchange/experimental/openmmforcefields/gaff.ipynb",
     "openforcefield/openff-interchange/ligand_in_water/ligand_in_water.ipynb",
-    "openforcefield/openff-nagl/train-gnn-notebook/train-gnn-notebook.ipynb",
 }
 """
 Notebooks that will not be processed.
