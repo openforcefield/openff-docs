@@ -336,6 +336,10 @@ def main(
                 + "\n"
                 + f"{exception.src} failed. Traceback:\n\n{exception.tb}"
             )
+        print(f"The following {len(exceptions)}/{len(notebooks)} notebooks failed:")
+        for exception in exceptions:
+            print("    ", exception.src)
+        print("For tracebacks, see above.")
 
     if isinstance(prefix, Path):
         prefix.mkdir(parents=True, exist_ok=True)
