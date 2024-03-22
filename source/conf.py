@@ -111,6 +111,8 @@ nb_mime_priority_overrides = [
     ("codelinter", "text/plain", 0),
 ]
 
+# Configure the linkcheck builder
+linkcheck_anchors = False  # This generates lots of false positives
 
 # Cookbook stuff
 import sys
