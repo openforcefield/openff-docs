@@ -10,6 +10,7 @@ from time import sleep
 import sys
 import tarfile
 from functools import partial
+import traceback
 
 import nbformat
 from nbconvert.preprocessors.execute import ExecutePreprocessor
@@ -30,7 +31,14 @@ from cookbook.notebook import (
 )
 from cookbook.github import download_dir, get_tag_matching_installed_version
 from cookbook.globals_ import *
-from cookbook.utils import set_env
+from cookbook.utils import set_env, to_result
+
+
+class NotebookExceptionError(ValueError):
+    def __init__(self, src: str, exc: Exception):
+        self.src = str(src)
+        self.exc = exc
+        self.tb = "".join(traceback.format_exception(exc, chain=False))
 
 
 def needed_files(notebook_path: Path) -> List[Tuple[Path, Path]]:
@@ -208,7 +216,8 @@ def execute_notebook(
         try:
             executor.preprocess(nb, {"metadata": {"path": src.parent}})
         except Exception as e:
-            raise ValueError(f"Exception encountered while executing {src_rel}")
+            print("Failed to execute", src.relative_to(SRC_IPYNB_ROOT))
+            raise NotebookExceptionError(str(src_rel), e)
 
     # Store the tag used to execute the notebook in metadata
     set_metadata(nb, "src_repo_tag", tag)
@@ -230,7 +239,7 @@ def execute_notebook(
             EXEC_IPYNB_ROOT / thumbnail_path.relative_to(SRC_IPYNB_ROOT),
         )
 
-    print("Done executing", src.relative_to(SRC_IPYNB_ROOT))
+    print("Successfully executed", src.relative_to(SRC_IPYNB_ROOT))
 
 
 def delay_iterator(iterator, seconds=1.0):
@@ -287,7 +296,6 @@ def main(
             for notebook in find_notebooks(dst_path)
             if str(notebook.relative_to(SRC_IPYNB_ROOT)) not in SKIP_NOTEBOOKS
         )
-    print(notebooks, SKIP_NOTEBOOKS)
 
     # Create Colab and downloadable versions of the notebooks
     if do_proc:
@@ -301,17 +309,33 @@ def main(
     # Execute notebooks in parallel for rendering as HTML
     if do_exec:
         shutil.rmtree(EXEC_IPYNB_ROOT, ignore_errors=True)
-        # Context manager ensures the pool is correctly terminated if there's
-        # an exception
-        with Pool(processes=processes) as pool:
-            # Wait a second between launching subprocesses
-            # Workaround https://github.com/jupyter/nbconvert/issues/1066
-            _ = [
-                *pool.imap_unordered(
-                    partial(execute_notebook, cache_branch=cache_branch),
-                    delay_iterator(notebooks),
-                )
-            ]
+        # # Context manager ensures the pool is correctly terminated if there's
+        # # an exception
+        # with Pool(processes=processes) as pool:
+        #     # Wait a second between launching subprocesses
+        #     # Workaround https://github.com/jupyter/nbconvert/issues/1066
+        #     exec_results = [
+        #         *pool.imap(
+        #             to_result(partial(execute_notebook, cache_branch=cache_branch)),
+        #             delay_iterator(notebooks),
+        #         )
+        #     ]
+        # for result in exec_results:
+        #     if isinstance(result, Exception):
+        #         traceback.print_exception(result)
+        exceptions = []
+        for notebook in notebooks:
+            try:
+                execute_notebook(notebook, cache_branch=cache_branch)
+            except NotebookExceptionError as e:
+                exceptions.append(e)
+
+        for exception in exceptions:
+            print(
+                "-" * 80
+                + "\n"
+                + f"{exception.src} failed. Traceback:\n\n{exception.tb}"
+            )
 
     if isinstance(prefix, Path):
         prefix.mkdir(parents=True, exist_ok=True)
