@@ -44,7 +44,7 @@ If you have an existing Mamba installation, skip steps 1 and 2 below. If you hav
     $ conda activate openff
     $ openff-toolkit-examples --target offtk-examples
     $ cd offtk-examples/toolkit_showcase
-    $ jupyter notebook toolkit_showcase.ipynb
+    $ jupyter-lab toolkit_showcase.ipynb
     ```
 
 If that worked, you're all set! The rest of this page covers corner cases and how to manage Conda environments. For package-specific installation instructions, please see the individual [project docs].
@@ -150,7 +150,7 @@ Any time you want to use software installed in an environment you have created, 
 
 ```shell-session
 $ conda activate <name>
-$ jupyter notebook .
+$ jupyter-lab .
 ```
 
 [virtual environments]: inv:conda#user-guide/concepts/environments
