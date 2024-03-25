@@ -1,9 +1,21 @@
+from functools import partial
 from types import FunctionType
-from typing import Callable, Iterable, Iterator, Optional, TypeVar, Generator
+from typing import (
+    Callable,
+    Iterable,
+    Iterator,
+    Optional,
+    TypeVar,
+    Generator,
+    ParamSpec,
+    Union,
+)
 import contextlib
 import os
 
 T = TypeVar("T")
+E = TypeVar("E")
+P = ParamSpec("P")
 
 
 def flatten(iterable: Iterable[Iterable[T]]) -> Generator[T, None, None]:
@@ -20,14 +32,17 @@ def next_or_none(iterator: Iterator[T]) -> Optional[T]:
     return ret
 
 
-def result(fn, exception=Exception):
-    def ret(*args, **kwargs):
-        try:
-            return fn(*args, **kwargs)
-        except exception as e:
-            return e
+def _result_inner(fn, exception, *args, **kwargs):
+    try:
+        return fn(*args, **kwargs)
+    except exception as e:
+        return e
 
-    return ret
+
+def to_result(
+    fn: Callable[P, T], exception: type[E] = Exception
+) -> Callable[P, Union[T, E]]:
+    return partial(_result_inner, fn, exception)
 
 
 @contextlib.contextmanager
