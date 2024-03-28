@@ -1,0 +1,4 @@
+system.*
+log.lammps
+out.lmp
+tmp.in
