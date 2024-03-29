@@ -25,4 +25,4 @@ dependencies:
     - parmed<4
     - nglview>=3.0.6
     - pip:
-        - git+https://github.com/openforcefield/openff-interchange.git@90d0c497e897a00f7f1ecefe872a1589d1332ddd
+        - git+https://github.com/openforcefield/openff-interchange.git@v0.3.25b0
