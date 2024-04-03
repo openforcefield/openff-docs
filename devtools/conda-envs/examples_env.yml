@@ -14,7 +14,7 @@ dependencies:
     - packaging
     # Examples
     - openff-toolkit-examples>=0.15.2
-    - openff-interchange ~=0.3.25
+    - openff-interchange >=0.3.25
     - openff-nagl
     # - openff-fragmenter
     # - openff-qcsubmit
@@ -24,5 +24,3 @@ dependencies:
     - jax
     - parmed<4
     - nglview>=3.0.6
-    - pip:
-        - git+https://github.com/openforcefield/openff-interchange.git@v0.3.25b1
