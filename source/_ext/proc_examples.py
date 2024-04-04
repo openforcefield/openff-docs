@@ -340,6 +340,8 @@ def main(
         for exception in exceptions:
             print("    ", exception.src)
         print("For tracebacks, see above.")
+        failed_notebooks_log = SRC_IPYNB_ROOT / "failed_notebooks.log"
+        failed_notebooks_log.write_text("\n".join(exc.src for exc in exceptions))
 
     if isinstance(prefix, Path):
         prefix.mkdir(parents=True, exist_ok=True)
