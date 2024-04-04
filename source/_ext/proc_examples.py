@@ -269,6 +269,7 @@ def main(
     do_exec=True,
     prefix: Path | None = None,
     processes: int | None = None,
+    failed_notebooks_log: Path | None = None,
 ):
     print("Working in", Path().resolve())
 
@@ -340,8 +341,8 @@ def main(
         for exception in exceptions:
             print("    ", exception.src)
         print("For tracebacks, see above.")
-        failed_notebooks_log = SRC_IPYNB_ROOT / "failed_notebooks.log"
-        failed_notebooks_log.write_text("\n".join(exc.src for exc in exceptions))
+        if failed_notebooks_log is not None:
+            failed_notebooks_log.write_text("\n".join(exc.src for exc in exceptions))
 
     if isinstance(prefix, Path):
         prefix.mkdir(parents=True, exist_ok=True)
@@ -395,10 +396,21 @@ if __name__ == "__main__":
             "Specify cache branch in a single argument: `--cache-branch=<branch>`"
         )
 
+    # --log-failures is the path to store a list of failing notebooks in
+    failed_notebooks_log = None
+    for arg in sys.argv:
+        if arg.startswith("--log-failures="):
+            cache_branch = arg[15:]
+    if "--log-failures" in sys.argv:
+        raise ValueError(
+            "Specify path to log file in a single argument: `--log-failures=<path>`"
+        )
+
     main(
         cache_branch=cache_branch,
         do_proc=not "--skip-proc" in sys.argv,
         do_exec=not "--skip-exec" in sys.argv,
         prefix=prefix,
         processes=processes,
+        failed_notebooks_log=failed_notebooks_log,
     )
