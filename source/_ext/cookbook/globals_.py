@@ -4,6 +4,7 @@ Global constants for the Sphinx extension and proc_examples.py
 These are here to form a quasi-configuration file, rather than have constants
 strewn across different modules.
 """
+
 from typing import Final
 from pathlib import Path
 
@@ -32,7 +33,7 @@ IGNORED_FILES: Final = [
 GITHUB_REPOS: Final = [
     "openforcefield/openff-toolkit",
     "openforcefield/openff-interchange",
-    "openforcefield/openff-nagl#v0.2.2",
+    "openforcefield/openff-nagl",
     "openforcefield/openff-fragmenter",
     "openforcefield/openff-qcsubmit",
 ]
@@ -79,3 +80,16 @@ REPO_EXAMPLES_DIR = "examples"
 
 DEFAULT_CACHE_BRANCH = "_cookbook_data_main"
 """Branch of the openff-docs repository where cached notebooks are stored."""
+
+SKIP_NOTEBOOKS: set[str] = {}
+"""
+Notebooks that will not be processed.
+
+This is intended to be used as a way of temporarily disabling broken notebooks
+without taking down an entire source repository or the examples page itself.
+
+Specified as a path relative to a notebook search path, eg ``SRC_IPYNB_ROOT``.
+This is something like ``{repo_owner}/{repo_name}/{path_from_examples_dir}``.
+These notebooks are skipped at the proc_examples stage, but they will still
+be rendered if they're in a cache.
+"""

@@ -88,6 +88,8 @@ def process_notebook(app: Sphinx, docname: str, source: list[str]):
     docpath = Path(app.env.doc2path(docname))
     if docpath.suffix != ".ipynb":
         return
+    if not str(docpath.resolve()).startswith(str(EXEC_IPYNB_ROOT.resolve())):
+        return
 
     notebook = json.loads(source[0])
 
@@ -121,7 +123,7 @@ def download_cached_notebooks(app: Sphinx, config: Config):
             if not repo_directory.exists():
                 download_dir(
                     "openforcefield/openff-docs",
-                    str("main" / repo_directory.relative_to(OPENFF_DOCS_ROOT)),
+                    str(repo_directory.relative_to(OPENFF_DOCS_ROOT)),
                     repo_directory,
                     refspec=DEFAULT_CACHE_BRANCH,
                 )

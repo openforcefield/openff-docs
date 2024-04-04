@@ -111,6 +111,8 @@ nb_mime_priority_overrides = [
     ("codelinter", "text/plain", 0),
 ]
 
+# Configure the linkcheck builder
+linkcheck_anchors = False  # This generates lots of false positives
 
 # Cookbook stuff
 import sys
@@ -135,7 +137,15 @@ html_css_files = [
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["Thumbs.db", ".DS_Store", "_*"]
+exclude_patterns = [
+    "Thumbs.db",
+    ".DS_Store",
+    "_*",
+    # Don't render colab notebooks
+    "workshops/2024/protein_prep/colab-protein_prep.ipynb",
+    "workshops/2024/smirnoff/colab-smirnoff.ipynb",
+    "workshops/2024/vignettes/colab-vignettes.ipynb",
+]
 
 
 # -- Options for HTML output -------------------------------------------------
