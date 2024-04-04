@@ -95,8 +95,8 @@ jobs:
         run: |
           python source/_ext/proc_examples.py --prefix=deploy/ --cache-branch=${DEPLOY_BRANCH} --log-failures=failing_notebooks.log
           echo "FAILING_NOTEBOOKS=$(awk '
-            BEGIN {ORS=""; OFS="";};
-            /./ {n++; print "\n    - " $0;};
+            BEGIN {ORS=", "; OFS="";};
+            /./ {n++; print $0;};
             END {print n == 0 ? "None" : "";}
           ' 'failing_notebooks.log')" >> "$GITHUB_ENV"
 
