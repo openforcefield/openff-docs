@@ -93,7 +93,7 @@ jobs:
       - name: Pre-process and execute notebooks
         shell: bash -l {0}
         run: |
-          python source/_ext/proc_examples.py --prefix=deploy/ --cache-branch=${DEPLOY_BRANCH} --log-failures='failing_notebooks.log'
+          python source/_ext/proc_examples.py --prefix=deploy/ --cache-branch=${DEPLOY_BRANCH} --log-failures=failing_notebooks.log
           echo "FAILING_NOTEBOOKS=$(awk '
             BEGIN {ORS=""; OFS="";};
             /./ {n++; print "\n    - " $0;};
