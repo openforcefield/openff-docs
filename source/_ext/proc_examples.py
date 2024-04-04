@@ -400,7 +400,7 @@ if __name__ == "__main__":
     failed_notebooks_log = None
     for arg in sys.argv:
         if arg.startswith("--log-failures="):
-            failed_notebooks_log = arg[15:]
+            failed_notebooks_log = Path(arg[15:])
     if "--log-failures" in sys.argv:
         raise ValueError(
             "Specify path to log file in a single argument: `--log-failures=<path>`"
