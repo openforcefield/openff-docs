@@ -142,7 +142,9 @@ jobs:
 
             - Notebooks status: **${{fromJSON(env.NOTEBOOKS_LOG).n_successful}} / ${{fromJSON(env.NOTEBOOKS_LOG).n_total}} notebooks successfully executed**
 
-            ${{fromJSON(env.NOTEBOOKS_LOG).failed && '- Failing notebooks:\n    - ' || ''}}${{join(fromJSON(env.NOTEBOOKS_LOG).failed, '\n    - ')}}
+            ${{fromJSON(env.NOTEBOOKS_LOG).failed && '- Failing notebooks:
+                - ' || ''}}${{join(fromJSON(env.NOTEBOOKS_LOG).failed, '
+                - ')}}
 
 
             Changes will only be visible in the ReadTheDocs
