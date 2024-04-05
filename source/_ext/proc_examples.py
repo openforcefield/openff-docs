@@ -342,7 +342,7 @@ def main(
             print("    ", exception.src)
         print("For tracebacks, see above.")
         if failed_notebooks_log is not None:
-            failed_notebooks_log.write_text("\n".join(exc.src for exc in exceptions))
+            failed_notebooks_log.write_text(json.dumps([exc.src for exc in exceptions]))
 
     if isinstance(prefix, Path):
         prefix.mkdir(parents=True, exist_ok=True)
