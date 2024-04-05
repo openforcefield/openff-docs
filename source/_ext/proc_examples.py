@@ -36,9 +36,9 @@ from cookbook.utils import set_env, to_result
 
 class NotebookExceptionError(ValueError):
     def __init__(self, src: str, exc: Exception):
-        self.src = str(src)
-        self.exc = exc
-        self.tb = "".join(traceback.format_exception(exc, chain=False))
+        self.src: str = str(src)
+        self.exc: Exception = exc
+        self.tb: str = "".join(traceback.format_exception(exc, chain=False))
 
 
 def needed_files(notebook_path: Path) -> List[Tuple[Path, Path]]:
@@ -324,7 +324,7 @@ def main(
         # for result in exec_results:
         #     if isinstance(result, Exception):
         #         traceback.print_exception(result)
-        exceptions = []
+        exceptions: list[NotebookExceptionError] = []
         for notebook in notebooks:
             try:
                 execute_notebook(notebook, cache_branch=cache_branch)
@@ -342,7 +342,15 @@ def main(
             print("    ", exception.src)
         print("For tracebacks, see above.")
         if failed_notebooks_log is not None:
-            failed_notebooks_log.write_text(json.dumps([exc.src for exc in exceptions]))
+            failed_notebooks_log.write_text(
+                json.dumps(
+                    {
+                        "n_successful": len(notebooks) - len(exceptions),
+                        "n_total": len(notebooks),
+                        "failed": [exc.src for exc in exceptions],
+                    }
+                )
+            )
 
     if isinstance(prefix, Path):
         prefix.mkdir(parents=True, exist_ok=True)
