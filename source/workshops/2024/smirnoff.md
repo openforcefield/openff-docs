@@ -7,10 +7,10 @@ This workshop introduces the SMIRNOFF format to familiar MD practitioners and de
 First Session
 : [Feb 20 23:00 UTC](https://time.is/1000_21_Feb_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?SMIRNOFF_OpenFF_Workshop)
 
-: [💨 Join on Zoom](https://us06web.zoom.us/j/81208498403?pwd=m17ZJnzLDwXvLbInqDKdGoeImro0cC.1)
-
 Second Session
 : [Apr 10 12:00 UTC](https://time.is/2200_10_Apr_2024_in_Canberra/Beijing/Berlin/Los_Angeles/Chicago/Phoenix/New_York/London/UTC?SMIRNOFF_OpenFF_Workshop)
+
+: [💨 Join on Zoom](https://us06web.zoom.us/j/87669037455?pwd=CK8ETt2HwXJe7h9rM42JbFzaU9RJFJ.1)
 
 Zoom links will be published here 24 hours before the sessions begin.
 
