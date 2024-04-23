@@ -5,13 +5,14 @@ dependencies:
     # Notebook + runtime
     - ipywidgets=7.6.0
     # Examples
-    - openff-toolkit-examples>=0.14.5
-    - openff-interchange>=0.3.18
-    - openff-nagl
-    - openff-bespokefit>=0.2.3
+    - openff-toolkit-examples >=0.16.0
+    - openff-interchange >=0.3.25
+    - openff-nagl >=0.3.7
+    - openff-bespokefit
+    - openff-forcefields >= 2024.04.0
     - openff-qcsubmit
     - gromacs >=2021=nompi*
-    - lammps
+    - lammps >=2023.08.02
     - rich
     - jax
     - dgl
@@ -19,10 +20,7 @@ dependencies:
     - xtb-python
     - pdbfixer
     - mdtraj
-    - propka
-    - pdb2pqr
     - openmmtools
     - chemper
-    - dockstring
     - mdanalysis
     - plotly
