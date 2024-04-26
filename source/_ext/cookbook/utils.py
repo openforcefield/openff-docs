@@ -2,6 +2,7 @@ from functools import partial
 from types import FunctionType
 from typing import (
     Callable,
+    Generic,
     Iterable,
     Iterator,
     Optional,
@@ -10,6 +11,7 @@ from typing import (
     ParamSpec,
     Union,
 )
+import abc
 import contextlib
 import os
 
@@ -32,7 +34,9 @@ def next_or_none(iterator: Iterator[T]) -> Optional[T]:
     return ret
 
 
-def _result_inner(fn, exception, *args, **kwargs):
+def result(
+    fn: Callable[P, T], exception: type[E], *args: P.args, **kwargs: P.kwargs
+) -> Union[T, E]:
     try:
         return fn(*args, **kwargs)
     except exception as e:
@@ -42,7 +46,8 @@ def _result_inner(fn, exception, *args, **kwargs):
 def to_result(
     fn: Callable[P, T], exception: type[E] = Exception
 ) -> Callable[P, Union[T, E]]:
-    return partial(_result_inner, fn, exception)
+    # partial's type stub is not precise enough to work here
+    return partial(result, fn, exception)  # type: ignore [reportReturnType]
 
 
 @contextlib.contextmanager

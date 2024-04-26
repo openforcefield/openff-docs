@@ -13,8 +13,8 @@ dependencies:
     - requests
     - packaging
     # Examples
-    - openff-toolkit-examples>=0.15.2
-    - openff-interchange>=0.3.18
+    - openff-toolkit-examples>=0.16.0
+    - openff-interchange>=0.3.26
     - openff-nagl
     # - openff-fragmenter
     # - openff-qcsubmit
@@ -23,4 +23,4 @@ dependencies:
     - rich
     - jax
     - parmed<4
-    - nglview>=3.0.6
+    - nglview>=3.0.6,<3.1.0

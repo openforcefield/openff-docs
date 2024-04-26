@@ -31,7 +31,7 @@ from cookbook.notebook import (
 )
 from cookbook.github import download_dir, get_tag_matching_installed_version
 from cookbook.globals_ import *
-from cookbook.utils import set_env, to_result
+from cookbook.utils import set_env, result, to_result
 
 
 class NotebookExceptionError(ValueError):
@@ -310,26 +310,24 @@ def main(
     # Execute notebooks in parallel for rendering as HTML
     if do_exec:
         shutil.rmtree(EXEC_IPYNB_ROOT, ignore_errors=True)
-        # # Context manager ensures the pool is correctly terminated if there's
-        # # an exception
-        # with Pool(processes=processes) as pool:
-        #     # Wait a second between launching subprocesses
-        #     # Workaround https://github.com/jupyter/nbconvert/issues/1066
-        #     exec_results = [
-        #         *pool.imap(
-        #             to_result(partial(execute_notebook, cache_branch=cache_branch)),
-        #             delay_iterator(notebooks),
-        #         )
-        #     ]
-        # for result in exec_results:
-        #     if isinstance(result, Exception):
-        #         traceback.print_exception(result)
-        exceptions: list[NotebookExceptionError] = []
-        for notebook in notebooks:
-            try:
-                execute_notebook(notebook, cache_branch=cache_branch)
-            except NotebookExceptionError as e:
-                exceptions.append(e)
+        # Context manager ensures the pool is correctly terminated if there's
+        # an exception
+        with Pool(processes=processes) as pool:
+            # Wait a second between launching subprocesses
+            # Workaround https://github.com/jupyter/nbconvert/issues/1066
+            exec_results = [
+                *pool.imap(
+                    to_result(
+                        partial(execute_notebook, cache_branch=cache_branch),
+                        NotebookExceptionError,
+                    ),
+                    delay_iterator(notebooks),
+                )
+            ]
+
+        exceptions: list[NotebookExceptionError] = [
+            result for result in exec_results if isinstance(result, Exception)
+        ]
 
         for exception in exceptions:
             print(
