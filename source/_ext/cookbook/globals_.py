@@ -83,6 +83,7 @@ DEFAULT_CACHE_BRANCH = "_cookbook_data_main"
 
 SKIP_NOTEBOOKS: set[str] = {
     "openforcefield/openff-interchange/experimental/openmmforcefields/gaff.ipynb",
+    "openforcefield/openff-toolkit/using_smirnoff_in_amber_or_gromacs/export_with_interchange.ipynb",
 }
 """
 Notebooks that will not be processed.
