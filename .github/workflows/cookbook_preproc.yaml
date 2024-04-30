@@ -22,6 +22,10 @@ jobs:
   preprocess:
     runs-on: ubuntu-latest
 
+    env:
+      OMP_NUM_THREADS: 2
+      PACKAGE: openff
+
     steps:
       - name: Choose deployment branch
         shell: bash -l {0}
