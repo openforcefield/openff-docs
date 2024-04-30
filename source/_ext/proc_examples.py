@@ -10,6 +10,7 @@ from time import sleep
 import sys
 import tarfile
 from functools import partial
+import traceback
 
 import nbformat
 from nbconvert.preprocessors.execute import ExecutePreprocessor
@@ -30,7 +31,14 @@ from cookbook.notebook import (
 )
 from cookbook.github import download_dir, get_tag_matching_installed_version
 from cookbook.globals_ import *
-from cookbook.utils import set_env
+from cookbook.utils import set_env, result, to_result
+
+
+class NotebookExceptionError(ValueError):
+    def __init__(self, src: str, exc: Exception):
+        self.src: str = str(src)
+        self.exc: Exception = exc
+        self.tb: str = "".join(traceback.format_exception(exc, chain=False))
 
 
 def needed_files(notebook_path: Path) -> List[Tuple[Path, Path]]:
@@ -208,7 +216,8 @@ def execute_notebook(
         try:
             executor.preprocess(nb, {"metadata": {"path": src.parent}})
         except Exception as e:
-            raise ValueError(f"Exception encountered while executing {src_rel}")
+            print("Failed to execute", src.relative_to(SRC_IPYNB_ROOT))
+            raise NotebookExceptionError(str(src_rel), e)
 
     # Store the tag used to execute the notebook in metadata
     set_metadata(nb, "src_repo_tag", tag)
@@ -230,7 +239,7 @@ def execute_notebook(
             EXEC_IPYNB_ROOT / thumbnail_path.relative_to(SRC_IPYNB_ROOT),
         )
 
-    print("Done executing", src.relative_to(SRC_IPYNB_ROOT))
+    print("Successfully executed", src.relative_to(SRC_IPYNB_ROOT))
 
 
 def delay_iterator(iterator, seconds=1.0):
@@ -260,6 +269,7 @@ def main(
     do_exec=True,
     prefix: Path | None = None,
     processes: int | None = None,
+    failed_notebooks_log: Path | None = None,
 ):
     print("Working in", Path().resolve())
 
@@ -287,7 +297,6 @@ def main(
             for notebook in find_notebooks(dst_path)
             if str(notebook.relative_to(SRC_IPYNB_ROOT)) not in SKIP_NOTEBOOKS
         )
-    print(notebooks, SKIP_NOTEBOOKS)
 
     # Create Colab and downloadable versions of the notebooks
     if do_proc:
@@ -306,12 +315,40 @@ def main(
         with Pool(processes=processes) as pool:
             # Wait a second between launching subprocesses
             # Workaround https://github.com/jupyter/nbconvert/issues/1066
-            _ = [
-                *pool.imap_unordered(
-                    partial(execute_notebook, cache_branch=cache_branch),
+            exec_results = [
+                *pool.imap(
+                    to_result(
+                        partial(execute_notebook, cache_branch=cache_branch),
+                        NotebookExceptionError,
+                    ),
                     delay_iterator(notebooks),
                 )
             ]
+
+        exceptions: list[NotebookExceptionError] = [
+            result for result in exec_results if isinstance(result, Exception)
+        ]
+
+        for exception in exceptions:
+            print(
+                "-" * 80
+                + "\n"
+                + f"{exception.src} failed. Traceback:\n\n{exception.tb}"
+            )
+        print(f"The following {len(exceptions)}/{len(notebooks)} notebooks failed:")
+        for exception in exceptions:
+            print("    ", exception.src)
+        print("For tracebacks, see above.")
+        if failed_notebooks_log is not None:
+            failed_notebooks_log.write_text(
+                json.dumps(
+                    {
+                        "n_successful": len(notebooks) - len(exceptions),
+                        "n_total": len(notebooks),
+                        "failed": [exc.src for exc in exceptions],
+                    }
+                )
+            )
 
     if isinstance(prefix, Path):
         prefix.mkdir(parents=True, exist_ok=True)
@@ -365,10 +402,21 @@ if __name__ == "__main__":
             "Specify cache branch in a single argument: `--cache-branch=<branch>`"
         )
 
+    # --log-failures is the path to store a list of failing notebooks in
+    failed_notebooks_log = None
+    for arg in sys.argv:
+        if arg.startswith("--log-failures="):
+            failed_notebooks_log = Path(arg[15:])
+    if "--log-failures" in sys.argv:
+        raise ValueError(
+            "Specify path to log file in a single argument: `--log-failures=<path>`"
+        )
+
     main(
         cache_branch=cache_branch,
         do_proc=not "--skip-proc" in sys.argv,
         do_exec=not "--skip-exec" in sys.argv,
         prefix=prefix,
         processes=processes,
+        failed_notebooks_log=failed_notebooks_log,
     )

@@ -88,7 +88,9 @@ SKIP_NOTEBOOKS: set[str] = {
 Notebooks that will not be processed.
 
 This is intended to be used as a way of temporarily disabling broken notebooks
-without taking down an entire source repository or the examples page itself.
+without taking down an entire source repository or the examples page itself. It
+should generally not be necessary as failing notebooks are automatically
+detected, but may speed up the process of executing notebooks.
 
 Specified as a path relative to a notebook search path, eg ``SRC_IPYNB_ROOT``.
 This is something like ``{repo_owner}/{repo_name}/{path_from_examples_dir}``.

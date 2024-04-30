@@ -97,7 +97,8 @@ jobs:
       - name: Pre-process and execute notebooks
         shell: bash -l {0}
         run: |
-          python source/_ext/proc_examples.py --prefix=deploy/ --cache-branch=${DEPLOY_BRANCH}
+          python source/_ext/proc_examples.py --prefix=deploy/ --cache-branch=${DEPLOY_BRANCH} --log-failures=notebooks_log.json
+          echo "NOTEBOOKS_LOG=$(cat 'notebooks_log.json')" >> "$GITHUB_ENV"
 
       - name: Deploy cache
         shell: bash -l {0}
@@ -141,10 +142,16 @@ jobs:
 
             - Deployment branch: ${{ env.DEPLOY_BRANCH }}
 
-            - Status: **${{ job.status }}**
+            - Job status: ${{ job.status }}
+
+            - Notebooks status: **${{fromJSON(env.NOTEBOOKS_LOG).n_successful}} / ${{fromJSON(env.NOTEBOOKS_LOG).n_total}} notebooks successfully executed**
+
+            ${{fromJSON(env.NOTEBOOKS_LOG).failed && '- Failing notebooks:
+                - ' || ''}}${{join(fromJSON(env.NOTEBOOKS_LOG).failed, '
+                - ')}}
 
 
-            If the workflow was successful, changes will only be visible in the ReadTheDocs
+            Changes will only be visible in the ReadTheDocs
             preview after it has been [rebuilt].
 
 
