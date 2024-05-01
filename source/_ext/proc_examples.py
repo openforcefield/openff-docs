@@ -270,6 +270,7 @@ def main(
     prefix: Path | None = None,
     processes: int | None = None,
     failed_notebooks_log: Path | None = None,
+    allow_failures: bool = False,
 ):
     print("Working in", Path().resolve())
 
@@ -354,7 +355,8 @@ def main(
                         }
                     )
                 )
-            exit(1)
+            if not allow_failures:
+                exit(1)
 
     if isinstance(prefix, Path):
         prefix.mkdir(parents=True, exist_ok=True)
@@ -418,6 +420,25 @@ if __name__ == "__main__":
             "Specify path to log file in a single argument: `--log-failures=<path>`"
         )
 
+    # if --allow-failures is True, do not exit with error code 1 if a
+    # notebook fails
+    allow_failures = False
+    for arg in sys.argv:
+        if arg.startswith("--allow-failures="):
+            allow_failures = arg[17:].lower()
+    if allow_failures in ["true", "1", "y", "yes", "t"]:
+        allow_failures = True
+    elif allow_failures in ["false", "0", "n", "no", "false"]:
+        allow_failures = False
+    else:
+        raise ValueError(
+            f"Didn't understand value of --allow-failures {allow_failures}; try `true` or `false`"
+        )
+    if "--log-failures" in sys.argv:
+        raise ValueError(
+            "Specify value in a single argument: `--allow-failures=true` or `--allow-failures=false`"
+        )
+
     main(
         cache_branch=cache_branch,
         do_proc=not "--skip-proc" in sys.argv,
@@ -425,4 +446,5 @@ if __name__ == "__main__":
         prefix=prefix,
         processes=processes,
         failed_notebooks_log=failed_notebooks_log,
+        allow_failures=allow_failures,
     )
