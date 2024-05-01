@@ -24,6 +24,7 @@ jobs:
 
     steps:
       - name: Choose deployment branch
+        shell: bash -l {0}
         run: |
           if [[ ${{ github.event_name }} != "workflow_dispatch" ]]; then
             echo "DEPLOY_BRANCH=_cookbook_data_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
@@ -90,13 +91,13 @@ jobs:
           environment-file: devtools/conda-envs/examples_env.yml
 
       - name: Pre-process and execute notebooks
-        shell: bash
+        shell: bash -l {0}
         run: |
           python source/_ext/proc_examples.py --prefix=deploy/ --cache-branch=${DEPLOY_BRANCH} --log-failures=notebooks_log.json
           echo "NOTEBOOKS_LOG=$(cat 'notebooks_log.json')" >> "$GITHUB_ENV"
 
       - name: Deploy cache
-        shell: bash
+        shell: bash -l {0}
         run: |
           cd deploy
 
