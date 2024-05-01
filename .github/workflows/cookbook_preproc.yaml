@@ -163,7 +163,7 @@ jobs:
 
 
       - name: Report status to PR on templating failure
-        if: failure() && github.event_name == 'workflow_dispatch' && inputs.pr_number != '' && steps.reportStatusToPr.outcome == 'failure'
+        if: always() && github.event_name == 'workflow_dispatch' && inputs.pr_number != '' && steps.reportStatusToPr.outcome == 'failure'
         uses: thollander/actions-comment-pull-request@v2
         with:
           pr_number: ${{ inputs.pr_number }}
@@ -182,6 +182,10 @@ jobs:
             - Job status: **${{ job.status }}**
 
             - Notebooks status: N/A
+
+
+            Changes will only be visible in the ReadTheDocs
+            preview after it has been [rebuilt].
 
 
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
