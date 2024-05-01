@@ -335,16 +335,12 @@ def main(
                 print(
                     "-" * 80
                     + "\n"
-                    + f"{exception.src} failed. Traceback:\n\n{exception.tb}",
-                    file=sys.stderr,
+                    + f"{exception.src} failed. Traceback:\n\n{exception.tb}"
                 )
-            print(
-                f"The following {len(exceptions)}/{len(notebooks)} notebooks failed:",
-                file=sys.stderr,
-            )
+            print(f"The following {len(exceptions)}/{len(notebooks)} notebooks failed:")
             for exception in exceptions:
-                print("    ", exception.src, file=sys.stderr)
-            print("For tracebacks, see above.", file=sys.stderr)
+                print("    ", exception.src)
+            print("For tracebacks, see above.")
             if failed_notebooks_log is not None:
                 failed_notebooks_log.write_text(
                     json.dumps(
