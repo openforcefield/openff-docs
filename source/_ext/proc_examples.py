@@ -329,26 +329,32 @@ def main(
             result for result in exec_results if isinstance(result, Exception)
         ]
 
-        for exception in exceptions:
-            print(
-                "-" * 80
-                + "\n"
-                + f"{exception.src} failed. Traceback:\n\n{exception.tb}"
-            )
-        print(f"The following {len(exceptions)}/{len(notebooks)} notebooks failed:")
-        for exception in exceptions:
-            print("    ", exception.src)
-        print("For tracebacks, see above.")
-        if failed_notebooks_log is not None:
-            failed_notebooks_log.write_text(
-                json.dumps(
-                    {
-                        "n_successful": len(notebooks) - len(exceptions),
-                        "n_total": len(notebooks),
-                        "failed": [exc.src for exc in exceptions],
-                    }
+        if exceptions:
+            for exception in exceptions:
+                print(
+                    "-" * 80
+                    + "\n"
+                    + f"{exception.src} failed. Traceback:\n\n{exception.tb}",
+                    file=sys.stderr,
                 )
+            print(
+                f"The following {len(exceptions)}/{len(notebooks)} notebooks failed:",
+                file=sys.stderr,
             )
+            for exception in exceptions:
+                print("    ", exception.src, file=sys.stderr)
+            print("For tracebacks, see above.", file=sys.stderr)
+            if failed_notebooks_log is not None:
+                failed_notebooks_log.write_text(
+                    json.dumps(
+                        {
+                            "n_successful": len(notebooks) - len(exceptions),
+                            "n_total": len(notebooks),
+                            "failed": [exc.src for exc in exceptions],
+                        }
+                    )
+                )
+            exit(1)
 
     if isinstance(prefix, Path):
         prefix.mkdir(parents=True, exist_ok=True)
