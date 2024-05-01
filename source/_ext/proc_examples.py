@@ -422,7 +422,7 @@ if __name__ == "__main__":
 
     # if --allow-failures is True, do not exit with error code 1 if a
     # notebook fails
-    allow_failures = False
+    allow_failures = "false"
     for arg in sys.argv:
         if arg.startswith("--allow-failures="):
             allow_failures = arg[17:].lower()
