@@ -93,8 +93,13 @@ jobs:
       - name: Pre-process and execute notebooks
         shell: bash -l {0}
         run: |
+          set -e
           python source/_ext/proc_examples.py --prefix=deploy/ --cache-branch=${DEPLOY_BRANCH} --log-failures=notebooks_log.json
-          echo "NOTEBOOKS_LOG=$(cat 'notebooks_log.json')" >> "$GITHUB_ENV"
+
+      - name: Read notebooks log
+        if: always()
+        shell: bash -l {0}
+        run: echo "NOTEBOOKS_LOG=$(cat 'notebooks_log.json')" >> "$GITHUB_ENV"
 
       - name: Deploy cache
         shell: bash -l {0}
