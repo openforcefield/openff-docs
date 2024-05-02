@@ -190,6 +190,8 @@ jobs:
 
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+            [rebuilt]: https://readthedocs.org/projects/openff-docs/builds/
+
       - name: Update check
         if: always() && github.event_name == 'workflow_dispatch' && inputs.pr_number != ''
         uses: actions/github-script@v6
