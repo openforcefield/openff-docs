@@ -341,19 +341,21 @@ def main(
             for exception in exceptions:
                 print("    ", exception.src)
             print("For tracebacks, see above.")
-            if failed_notebooks_log is not None:
-                print(f"Writing log to {failed_notebooks_log.absolute()}")
-                failed_notebooks_log.write_text(
-                    json.dumps(
-                        {
-                            "n_successful": len(notebooks) - len(exceptions),
-                            "n_total": len(notebooks),
-                            "failed": [exc.src for exc in exceptions],
-                        }
-                    )
+
+        if failed_notebooks_log is not None:
+            print(f"Writing log to {failed_notebooks_log.absolute()}")
+            failed_notebooks_log.write_text(
+                json.dumps(
+                    {
+                        "n_successful": len(notebooks) - len(exceptions),
+                        "n_total": len(notebooks),
+                        "failed": [exc.src for exc in exceptions],
+                    }
                 )
-            if not allow_failures:
-                exit(1)
+            )
+
+        if exceptions and not allow_failures:
+            exit(1)
 
     if isinstance(prefix, Path):
         prefix.mkdir(parents=True, exist_ok=True)

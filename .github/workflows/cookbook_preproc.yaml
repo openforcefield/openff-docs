@@ -99,10 +99,7 @@ jobs:
       - name: Read notebooks log
         if: always()
         shell: bash -l {0}
-        run: |
-          pwd
-          ls
-          echo "NOTEBOOKS_LOG=$(cat 'notebooks_log.json')" >> "$GITHUB_OUTPUT"
+        run: echo "NOTEBOOKS_LOG=$(cat 'notebooks_log.json')" >> "$GITHUB_OUTPUT"
 
       - name: Deploy cache
         shell: bash -l {0}
