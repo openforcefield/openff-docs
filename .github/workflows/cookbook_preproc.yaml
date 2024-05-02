@@ -99,7 +99,10 @@ jobs:
       - name: Read notebooks log
         if: always()
         shell: bash -l {0}
-        run: echo "NOTEBOOKS_LOG=$(cat 'notebooks_log.json')" >> "$GITHUB_ENV"
+        run: |
+          pwd
+          ls
+          echo "NOTEBOOKS_LOG=$(cat 'notebooks_log.json')" >> "$GITHUB_OUTPUT"
 
       - name: Deploy cache
         shell: bash -l {0}
@@ -163,7 +166,7 @@ jobs:
 
 
       - name: Report status to PR on templating failure
-        if: always() && github.event_name == 'workflow_dispatch' && inputs.pr_number != '' && steps.reportStatusToPr.outcome == 'failure'
+        if: always() && steps.reportStatusToPr.outcome == 'failure'
         uses: thollander/actions-comment-pull-request@v2
         with:
           pr_number: ${{ inputs.pr_number }}

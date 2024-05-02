@@ -342,6 +342,7 @@ def main(
                 print("    ", exception.src)
             print("For tracebacks, see above.")
             if failed_notebooks_log is not None:
+                print(f"Writing log to {failed_notebooks_log.absolute()}")
                 failed_notebooks_log.write_text(
                     json.dumps(
                         {
