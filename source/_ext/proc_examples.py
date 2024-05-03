@@ -338,7 +338,7 @@ def main(
                     + "\n"
                     + f"{exception.src} failed. Traceback:\n\n{exception.tb}"
                 )
-                if in_regexes(exception.src, OPTIONAL_NOTEBOOKS):
+                if not in_regexes(exception.src, OPTIONAL_NOTEBOOKS):
                     execution_failed = True
             print(f"The following {len(exceptions)}/{len(notebooks)} notebooks failed:")
             for exception in exceptions:
