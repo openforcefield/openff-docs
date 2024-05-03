@@ -360,7 +360,7 @@ def main(
                         "failed": [
                             exc.src
                             for exc in exceptions
-                            if exc.src not in ignored_exceptions
+                            if exc not in ignored_exceptions
                         ],
                         "ignored": [exc.src for exc in ignored_exceptions],
                     }
