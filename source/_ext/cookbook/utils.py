@@ -11,9 +11,9 @@ from typing import (
     ParamSpec,
     Union,
 )
-import abc
 import contextlib
 import os
+import re
 
 T = TypeVar("T")
 E = TypeVar("E")
@@ -74,3 +74,10 @@ def set_env(**environ):
     finally:
         os.environ.clear()
         os.environ.update(old_environ)
+
+
+def in_regexes(s: str, regexes: Iterable[str]) -> bool:
+    for regex in regexes:
+        if re.match(regex, s):
+            return True
+    return False

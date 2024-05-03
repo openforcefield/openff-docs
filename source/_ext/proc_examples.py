@@ -31,7 +31,7 @@ from cookbook.notebook import (
 )
 from cookbook.github import download_dir, get_tag_matching_installed_version
 from cookbook.globals_ import *
-from cookbook.utils import set_env, result, to_result
+from cookbook.utils import set_env, to_result, in_regexes
 
 
 class NotebookExceptionError(ValueError):
@@ -309,6 +309,7 @@ def main(
             create_download(notebook)
 
     # Execute notebooks in parallel for rendering as HTML
+    execution_failed = False
     if do_exec:
         shutil.rmtree(EXEC_IPYNB_ROOT, ignore_errors=True)
         # Context manager ensures the pool is correctly terminated if there's
@@ -337,6 +338,8 @@ def main(
                     + "\n"
                     + f"{exception.src} failed. Traceback:\n\n{exception.tb}"
                 )
+                if in_regexes(exception.src, OPTIONAL_NOTEBOOKS):
+                    execution_failed = True
             print(f"The following {len(exceptions)}/{len(notebooks)} notebooks failed:")
             for exception in exceptions:
                 print("    ", exception.src)
@@ -354,9 +357,6 @@ def main(
                 )
             )
 
-        if exceptions and not allow_failures:
-            exit(1)
-
     if isinstance(prefix, Path):
         prefix.mkdir(parents=True, exist_ok=True)
 
@@ -370,6 +370,9 @@ def main(
                 directory,
                 prefix / directory.relative_to(OPENFF_DOCS_ROOT),
             )
+
+    if execution_failed:
+        exit(1)
 
 
 if __name__ == "__main__":
