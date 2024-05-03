@@ -1,5 +1,6 @@
 """Script to execute and pre-process example notebooks"""
 
+import re
 from typing import Tuple, List, Final
 from zipfile import ZIP_DEFLATED, ZipFile
 from pathlib import Path
@@ -330,6 +331,9 @@ def main(
         exceptions: list[NotebookExceptionError] = [
             result for result in exec_results if isinstance(result, Exception)
         ]
+        ignored_exceptions = [
+            exc for exc in exceptions if in_regexes(exc.src, OPTIONAL_NOTEBOOKS)
+        ]
 
         if exceptions:
             for exception in exceptions:
@@ -352,7 +356,13 @@ def main(
                     {
                         "n_successful": len(notebooks) - len(exceptions),
                         "n_total": len(notebooks),
-                        "failed": [exc.src for exc in exceptions],
+                        "n_ignored": len(ignored_exceptions),
+                        "failed": [
+                            exc.src
+                            for exc in exceptions
+                            if exc.src not in ignored_exceptions
+                        ],
+                        "ignored": [exc.src for exc in ignored_exceptions],
                     }
                 )
             )
