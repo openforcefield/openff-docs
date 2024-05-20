@@ -1,9 +1,23 @@
+from functools import partial
 from types import FunctionType
-from typing import Callable, Iterable, Iterator, Optional, TypeVar, Generator
+from typing import (
+    Callable,
+    Generic,
+    Iterable,
+    Iterator,
+    Optional,
+    TypeVar,
+    Generator,
+    ParamSpec,
+    Union,
+)
 import contextlib
 import os
+import re
 
 T = TypeVar("T")
+E = TypeVar("E")
+P = ParamSpec("P")
 
 
 def flatten(iterable: Iterable[Iterable[T]]) -> Generator[T, None, None]:
@@ -20,14 +34,20 @@ def next_or_none(iterator: Iterator[T]) -> Optional[T]:
     return ret
 
 
-def result(fn, exception=Exception):
-    def ret(*args, **kwargs):
-        try:
-            return fn(*args, **kwargs)
-        except exception as e:
-            return e
+def result(
+    fn: Callable[P, T], exception: type[E], *args: P.args, **kwargs: P.kwargs
+) -> Union[T, E]:
+    try:
+        return fn(*args, **kwargs)
+    except exception as e:
+        return e
 
-    return ret
+
+def to_result(
+    fn: Callable[P, T], exception: type[E] = Exception
+) -> Callable[P, Union[T, E]]:
+    # partial's type stub is not precise enough to work here
+    return partial(result, fn, exception)  # type: ignore [reportReturnType]
 
 
 @contextlib.contextmanager
@@ -54,3 +74,10 @@ def set_env(**environ):
     finally:
         os.environ.clear()
         os.environ.update(old_environ)
+
+
+def in_regexes(s: str, regexes: Iterable[str]) -> bool:
+    for regex in regexes:
+        if re.match(regex, s):
+            return True
+    return False
