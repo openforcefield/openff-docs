@@ -11,14 +11,12 @@ dependencies:
     - packaging
     # Examples
     - openff-toolkit-examples>=0.15.2
-    - openff-interchange>=0.3.7
-    - openff-nagl
+    - openff-interchange>=0.3.25
+    - openff-nagl >=0.3.7
     # - openff-bespokefit
     # - openff-fragmenter
     # - openff-qcsubmit
     # - openff-recharge
-    - gromacs >=2021=nompi*
-    - lammps
     - rich
     - jax
     - dgl

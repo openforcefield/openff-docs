@@ -7,10 +7,10 @@ This workshop will display this flexibility by demonstrating a variety of unusua
 First session
 : [Mar 12 22:00 UTC](https://time.is/0900_13_Mar_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?OpenFF_Vignettes_Workshop)
 
-: [💨 Join on Zoom](https://us06web.zoom.us/j/88273328068?pwd=VtDJg1lJYbnLAI8aA2VPtYQEaw5Ebj.1)
-
 Second session
 : [Apr 24 12:00 UTC](https://time.is/2200_24_Apr_2024_in_Canberra/Beijing/Berlin/Los_Angeles/Chicago/Phoenix/New_York/London/UTC?Vignettes_OpenFF_Workshop)
+
+: [💨 Join on Zoom](https://us06web.zoom.us/j/87885784973?pwd=gnIHcbboXbxdopbG3OBb9kyoUKUYLr.1)
 
 Zoom links will be published here 24 hours before the sessions begin.
 

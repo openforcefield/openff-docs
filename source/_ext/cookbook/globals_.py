@@ -92,7 +92,8 @@ be rendered if they're in a cache.
 """
 
 OPTIONAL_NOTEBOOKS: list[str] = [
-    ".*/experimental/.*",
+    # ".*/experimental/.*",
+    "openforcefield/openff-interchange/experimental/openmmforcefields/gaff.ipynb",
 ]
 """
 Notebooks whose execution failure will not cause notebook processing to fail.

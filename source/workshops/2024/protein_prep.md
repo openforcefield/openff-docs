@@ -7,10 +7,10 @@ This workshop covers the preparation of a protein system from a structure downlo
 First session
 : [Feb 27 23:00 UTC](https://time.is/1000_28_Feb_2024_in_Canberra/Tokyo/Auckland,_New_Zealand/Los_Angeles/Chicago/Phoenix/New_York/UTC?Protein_Prep_OpenFF_Workshop)
 
-: [💨 Join on Zoom](https://us06web.zoom.us/j/84928391532?pwd=ZJoPVISZzA1LHo3mvfxbg1zug26Gas.1)
-
 Second Session
 : [Apr 17 12:00 UTC](https://time.is/2200_17_Apr_2024_in_Canberra/Beijing/Berlin/Los_Angeles/Chicago/Phoenix/New_York/London/UTC?Protein_Prep_OpenFF_Workshop)
+
+: [💨 Join on Zoom](https://us06web.zoom.us/j/85120722786?pwd=Hb4mp4gOkNnjyarG4RLsoR9ClEPDDC.1)
 
 Zoom links will be published here 24 hours before the sessions begin.
 
