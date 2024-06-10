@@ -6,7 +6,7 @@ dependencies:
     - ipywidgets=7.6.0
     # Examples
     - openff-toolkit-examples >=0.16.0
-    - openff-interchange >=0.3.25
+    - openff-interchange >=0.3.27
     - openff-nagl >=0.3.7
     - openff-bespokefit
     - openff-forcefields >= 2024.04.0

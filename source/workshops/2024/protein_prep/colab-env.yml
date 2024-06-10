@@ -10,8 +10,8 @@ dependencies:
     - requests
     - packaging
     # Examples
-    - openff-toolkit-examples>=0.15.2
-    - openff-interchange>=0.3.25
+    - openff-toolkit-examples>=0.16.0
+    - openff-interchange>=0.3.27
     - openff-nagl >=0.3.7
     # - openff-bespokefit
     # - openff-fragmenter
