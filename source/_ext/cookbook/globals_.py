@@ -34,8 +34,8 @@ GITHUB_REPOS: Final = [
     "openforcefield/openff-toolkit",
     "openforcefield/openff-interchange",
     "openforcefield/openff-nagl",
-    # "openforcefield/openff-fragmenter", # Slow with AmberTools
-    # "openforcefield/openff-qcsubmit",  # Broken with RDKit (and slow)
+    "openforcefield/openff-fragmenter",
+    "openforcefield/openff-qcsubmit",
 ]
 """
 GitHub repos to download example notebooks from.
