@@ -18,6 +18,7 @@ dependencies:
     - openff-nagl
     # - openff-fragmenter
     # - openff-qcsubmit
+    - openmmforcefields=0.12
     - gromacs >=2021=nompi*
     - lammps
     - rich
