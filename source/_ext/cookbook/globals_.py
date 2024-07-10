@@ -94,6 +94,7 @@ be rendered if they're in a cache.
 OPTIONAL_NOTEBOOKS: list[str] = [
     # ".*/experimental/.*",
     "openforcefield/openff-interchange/experimental/openmmforcefields/gaff.ipynb",
+    "openforcefield/openff-interchange/ligand_in_water/ligand_in_water.ipynb",
 ]
 """
 Notebooks whose execution failure will not cause notebook processing to fail.
