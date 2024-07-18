@@ -14,7 +14,7 @@ dependencies:
     - packaging
     # Examples
     - openff-toolkit-examples>=0.16.0
-    - openff-interchange>=0.3.26
+    - openff-interchange ~=0.3.28
     - openff-nagl
     # - openff-fragmenter
     # - openff-qcsubmit
