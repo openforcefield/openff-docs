@@ -91,10 +91,8 @@ These notebooks are skipped at the proc_examples stage, but they will still
 be rendered if they're in a cache.
 """
 
-OPTIONAL_NOTEBOOKS: list[str] = [
-    # ".*/experimental/.*",
-    "openforcefield/openff-interchange/experimental/openmmforcefields/gaff.ipynb",
-]
+# ".*/experimental/.*",
+OPTIONAL_NOTEBOOKS: list[str] = list()
 """
 Notebooks whose execution failure will not cause notebook processing to fail.
 
