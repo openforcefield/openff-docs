@@ -13,14 +13,15 @@ dependencies:
     - requests
     - packaging
     # Examples
-    - openff-toolkit-examples>=0.15.2
-    - openff-interchange >=0.3.25
+    - openff-toolkit-examples>=0.16.0
+    - openff-interchange ~=0.3.28
     - openff-nagl
     - openff-fragmenter
     - openff-qcsubmit
+    - openmmforcefields =0.14
     - gromacs >=2021=nompi*
     - lammps
     - rich
     - jax
-    - parmed<4
-    - nglview>=3.0.6
+    - parmed <4
+    - nglview ~=3.0.6
