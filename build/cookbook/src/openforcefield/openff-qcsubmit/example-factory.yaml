@@ -1,0 +1,113 @@
+!!python/object:openff.qcsubmit.factories.BasicDatasetFactory
+__dict__:
+  compute_tag: openff
+  dataset_tags:
+  - openff
+  driver: !!python/object/apply:qcportal.singlepoint.record_models.SinglepointDriver
+  - energy
+  priority: normal
+  qc_specifications:
+    ani1ccx: !!python/object:openff.qcsubmit.common_structures.QCSpec
+      __dict__:
+        basis: null
+        implicit_solvent: null
+        keywords: {}
+        maxiter: 200
+        method: ani1ccx
+        program: torchani
+        scf_properties:
+        - !!python/object/apply:openff.qcsubmit.common_structures.SCFProperties
+          - dipole
+        - !!python/object/apply:openff.qcsubmit.common_structures.SCFProperties
+          - quadrupole
+        - !!python/object/apply:openff.qcsubmit.common_structures.SCFProperties
+          - wiberg_lowdin_indices
+        - !!python/object/apply:openff.qcsubmit.common_structures.SCFProperties
+          - mayer_indices
+        spec_description: ANI1ccx standard specification
+        spec_name: ani1ccx
+        store_wavefunction: !!python/object/apply:qcelemental.models.results.WavefunctionProtocolEnum
+        - none
+      __fields_set__: !!set
+        basis: null
+        implicit_solvent: null
+        keywords: null
+        maxiter: null
+        method: null
+        program: null
+        scf_properties: null
+        spec_description: null
+        spec_name: null
+        store_wavefunction: null
+      __private_attribute_values__: {}
+    default: !!python/object:openff.qcsubmit.common_structures.QCSpec
+      __dict__:
+        basis: DZVP
+        implicit_solvent: null
+        keywords: {}
+        maxiter: 200
+        method: B3LYP-D3BJ
+        program: psi4
+        scf_properties:
+        - !!python/object/apply:openff.qcsubmit.common_structures.SCFProperties
+          - dipole
+        - !!python/object/apply:openff.qcsubmit.common_structures.SCFProperties
+          - quadrupole
+        - !!python/object/apply:openff.qcsubmit.common_structures.SCFProperties
+          - wiberg_lowdin_indices
+        - !!python/object/apply:openff.qcsubmit.common_structures.SCFProperties
+          - mayer_indices
+        spec_description: Standard OpenFF optimization quantum chemistry specification.
+        spec_name: default
+        store_wavefunction: !!python/object/apply:qcelemental.models.results.WavefunctionProtocolEnum
+        - none
+      __fields_set__: !!set
+        basis: null
+        implicit_solvent: null
+        keywords: null
+        maxiter: null
+        method: null
+        program: null
+        scf_properties: null
+        spec_description: null
+        spec_name: null
+        store_wavefunction: null
+      __private_attribute_values__: {}
+  type: BasicDatasetFactory
+  workflow:
+  - !!python/object:openff.qcsubmit.workflow_components.filters.ElementFilter
+    __dict__:
+      allowed_elements:
+      - 1
+      - 6
+      - 7
+      - 8
+      type: ElementFilter
+    __fields_set__: !!set
+      allowed_elements: null
+    __private_attribute_values__:
+      _cache: {}
+  - !!python/object:openff.qcsubmit.workflow_components.filters.MolecularWeightFilter
+    __dict__:
+      maximum_weight: 781
+      minimum_weight: 130
+      type: MolecularWeightFilter
+    __fields_set__: !!set
+      maximum_weight: null
+      minimum_weight: null
+    __private_attribute_values__:
+      _cache: {}
+  - !!python/object:openff.qcsubmit.workflow_components.conformer_generation.StandardConformerGenerator
+    __dict__:
+      clear_existing: true
+      max_conformers: 1
+      rms_cutoff: null
+      type: StandardConformerGenerator
+    __fields_set__: !!set
+      max_conformers: null
+    __private_attribute_values__:
+      _cache: {}
+__fields_set__: !!set
+  driver: null
+  qc_specifications: null
+__private_attribute_values__: {}

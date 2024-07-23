@@ -1,0 +1,67 @@
+{
+  "qc_specifications": {
+    "default": {
+      "method": "B3LYP-D3BJ",
+      "basis": "DZVP",
+      "program": "psi4",
+      "spec_name": "default",
+      "spec_description": "Standard OpenFF optimization quantum chemistry specification.",
+      "store_wavefunction": "none",
+      "implicit_solvent": null,
+      "maxiter": 200,
+      "scf_properties": [
+        "dipole",
+        "quadrupole",
+        "wiberg_lowdin_indices",
+        "mayer_indices"
+      ],
+      "keywords": {}
+    },
+    "ani1ccx": {
+      "method": "ani1ccx",
+      "basis": null,
+      "program": "torchani",
+      "spec_name": "ani1ccx",
+      "spec_description": "ANI1ccx standard specification",
+      "store_wavefunction": "none",
+      "implicit_solvent": null,
+      "maxiter": 200,
+      "scf_properties": [
+        "dipole",
+        "quadrupole",
+        "wiberg_lowdin_indices",
+        "mayer_indices"
+      ],
+      "keywords": {}
+    }
+  },
+  "driver": "energy",
+  "priority": "normal",
+  "dataset_tags": [
+    "openff"
+  ],
+  "compute_tag": "openff",
+  "type": "BasicDatasetFactory",
+  "workflow": [
+    {
+      "type": "ElementFilter",
+      "allowed_elements": [
+        1,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "type": "MolecularWeightFilter",
+      "minimum_weight": 130,
+      "maximum_weight": 781
+    },
+    {
+      "type": "StandardConformerGenerator",
+      "rms_cutoff": null,
+      "max_conformers": 1,
+      "clear_existing": true
+    }
+  ]
+}
