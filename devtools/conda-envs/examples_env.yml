@@ -25,3 +25,4 @@ dependencies:
     - jax
     - parmed <4
     - nglview ~=3.0.6
+    - plotly
