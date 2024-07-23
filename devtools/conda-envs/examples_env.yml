@@ -16,8 +16,8 @@ dependencies:
     - openff-toolkit-examples>=0.16.0
     - openff-interchange ~=0.3.28
     - openff-nagl
-    # - openff-fragmenter
-    # - openff-qcsubmit
+    - openff-fragmenter
+    - openff-qcsubmit
     - openmmforcefields =0.14
     - gromacs >=2021=nompi*
     - lammps
@@ -25,3 +25,4 @@ dependencies:
     - jax
     - parmed <4
     - nglview ~=3.0.6
+    - plotly
