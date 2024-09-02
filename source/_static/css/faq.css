@@ -1,0 +1,10 @@
+details.faq.sd-dropdown,
+details.faq.sd-dropdown summary,
+details.faq.sd-dropdown:not([open]) > .sd-card-header {
+    border: None;
+}
+
+details.faq.sd-dropdown summary.sd-summary-title .sd-summary-state-marker {
+    min-width: 3em;
+    transform-origin: 25% 50%;
+}

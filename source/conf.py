@@ -80,6 +80,16 @@ intersphinx_mapping = {
     "openff.nagl": ("https://docs.openforcefield.org/nagl/en/stable", None),
 }
 
+sd_custom_directives = {
+    "faq-entry": {
+        "inherit": "dropdown",
+        "options": {
+            "animate": "fade-in-slide-down",
+            "class-container": "faq",
+        },
+    }
+}
+
 # sphinx-notfound-page
 # https://github.com/readthedocs/sphinx-notfound-page
 # Renders a 404 page with absolute links
@@ -132,6 +142,7 @@ html_static_path = ["_static"]
 html_css_files = [
     "css/deflist-flowchart.css",
     "css/cookbook.css",
+    "css/faq.css",
 ]
 
 # List of patterns, relative to source directory, that match files and

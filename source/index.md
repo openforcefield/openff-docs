@@ -31,7 +31,7 @@ Specifications for SMIRNOFF and other standards defined by OpenFF can be found a
 : Submit and retrieve datasets with rich metadata from QCFractal instances
 
 [`openff-fragmenter`](https://docs.openforcefield.org/projects/fragmenter)
-: Fragment molecules for efficient quantum mechanical torsion scans 
+: Fragment molecules for efficient quantum mechanical torsion scans
 
 [`openff-evaluator`](https://docs.openforcefield.org/projects/evaluator)
 : Scalably and automatically estimate physical properties
@@ -70,6 +70,7 @@ caption: Getting Started
 install
 modelling
 examples
+faq
 :::
 
 :::{toctree}
