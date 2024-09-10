@@ -79,6 +79,18 @@ intersphinx_mapping = {
     "openff.recharge": ("https://docs.openforcefield.org/recharge/en/stable", None),
     "openff.nagl": ("https://docs.openforcefield.org/nagl/en/stable", None),
 }
+intersphinx_disabled_reftypes = ["*"]
+myst_heading_anchors = 2
+
+sd_custom_directives = {
+    "faq-entry": {
+        "inherit": "dropdown",
+        "options": {
+            "animate": "fade-in-slide-down",
+            "class-container": "faq",
+        },
+    }
+}
 
 # sphinx-notfound-page
 # https://github.com/readthedocs/sphinx-notfound-page
@@ -104,7 +116,7 @@ if importlib.util.find_spec("notfound"):
 extensions.append("sphinxawesome.codelinter")
 codelinter_languages = {
     # Language: command to pass codeblock as stdin
-    "python": "python",
+    "python": "python source/_ext/check_python_codeblocks.py",
 }
 # Tell MyST-NB about codelinter builder
 nb_mime_priority_overrides = [
@@ -113,6 +125,9 @@ nb_mime_priority_overrides = [
 
 # Configure the linkcheck builder
 linkcheck_anchors = False  # This generates lots of false positives
+linkcheck_ignore = [
+    r'https://pubs.acs.org/doi/' # ACS 403s the link checker. Thanks ACS.
+]
 
 # Cookbook stuff
 import sys
@@ -132,6 +147,7 @@ html_static_path = ["_static"]
 html_css_files = [
     "css/deflist-flowchart.css",
     "css/cookbook.css",
+    "css/faq.css",
 ]
 
 # List of patterns, relative to source directory, that match files and
