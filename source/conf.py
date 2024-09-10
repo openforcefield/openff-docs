@@ -125,6 +125,9 @@ nb_mime_priority_overrides = [
 
 # Configure the linkcheck builder
 linkcheck_anchors = False  # This generates lots of false positives
+linkcheck_ignore = [
+    r'https://pubs.acs.org/doi/' # ACS 403s the link checker. Thanks ACS.
+]
 
 # Cookbook stuff
 import sys
