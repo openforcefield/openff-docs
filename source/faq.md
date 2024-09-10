@@ -159,6 +159,21 @@ In the future, the use of AM1-BCC in OpenFF force fields may be replaced with me
 
 :::::
 
+:::::{faq-entry} How can I silence warnings I'm expecting my code to generate?
+
+OpenFF libraries often issue warnings when they detect that the user might be doing something they don't intend. These warnings are largely borne out of bug reports from users, and we'd rather make sure new users understand our software, so they can get noisy for experienced developers. We use the Python [`warnings`] module from the standard library, so warnings can be filtered from a particular section of code like so:
+
+```python
+import warnings
+with warnings.catch_warnings():
+    warnings.filterwarnings(
+        "ignore",
+        category=openff.toolkit.utils.exceptions.AtomMappingWarning,
+    )
+
+    Molecule.from_smiles("[H:1][O:4][H:2]")
+:::::
+
 ## Installation Issues
 
 :::::{faq-entry} I'm having troubles installing the OpenFF Toolkit on my Apple Silicon Mac.

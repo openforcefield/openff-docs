@@ -19,6 +19,7 @@ pollution by importing the toolkit.
 """
 
 # Define the default namespace
+import openff.toolkit
 from openff.toolkit import ForceField, Molecule, Topology
 
 molecule = Molecule.from_smiles("C123C(C1)(C2)C3")
