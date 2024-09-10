@@ -80,6 +80,7 @@ intersphinx_mapping = {
     "openff.nagl": ("https://docs.openforcefield.org/nagl/en/stable", None),
 }
 intersphinx_disabled_reftypes = ["*"]
+myst_heading_anchors = 2
 
 sd_custom_directives = {
     "faq-entry": {

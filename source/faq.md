@@ -1,14 +1,13 @@
-# Frequently asked questions (FAQ)
+# Frequently Asked Questions (FAQ)
 
-## Getting started
+## Getting Started
 
 :::::{faq-entry} What do I need to know to get started?
 
-OpenFF tools follow a philosophy of failing with a descriptive error message
-rather than trying to interpret intention from ambiguous information, so you
-might find you have to provide more information than you're used to. For an
-overview of how the ecosystem fits together, read [](modelling.md). Once
-you're ready to start coding, check out [](install.md) and [](examples.md).
+OpenFF tools follow a philosophy of failing with a descriptive error message rather than trying to interpret intention from ambiguous information, so you
+might find you have to provide more information than you're used to.
+For an overview of how the ecosystem fits together, read [](modelling.md).
+Once you're ready to start coding, check out [](install.md) and [](examples.md).
 
 :::::
 
@@ -18,36 +17,57 @@ SMIRNOFF force fields use direct chemical perception meaning that, unlike many m
 This creates unique opportunities and allows them to encode a great deal of chemistry quite simply, but it also means that the *starting point* for parameter assignment must be well-defined chemically, giving not just the elements and connectivity for all of the atoms of all of the components of your system, but also providing the formal charges and bond orders.
 
 Specifically, to apply SMIRNOFF to a system, you must either:
-1. Provide Open Force Field Toolkit [`Molecule`](openff.toolkit.topology.Molecule) objects corresponding to the components of your system, or
-2. Provide an OpenMM [`Topology`](openff.toolkit.topology.Topology) which includes bond orders and thus can be converted to molecules corresponding to the components of your system
+1. Provide Open Force Field Toolkit [`Molecule`] objects corresponding to the components of your system, or
+2. Provide an OpenMM [`Topology`] which includes bond orders and thus can be converted to molecules corresponding to the components of your system
 
 Without this information, our direct chemical perception cannot be applied to your molecule, as it requires the chemical identity of the molecules in your system -- that is, bond order and formal charge as well as atoms and connectivity.
 Unless you provide the full chemical identity in this sense, we must attempt to guess or infer the chemical identity of your molecules, which is a recipe for trouble.
 Different molecules can have the same chemical graph but differ in bond order and formal charge, or different resonance structures may be treated rather differently by some force fields (e.g. `c1cc(ccc1c2cc[nH+]cc2)[O-]` vs `C1=CC(C=CC1=C2C=CNC=C2)=O`, where the central bond is rotatable in one resonance structure but not in the other) even though they have identical formal charge and connectivity (chemical graph).
 A force field which uses the chemical identity of molecules to assign parameters needs to know the exact chemical identity of the molecule you are intending to parameterize.
 
+[`Molecule`]: openff.toolkit.topology.Molecule
+[`Topology`]: openff.toolkit.topology.Topology
+
 :::::
 
-:::::{faq-entry} Can I use an AMBER (or GROMACS) topology/coordinate file as a starting point for applying a SMIRNOFF force field?
+:::::{faq-entry} Can I use an Amber or GROMACS topology/coordinate file as a starting point for applying a SMIRNOFF force field?
 
-In a word, "no".
+Amber and GROMACS topologies and coordinate files do not include enough explicit chemical information to apply a SMIRNOFF force field.
+For example, bond orders are not present in either format; one could infer bond orders based on bond lengths, or attempt to infer bond orders from force constants, but such inference work would be error-prone and is outside the scope of SMIRNOFF.
+PDB files that include all atoms in the model can be used in some cases (see next question).
 
-Parameter files used by typical molecular dynamics simulation packages do not currently encode enough information to identify the molecules chemically present, or at least not without drawing inferences.
-For example, one could take a structure file and infer bond orders based on bond lengths, or attempt to infer bond orders from force constants in a parameter file.
-Such inference work is outside the scope of SMIRNOFF.
+Amber and GROMACS topology and coordinate files can be [experimentally loaded] by Interchange for export to other MD engines, but this does not require the chemical information needed to apply a SMIRNOFF force field.
+
+[experimentally loaded]: inv:openff.interchange#using/experimental
+
+:::::
+
+:::::{faq-entry} Can I use an Amber force field with SMIRNOFF ligands?
+
+Experimental support for this approach is available through Interchange. Briefly, the ligands are parametrized in the usual SMIRNOFF way to produce an Interchange, the Amber components are parametrized through OpenMM and then loaded into a second Interchange with [`Interchange.from_openmm()`], and then the two Interchanges are combined.
+
+[`Interchange.from_openmm()`]: openff.interchange.Interchange.from_openmm
 
 :::::
 
 :::::{faq-entry} What about starting from a PDB file?
 
-PDB files do not in general provide the chemical identity of small molecules contained therein, and thus do not provide suitable starting points for applying SMIRNOFF to small molecules.
-This is especially problematic for PDB files from X-ray crystallography which typically do not include proteins, making the problem even worse.
-For our purposes here, however, we assume you begin with the coordinates of all atoms present and the full topology of your system.
+PDB files are a ubiquitous coordinate format, but the interpretation of the chemistry of a given PDB file is ambiguous in many ways.
+Without a complete and accurate chemical description of the system, SMIRNOFF parameters cannot be applied.
+When a few common biopolymers like peptides have the conventional atom and residue names and are not missing any atoms, they can be loaded unambiguously.
+However, different software packages in common use make slightly different choices for these conventions.
+In addition, many of the affordances provided by the format for disambiguation, like formal charges and CONECT records, are both not reliably produced by all software and have deficiencies that make chemical identification impossible.
+This means while PDBs are great for providing the coordinates of a known system of atoms in a format that can be readily visualized, applying SMIRNOFF parameters to them is an active area of development.
 
-Given a PDB file of a hypothetical biomolecular system of interest containing a small molecule, there are several routes available to you for treating the small molecule present:
+To load a PDB file including appropriately named canonical peptides with all atoms present and a known list of non-protein elements, see the OpenFF Toolkit's [PDB Cookbook].
+This workflow is an active area of development and we are expanding the scope of what can be loaded as we settle on what is needed.
+
+Given a PDB file of a hypothetical biomolecular system of interest containing a small molecule, there are several routes available to you for identifying the small molecules present:
 - Use a cheminformatics toolkit (see below) to infer bond orders
 - Identify your ligand from a database; e.g. if it is in the Protein Data Bank (PDB), it will be present in the [Ligand Expo](http://ligand-expo.rcsb.org) meaning that it has a database entry and code you can use to look up its putative chemical identity
 - Identify your ligand by name or SMILES string (or similar) from the literature or your collaborators
+
+[the PDB Cookbook]: inv:openff.toolkit#users/pdb_cookbook/index.ipynb
 
 :::::
 
@@ -81,7 +101,45 @@ OpenFF recommends exporting a prepared `Interchange` to the target MD engine and
 [serializing to XML]: https://openmm.github.io/openmm-cookbook/latest/notebooks/cookbook/Saving%20Systems%20to%20XML%20Files.html
 :::::
 
-## Errors and performance issues
+## Errors and Performance Issues
+
+:::::{faq-entry} Why does partial charge assignment fail during conformer generation, even though my molecule has conformers?
+
+Assigning partial charges with a quantum chemical method requires conformers, as they are an essential input to a quantum chemical calculation.
+Because the charges assigned by a SMIRNOFF force field should be transferrable between systems, we default to generating our own set of conformers during charge assignment.
+This requirement will become unnecessary for future SMIRNOFF force fields that use NAGL graph charges; see the [](#under-the-hood) section.
+
+To assign charges based on the provided conformer if conformer generation fails, first assign charges, then use the assigned charges during parametrization:
+
+```python
+from openff.toolkit import ForceField, Topology, Molecule
+
+topology = ...
+forcefield  = ForceField(...)
+problematic_molecule_indices = [...]
+
+for i in problematic_molecule_indices:
+    molecule = topology.molecule(i)
+    try:
+        molecule.assign_partial_charges(
+            partial_charge_method="am1bcc"
+        )
+    except ValueError:
+        molecule.assign_partial_charges(
+            partial_charge_method="am1bcc",
+            use_conformers=molecule.conformers,
+        )
+
+interchange = forcefield.create_interchange(
+    topology,
+    charge_from_molecules=[
+        topology.molecule(i)
+        for i in problematic_molecule_indices
+    ]
+)
+```
+
+:::::
 
 :::::{faq-entry} I'm getting stereochemistry errors when loading a molecule from a SMILES string.
 
@@ -99,7 +157,7 @@ In the future, the use of AM1-BCC in OpenFF force fields may be replaced with me
 
 :::::
 
-## Installation issues
+## Installation Issues
 
 :::::{faq-entry} I'm having troubles installing the OpenFF Toolkit on my Apple Silicon Mac.
 
@@ -138,7 +196,7 @@ and then try rerunning and/or reinstalling the Toolkit.
 
 :::::
 
-## Under the hood
+## Under the Hood
 
 :::::{faq-entry} How are partial charges assigned in a SMIRNOFF force field?
 
@@ -170,7 +228,7 @@ No! This is the intended behavior. The force field parameters of a molecule shou
 
 :::::
 
-## SMIRNOFF and force fields
+## SMIRNOFF Force Fields
 
 :::::{faq-entry} How can I distribute my own force fields in SMIRNOFF format?
 
