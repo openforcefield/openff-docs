@@ -2,6 +2,16 @@
 
 ## Getting started
 
+:::::{faq-entry} What do I need to know to get started?
+
+OpenFF tools follow a philosophy of failing with a descriptive error message
+rather than trying to interpret intention from ambiguous information, so you
+might find you have to provide more information than you're used to. For an
+overview of how the ecosystem fits together, read [](modelling.md). Once
+you're ready to start coding, check out [](install.md) and [](examples.md).
+
+:::::
+
 :::::{faq-entry} What kinds of input files can I apply SMIRNOFF parameters to?
 
 SMIRNOFF force fields use direct chemical perception meaning that, unlike many molecular mechanics (MM) force fields, they apply parameters based on substructure searches acting directly on molecules.
@@ -98,7 +108,7 @@ As of August 2022, some upstreams (at least AmberTools, possibly more) are not b
 (Keywords `osx-arm64`, M1 Mac, M2 Mac)
 
 [Rosetta]: https://support.apple.com/en-au/HT211861
-[platform support]: inv:#install_arm
+[platform support]: install_arm
 
 :::::
 

@@ -79,6 +79,7 @@ intersphinx_mapping = {
     "openff.recharge": ("https://docs.openforcefield.org/recharge/en/stable", None),
     "openff.nagl": ("https://docs.openforcefield.org/nagl/en/stable", None),
 }
+intersphinx_disabled_reftypes = ["*"]
 
 sd_custom_directives = {
     "faq-entry": {
