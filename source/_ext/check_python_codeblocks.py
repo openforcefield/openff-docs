@@ -24,24 +24,47 @@ from openff.toolkit import ForceField, Molecule, Topology
 
 molecule = Molecule.from_smiles("C123C(C1)(C2)C3")
 topology = Topology.from_molecules([molecule])
-force_field  = ForceField("openff_unconstrained-2.2.0.offxml")
+force_field = ForceField("openff_unconstrained-2.2.0.offxml")
+ff_unconstrained = force_field
+ff_constrained = ForceField("openff-2.2.0.offxml")
 
 # Set the import hook
-import sys
 import builtins
+import sys
+
 _old_import = __import__
 _already_deleted = False
+
+
 def __import__(name, *args, **kwargs):
     """
     Clear above variables on any new import of the toolkit
     """
     global _already_deleted
     if name.startswith("openff.toolkit") and not _already_deleted:
-        global molecule, topology, force_field, ForceField, Molecule, Topology
-        del molecule, topology, force_field, ForceField, Molecule, Topology
+        global \
+            molecule, \
+            topology, \
+            force_field, \
+            ForceField, \
+            Molecule, \
+            Topology, \
+            ff_constrained, \
+            ff_unconstrained
+        del (
+            molecule,
+            topology,
+            force_field,
+            ForceField,
+            Molecule,
+            Topology,
+            ff_constrained,
+            ff_unconstrained,
+        )
         _already_deleted = True
 
     return _old_import(name, *args, **kwargs)
+
 
 builtins.__import__ = __import__
 
