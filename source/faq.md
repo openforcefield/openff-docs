@@ -114,9 +114,11 @@ To assign charges based on the provided conformer if conformer generation fails,
 ```python
 from openff.toolkit import ForceField, Topology, Molecule
 
-topology = ...
-forcefield  = ForceField(...)
-problematic_molecule_indices = [...]
+topology = Topology.from_molecules([
+    Molecule.from_smiles("C123C(C1)(C2)C3")
+])
+force_field  = ForceField("openff-2.2.0.offxml")
+problematic_molecule_indices = [0]
 
 for i in problematic_molecule_indices:
     molecule = topology.molecule(i)
@@ -130,7 +132,7 @@ for i in problematic_molecule_indices:
             use_conformers=molecule.conformers,
         )
 
-interchange = forcefield.create_interchange(
+interchange = force_field.create_interchange(
     topology,
     charge_from_molecules=[
         topology.molecule(i)
@@ -285,13 +287,7 @@ Adding or removing the inner `<Constraint...` line will convert a force field be
 
 ```python
 ch = force_field.get_parameter_handler('Constraints')
-ch.add_parameter(smirks="[#1:1]-[*:2]")
-```
-
-Constraints can be removed from bonds involving hydrogen by removing the corresponding parameter:
-
-```python
-del forcefield['Constraints']["[#1:1]-[*:2]"]
+ch.add_parameter({'smirks': "[#1:1]-[*:2]"})
 ```
 
 :::::

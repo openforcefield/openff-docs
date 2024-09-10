@@ -116,7 +116,7 @@ if importlib.util.find_spec("notfound"):
 extensions.append("sphinxawesome.codelinter")
 codelinter_languages = {
     # Language: command to pass codeblock as stdin
-    "python": "python",
+    "python": "python source/_ext/check_python_codeblocks.py",
 }
 # Tell MyST-NB about codelinter builder
 nb_mime_priority_overrides = [
