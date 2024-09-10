@@ -109,7 +109,7 @@ Assigning partial charges with a quantum chemical method requires conformers, as
 Because the charges assigned by a SMIRNOFF force field should be transferrable between systems, we default to generating our own set of conformers during charge assignment.
 This requirement will become unnecessary for future SMIRNOFF force fields that use NAGL graph charges; see the [](#under-the-hood) section.
 
-To assign charges based on the provided conformer if conformer generation fails, first assign charges, then use the assigned charges during parametrization:
+To assign charges based on the provided conformer if conformer generation fails, first assign charges using the existing conformer with the `use_conformers` argument, then use the assigned charges during parametrization with `charge_from_molecules`:
 
 ```python
 from openff.toolkit import ForceField, Topology, Molecule
