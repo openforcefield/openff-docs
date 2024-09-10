@@ -23,7 +23,7 @@ from openff.toolkit import ForceField, Molecule, Topology
 
 molecule = Molecule.from_smiles("C123C(C1)(C2)C3")
 topology = Topology.from_molecules([molecule])
-force_field  = ForceField("openff-2.2.0.offxml")
+force_field  = ForceField("openff_unconstrained-2.2.0.offxml")
 
 # Set the import hook
 import sys
