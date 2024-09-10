@@ -36,7 +36,7 @@ Amber and GROMACS topologies and coordinate files do not include enough explicit
 For example, bond orders are not present in either format; one could infer bond orders based on bond lengths, or attempt to infer bond orders from force constants, but such inference work would be error-prone and is outside the scope of SMIRNOFF.
 PDB files that include all atoms in the model can be used in some cases (see next question).
 
-Amber and GROMACS topology and coordinate files can be [experimentally loaded] by Interchange for export to other MD engines, but this does not require the chemical information needed to apply a SMIRNOFF force field.
+Amber and GROMACS topology and coordinate files can be [experimentally loaded] by Interchange for export to other MD engines, but this does not include the chemical information needed to apply a SMIRNOFF force field.
 
 [experimentally loaded]: inv:openff.interchange#using/experimental
 
