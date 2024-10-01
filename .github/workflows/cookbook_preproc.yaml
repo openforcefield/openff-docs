@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       pr_number:
-        description: 'Update the cache for PR#: (leave blank if not a PR)'
+        description: "Update the cache for PR#: (leave blank if not a PR)"
         required: false
         default: ""
         type: string
@@ -89,6 +89,10 @@ jobs:
         uses: mamba-org/setup-micromamba@v1
         with:
           environment-file: devtools/conda-envs/examples_env.yml
+          # default - will pull down 2.0 which we don't want!
+          # micromamba-version: latest
+          # pin to latest 1.x release
+          micromamba-version: "1.5.10-0"
 
       - name: Pre-process and execute notebooks
         shell: bash -l {0}
@@ -162,7 +166,6 @@ jobs:
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
             [rebuilt]: https://readthedocs.org/projects/openff-docs/builds/
-
 
       - name: Report status to PR on templating failure
         if: always() && steps.reportStatusToPr.outcome == 'failure'

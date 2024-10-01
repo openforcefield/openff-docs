@@ -3,6 +3,9 @@
 ## Getting Started
 
 :::::{faq-entry} What do I need to know to get started?
+---
+name: faq-get-started
+---
 
 OpenFF tools follow a philosophy of failing with a descriptive error message rather than trying to interpret intention from ambiguous information, so you
 might find you have to provide more information than you're used to.
@@ -12,6 +15,9 @@ Once you're ready to start coding, check out [](install.md) and [](examples.md).
 :::::
 
 :::::{faq-entry} What kinds of input files can I apply SMIRNOFF parameters to?
+---
+name: faq-input-files
+---
 
 SMIRNOFF force fields use direct chemical perception meaning that, unlike many molecular mechanics (MM) force fields, they apply parameters based on substructure searches acting directly on molecules.
 This creates unique opportunities and allows them to encode a great deal of chemistry quite simply, but it also means that the *starting point* for parameter assignment must be well-defined chemically, giving not just the elements and connectivity for all of the atoms of all of the components of your system, but also providing the formal charges and bond orders.
@@ -31,6 +37,9 @@ A force field which uses the chemical identity of molecules to assign parameters
 :::::
 
 :::::{faq-entry} Can I use an Amber or GROMACS topology/coordinate file as a starting point for applying a SMIRNOFF force field?
+---
+name: faq-amber-gmx-top
+---
 
 Amber and GROMACS topologies and coordinate files do not include enough explicit chemical information to apply a SMIRNOFF force field.
 For example, bond orders are not present in either format; one could infer bond orders based on bond lengths, or attempt to infer bond orders from force constants, but such inference work would be error-prone and is outside the scope of SMIRNOFF.
@@ -43,6 +52,9 @@ Amber and GROMACS topology and coordinate files can be [experimentally loaded] b
 :::::
 
 :::::{faq-entry} Can I use an Amber force field with SMIRNOFF ligands?
+---
+name: faq-amber-ff
+---
 
 Experimental support for this approach is available through Interchange. Briefly, the ligands are parametrized in the usual SMIRNOFF way to produce an Interchange, the Amber components are parametrized through OpenMM and then loaded into a second Interchange with [`Interchange.from_openmm()`], and then the two Interchanges are combined.
 
@@ -51,6 +63,9 @@ Experimental support for this approach is available through Interchange. Briefly
 :::::
 
 :::::{faq-entry} What about starting from a PDB file?
+---
+name: faq-pdb
+---
 
 PDB files are a ubiquitous coordinate format, but the interpretation of the chemistry of a given PDB file is ambiguous in many ways.
 Without a complete and accurate chemical description of the system, SMIRNOFF parameters cannot be applied.
@@ -72,12 +87,18 @@ Given a PDB file of a hypothetical biomolecular system of interest containing a 
 :::::
 
 :::::{faq-entry} What about starting from an XYZ file?
+---
+name: faq-xyz
+---
 
 XYZ files generally only contain elements and positions, and are therefore similar in content to PDB files. See the above section "What about starting from a PDB file?" for more information.
 
 :::::
 
 :::::{faq-entry} What do you recommend as a starting point?
+---
+name: faq-recommended-starting-point
+---
 
 For application of SMIRNOFF force fields, we recommend that you begin your work with formats which provide the chemical identity of your small molecule (including formal charge and bond order).
 This means we recommend one of the following or equivalent:
@@ -92,6 +113,9 @@ Essentially, anything which provides the full identity of what you want to simul
 :::::
 
 :::::{faq-entry} How can I transfer my prepared system to HPC resources for simulation?
+---
+name: faq-hpc
+---
 
 OpenFF recommends exporting a prepared `Interchange` to the target MD engine and using the MD engine's recommended method to transfer it to HPC resources. This way, no additional dependencies need to be installed on the HPC resource to use OpenFF tools during preparation. For most MD engines, simply transfer the files produced by the appropriate [`Interchange.to_*()`] methods. For OpenMM, create a `System` Python object with [`Interchange.to_openmm_system()`] or [`ForceField.create_openmm_system()`] and transfer it by [serializing to XML].
 
@@ -104,6 +128,9 @@ OpenFF recommends exporting a prepared `Interchange` to the target MD engine and
 ## Errors and Performance Issues
 
 :::::{faq-entry} Why does partial charge assignment fail during conformer generation, even though my molecule has conformers?
+---
+name: faq-charge-conformers
+---
 
 Assigning partial charges with a quantum chemical method requires conformers, as they are an essential input to a quantum chemical calculation.
 Because the charges assigned by a SMIRNOFF force field should be transferrable between systems, we default to generating our own set of conformers during charge assignment.
@@ -144,6 +171,9 @@ interchange = force_field.create_interchange(
 :::::
 
 :::::{faq-entry} I'm getting stereochemistry errors when loading a molecule from a SMILES string.
+---
+name: faq-stereochemistry-errors-from-smiles
+---
 
 By default, the OpenFF Toolkit throws an error if a molecule with undefined stereochemistry is loaded. This is because the stereochemistry of a molecule may affect its partial charges, and assigning parameters using [direct chemical perception](https://pubs.acs.org/doi/pdf/10.1021/acs.jctc.8b00640) may require knowing the stereochemistry of chiral centers. In addition, coordinates generated by the Toolkit for undefined chiral centers may have any combination of stereochemistries; the toolkit makes no guarantees about consistency, uniformity, or randomness. Note that the main-line OpenFF force fields currently use a stereochemistry-dependent charge generation method, but do not include any other stereospecific parameters.
 
@@ -152,6 +182,9 @@ This behavior is in line with OpenFF's general attitude of requiring users to ex
 :::::
 
 :::::{faq-entry} Parameterizing my system, which contains a large molecule, is taking forever. What's wrong?
+---
+name: faq-slow-parametrization
+---
 
 The mainline OpenFF force fields use AM1-BCC to assign partial charges (via the `<ToolkitAM1BCCHandler>` tag in the OFFXML file). This method unfortunately scales poorly with the size of a molecule and ligands roughly 100 atoms (about 40 heavy atoms) or larger may take so long (i.e. 10 minutes or more) that it seems like your code is simply hanging indefinitely. If you have an OpenEye license and OpenEye Toolkits [installed](installation/openeye), the OpenFF Toolkit will instead use `quacpac`, which can offer better performance on large molecules. Otherwise, it uses AmberTools' `sqm`, which is free to use.
 
@@ -160,6 +193,9 @@ In the future, the use of AM1-BCC in OpenFF force fields may be replaced with me
 :::::
 
 :::::{faq-entry} How can I silence warnings I'm expecting my code to generate?
+---
+name: faq-warnings
+---
 
 OpenFF libraries often issue warnings when they detect that the user might be doing something they don't intend. These warnings are largely borne out of bug reports from users, and we'd rather make sure new users understand our software, so they can get noisy for experienced developers. We use the Python [`warnings`] module from the standard library, so warnings can be filtered from a particular section of code like so:
 
@@ -172,11 +208,15 @@ with warnings.catch_warnings():
     )
 
     Molecule.from_smiles("[H:1][O:4][H:2]")
+```
 :::::
 
 ## Installation Issues
 
 :::::{faq-entry} I'm having troubles installing the OpenFF Toolkit on my Apple Silicon Mac.
+---
+name: faq-apple-silicon
+---
 
 As of August 2022, some upstreams (at least AmberTools, possibly more) are not built on `osx-arm64`, so installing the OpenFF stack is only possible with [Rosetta]. See the [platform support] section of the installation documentation for more.
 
@@ -188,6 +228,9 @@ As of August 2022, some upstreams (at least AmberTools, possibly more) are not b
 :::::
 
 :::::{faq-entry} My mamba/conda installation of the toolkit doesn't appear to work. What should I try next?
+---
+name: faq-conda-install-broken
+---
 
 We recommend that you install the toolkit in a fresh environment, explicitly passing the channels to be used, in-order:
 
@@ -202,6 +245,9 @@ Taking the approach that conda/mamba environments are generally disposable, even
 :::::
 
 :::::{faq-entry} My mamba/conda installation of the toolkit STILL doesn't appear to work.
+---
+name: faq-conda-install-broken-contd
+---
 
 Many of our users encounter issues that are ultimately due to their terminal finding a different `conda` at higher priority in their `PATH` than the `conda` deployment where OpenFF is installed. To fix this, find the conda deployment where OpenFF is installed. Then, if that folder is something like `~/miniconda3`, run in the terminal:
 
@@ -216,6 +262,9 @@ and then try rerunning and/or reinstalling the Toolkit.
 ## Under the Hood
 
 :::::{faq-entry} How are partial charges assigned in a SMIRNOFF force field?
+---
+name: faq-partial-charges
+---
 
 There are [many charge methods](https://openforcefield.github.io/standards/standards/smirnoff/#partial-charge-and-electrostatics-models) supported by the SMIRNOFF specification. With the exception of water, mainline OpenFF force fields only use AM1-BCC (through `ToolkitAM1BCC`) to assign partial charges. (A future biopolymer force field will likely use library charges for standard residues.)
 
@@ -230,6 +279,9 @@ A future charge method may use [NAGL](https://github.com/openforcefield/openff-n
 :::::
 
 :::::{faq-entry} I understand the risks and want to perform bond and formal charge inference anyway
+---
+name: faq-chemical-inference
+---
 
 If you are unable to provide a molecule in the formats recommended above and want to attempt to infer the bond orders and atomic formal charges, there are tools available elsewhere that can provide guesses for this problem. These tools are not perfect, and the inference problem itself is poorly defined, so you should review each output closely (see our [Core Concepts](users/concepts) for an explanation of what information is needed to construct an OpenFF Molecule). Some tools we know of include:
 
@@ -240,6 +292,9 @@ If you are unable to provide a molecule in the formats recommended above and wan
 :::::
 
 :::::{faq-entry} The partial charges generated by the toolkit don't seem to depend on the molecule's conformation! Is this a bug?
+---
+name: faq-charges-conformation-independent
+---
 
 No! This is the intended behavior. The force field parameters of a molecule should be independent of both their chemical environment and conformation so that they can be used and compared across different contexts. When applying AM1BCC partial charges, the toolkit achieves a deterministic output by ignoring the input conformation and producing several new conformations for the same molecule. Partial charges are then computed based on these conformations. This behavior can be controlled with the `use_conformers` argument to [Molecule.assign_partial_charges()](openff.toolkit.topology.Molecule.assign_partial_charges).
 
@@ -248,6 +303,9 @@ No! This is the intended behavior. The force field parameters of a molecule shou
 ## SMIRNOFF Force Fields
 
 :::::{faq-entry} How can I distribute my own force fields in SMIRNOFF format?
+---
+name: faq-distribute-smirnoff
+---
 
 We support conda data packages for distribution of force fields in `.offxml` format! Just add the relevant entry point to `setup.py` and distribute via a conda (or PyPI) package:
 
@@ -264,6 +322,9 @@ Where `get_my_new_force_field_paths` is a function in the `my_package` module pr
 :::::
 
 :::::{faq-entry} What does "unconstrained" mean in a force field name?
+---
+name: faq-unconstrained-ff
+---
 
 Each release of an [OpenFF force field](https://github.com/openforcefield/openff-forcefields/tree/main/openforcefields/offxml) has two associated `.offxml` files: one unadorned (for example, `openff-2.0.0.offxml`) and one labeled "unconstrained" (`openff_unconstrained-2.0.0.offxml`). This reflects the presence or absence of holonomic constraints on hydrogen-involving bonds in the force field specification.
 
@@ -286,6 +347,9 @@ Starting with v2.0.0 (Sage), TIP3P water is included in OpenFF force fields. The
 :::::
 
 :::::{faq-entry} How do I add or remove constraints from my own force field?
+---
+name: faq-add-remove-constraints
+---
 
 To make applying or removing bond constraints easy, constrained force fields released by OpenFF always include full bond parameters. Constraints on Hydrogen-involving bonds inherit their lengths from the harmonic parameters also included in the force field. To restore the harmonic treatment, simply remove the appropriate constraint entry from the force field.
 
