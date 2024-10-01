@@ -126,7 +126,7 @@ nb_mime_priority_overrides = [
 # Configure the linkcheck builder
 linkcheck_anchors = False  # This generates lots of false positives
 linkcheck_ignore = [
-    r'https://pubs.acs.org/doi/' # ACS 403s the link checker. Thanks ACS.
+    r"https://pubs.acs.org/doi/"  # ACS 403s the link checker. Thanks ACS.
 ]
 
 # Cookbook stuff
@@ -148,6 +148,9 @@ html_css_files = [
     "css/deflist-flowchart.css",
     "css/cookbook.css",
     "css/faq.css",
+]
+html_js_files = [
+    "js/faq.js",
 ]
 
 # List of patterns, relative to source directory, that match files and
