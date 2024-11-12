@@ -4,6 +4,7 @@ channels:
 dependencies:
   - pip
   # readthedocs dependencies
+  - python~=3.12 # Python>=3.13 breaks Sphinx<6.2
   - sphinx>=5,<7
   - myst-parser>=1,<2
   # - myst-nb
