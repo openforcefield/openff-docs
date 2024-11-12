@@ -1,4 +1,7 @@
 # openff-docs
+
+ [![Read the Docs](https://img.shields.io/readthedocs/openff-docs?style=for-the-badge&label=Website%20Build)](https://readthedocs.org/projects/openff-docs/builds/)
+
 Documentation for the Open Force Field ecosystem
 
 Documentation for individual packages live in each project's own repository.
