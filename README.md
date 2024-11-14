@@ -61,7 +61,9 @@ GITHUB_REPOS = [
 ]
 ```
 
-Note that while the example notebooks will be taken from this commit, they will be executed in the examples environment, so its important to make sure the same version is installed there.
+Note that while the example notebooks will be taken from this commit, they will be executed in the latest global [examples environment] from the docs repository, so its important to make sure the same version is installed there.
+
+[examples environment]: https://github.com/openforcefield/openff-docs/blob/main/devtools/conda-envs/examples_env.yml
 
 #### Regenerating the cache in GitHub
 
