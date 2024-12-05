@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "OpenFF Documentation"
+project = "OpenFF Ecosystem"
 copyright = "2022, The Open Force Field Initiative"
 author = "The Open Force Field Initiative"
 
