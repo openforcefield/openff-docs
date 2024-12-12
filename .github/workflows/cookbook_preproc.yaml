@@ -14,6 +14,10 @@ on:
     branches:
       - main
 
+defaults:
+  run:
+    shell: bash -l {0}
+
 concurrency:
   group: ${{ github.workflow }}-${{ inputs.pr_number || github.ref || github.run_id }}
   cancel-in-progress: true
@@ -24,7 +28,6 @@ jobs:
 
     steps:
       - name: Choose deployment branch
-        shell: bash -l {0}
         run: |
           if [[ ${{ github.event_name }} != "workflow_dispatch" ]]; then
             echo "DEPLOY_BRANCH=_cookbook_data_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
@@ -83,30 +86,23 @@ jobs:
 
             return created_run.data.id
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install Conda environment
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: devtools/conda-envs/examples_env.yml
-          # default - will pull down 2.0 which we don't want!
-          # micromamba-version: latest
-          # pin to latest 1.x release
-          micromamba-version: "1.5.10-0"
 
       - name: Pre-process and execute notebooks
-        shell: bash -l {0}
         run: |
           set -e
           python source/_ext/proc_examples.py --prefix=deploy/ --cache-branch=${DEPLOY_BRANCH} --log-failures=notebooks_log.json
 
       - name: Read notebooks log
         if: always()
-        shell: bash -l {0}
         run: echo "NOTEBOOKS_LOG=$(cat 'notebooks_log.json')" >> "$GITHUB_ENV"
 
       - name: Deploy cache
-        shell: bash -l {0}
         run: |
           cd deploy
 
@@ -126,7 +122,6 @@ jobs:
       - name: Trigger RTD build
         # RTD doesn't offer a way to manually trigger builds in PRs, so we'll just do this for other builds
         if: github.event_name == 'schedule' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.pr_number == '')
-        shell: bash -l {0}
         run: |
           curl -X POST -d "branches=$GITHUB_REF_NAME" -d "token=${{ secrets.RTD_WEBHOOK_TOKEN }}" https://readthedocs.org/api/v2/webhook/openff-docs/243876/
 
