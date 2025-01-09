@@ -1,10 +1,10 @@
 # Installation
 
-OpenFF software is distributed via [Conda Forge], a repository of software packages maintained by the open source community. You need a Conda-compatible package manager to install Conda Forge software. OpenFF recommends [Mamba], installed via the [MambaForge] distribution.
+OpenFF software is distributed via [Conda Forge], a repository of software packages maintained by the open source community. You need a Conda-compatible package manager to install Conda Forge software. OpenFF recommends [Mamba], installed via the [Miniforge] distribution.
 
 [Conda Forge]: https://conda-forge.org/
 [Mamba]: inv:mamba#index
-[MambaForge]: https://github.com/conda-forge/miniforge#user-content-mambaforge
+[Miniforge]: https://github.com/conda-forge/miniforge#user-content-miniforge
 
 (quick_install)=
 ## Quick Install Guide
@@ -15,25 +15,25 @@ This guide describes how to install OpenFF software within your own user account
 If you have an existing Mamba installation, skip steps 1 and 2 below. If you have an existing Conda installation, see [](existing_conda).
 :::
 
-1. Download the appropriate MambaForge installer from the [MambaForge repository]. Use [Mambaforge-MacOSX-x86_64] on a Mac and [Mambaforge-Linux-x86_64] on Linux/WSL.
+1. Download the appropriate Miniforge installer from the [Miniforge repository]. Use [Miniforge-MacOSX-x86_64] on a Mac and [Miniforge-Linux-x86_64] on Linux/WSL.
 
-2. Run the MambaForge installer in a terminal window and accept the license agreement: 
+2. Run the Miniforge installer in a terminal window and accept the license agreement:
 
     ```shell-session
-    $ bash Mambaforge-$(uname)-x86_64.sh
+    $ bash Miniforge-$(uname)-x86_64.sh
     ```
 
     1.  When asked for an install destination, choose a directory owned by your user account (such as the default).
 
-    2. When asked if you'd like to initialize MambaForge, answer "yes". Note that this will modify your shell's startup script; for more information about this choice, see [](conda_init). 
+    2. When asked if you'd like to initialize Miniforge, answer "yes". Note that this will modify your shell's startup script; for more information about this choice, see [](conda_init).
 
-    3. Once the installer is finished, close the window and run the following command in a new terminal window: 
+    3. Once the installer is finished, close the window and run the following command in a new terminal window:
 
         ```shell-session
         $ conda config --set auto_activate_base false
         ```
 
-3. Close and reopen the terminal window and install the desired packages into a [new environment]. The names of OpenFF packages can be found in the [projects list]: 
+3. Close and reopen the terminal window and install the desired packages into a [new environment]. The names of OpenFF packages can be found in the [projects list]:
     ```shell-session
     $ mamba create -c conda-forge -n openff openff-toolkit-examples
     ```
@@ -50,16 +50,16 @@ If you have an existing Mamba installation, skip steps 1 and 2 below. If you hav
 If that worked, you're all set! The rest of this page covers corner cases and how to manage Conda environments. For package-specific installation instructions, please see the individual [project docs].
 
 :::{admonition} OpenFF on Windows
-We recommend installing MambaForge through WSL on Windows. For more information, see [](install_windows).
+We recommend installing Miniforge through WSL on Windows. For more information, see [](install_windows).
 :::
 
 :::{admonition} OpenFF on Apple Silicon
-If you run into issues with upstream dependencies not supporting Apple Silicon, we recommend installing x86_64 MambaForge. For more information, see [](install_arm).
+If you run into issues with upstream dependencies not supporting Apple Silicon, we recommend installing x86_64 Miniforge. For more information, see [](install_arm).
 :::
 
-[MambaForge repository]: https://github.com/conda-forge/miniforge#user-content-mambaforge
-[Mambaforge-MacOSX-x86_64]: https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-MacOSX-x86_64.sh
-[Mambaforge-Linux-x86_64]: https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+[Miniforge repository]: https://github.com/conda-forge/miniforge#user-content-miniforge
+[Miniforge-MacOSX-x86_64]: https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-x86_64.sh
+[Miniforge-Linux-x86_64]: https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
 
 [new environment]: managing_environments
 [projects list]: projects
@@ -70,14 +70,14 @@ If you run into issues with upstream dependencies not supporting Apple Silicon, 
 (install_mamba)=
 ## Installing Mamba
 
-Mamba is a drop-in replacement for the Conda package manager. It is faster and can sometimes find ways to safely install two pieces of software that Conda thinks have conflicting dependencies. MambaForge includes Mamba itself, as well as an initial configuration supporting Conda Forge.
+Mamba is a drop-in replacement for the Conda package manager. It is faster and can sometimes find ways to safely install two pieces of software that Conda thinks have conflicting dependencies. Miniforge includes Mamba itself, as well as an initial configuration supporting Conda Forge.
 
-If you don't have Conda or Mamba installed, installing MambaForge will give you access to everything you need to install OpenFF software. If you can, we recommend installing MambaForge locally to your user account, rather than system-wide, so that you can freely create and destroy environments and manage your own configuration. If something goes wrong, you can always delete your MambaForge installation and start again, and you'll only lose your installed software.
+If you don't have Conda or Mamba installed, installing Miniforge will give you access to everything you need to install OpenFF software. If you can, we recommend installing Miniforge locally to your user account, rather than system-wide, so that you can freely create and destroy environments and manage your own configuration. If something goes wrong, you can always delete your Miniforge installation and start again, and you'll only lose your installed software.
 
 Mamba can be installed to your own user account without root/sudo access. A system-wide multi-user Conda/Mamba installation is [complicated] and generally not necessary.
 
 :::{hint}
-If you're running Mamba through MambaForge, you're configured to use the Conda Forge channel by default, and you don't need to pass the `-c conda-forge` argument to the commands in this page. Including this argument does no harm, so we've included it for the benefit of users that don't have this configuration.
+If you're running Mamba through Miniforge, you're configured to use the Conda Forge channel by default, and you don't need to pass the `-c conda-forge` argument to the commands in this page. Including this argument does no harm, so we've included it for the benefit of users that don't have this configuration.
 :::
 
 [complicated]: inv:conda#user-guide/configuration/admin-multi-user-install
@@ -85,7 +85,7 @@ If you're running Mamba through MambaForge, you're configured to use the Conda F
 (conda_init)=
 ### To init or not to init
 
-After it's done installing, the MambaForge installer will ask you if you want it to initialize MambaForge. Initialization involves adding a section to your shell startup script that tells the shell where to find Conda/Mamba. Answering "no" will leave you startup scripts untouched, but you will need to run an additional command every time you want to use Conda/Mamba or a Conda environment. Answering "yes" will attempt to add a version of this command to your shell startup script, which generally makes Conda easier to use.
+After it's done installing, the Miniforge installer will ask you if you want it to initialize Miniforge. Initialization involves adding a section to your shell startup script that tells the shell where to find Conda/Mamba. Answering "no" will leave you startup scripts untouched, but you will need to run an additional command every time you want to use Conda/Mamba or a Conda environment. Answering "yes" will attempt to add a version of this command to your shell startup script, which generally makes Conda easier to use.
 
 If you do answer "yes", we recommend preventing Conda from activating the base environment in every new shell:
 
@@ -93,12 +93,12 @@ If you do answer "yes", we recommend preventing Conda from activating the base e
 $ conda config --set auto_activate_base false
 ```
 
-This will prevent any conflicts between the MambaForge Python installation and the Python expected by your system. It does not prevent you from using Conda/Mamba directly to manage or activate environments.
+This will prevent any conflicts between the Miniforge Python installation and the Python expected by your system. It does not prevent you from using Conda/Mamba directly to manage or activate environments.
 
 (existing_conda)=
 ### Installing Mamba in an existing Conda installation
 
-If you already have Conda installed, you don't need to install MambaForge; you can install Mamba on its own into the base environment with:
+If you already have Conda installed, you don't need to install Miniforge; you can install Mamba on its own into the base environment with:
 
 ```shell-session
 $ conda install -n base -c conda-forge mamba
@@ -118,10 +118,10 @@ Conda environments that use packages from Conda Forge alongside packages from th
 ```shell-session
 $ conda activate openff
 $ conda config --env --add channels conda-forge
-$ conda config --env --set channel_priority strict 
+$ conda config --env --set channel_priority strict
 ```
 
-In environments with this configuration, the `-c conda-forge` switch is unnecessary. Other channels, like `psi4` and `bioconda`, can still be used in the usual way. These settings can be applied to all your Conda environments by removing the `--env` switches, matching the default MambaForge configuration.
+In environments with this configuration, the `-c conda-forge` switch is unnecessary. Other channels, like `psi4` and `bioconda`, can still be used in the usual way. These settings can be applied to all your Conda environments by removing the `--env` switches, matching the default Miniforge configuration.
 
 (managing_environments)=
 ## Managing Environments
@@ -158,7 +158,7 @@ $ jupyter-lab .
 
 ### Advanced Environment Management
 
-Mamba/Conda cache the packages you install, so if you've already downloaded a particular version, you can install it in as many environments as you like without having to re-download it. In fact, Mamba/Conda try their hardest to unpack each version once, and then hardlink to it from each environment to keep the storage size of environments down. So don't be afraid to just create a new environment! 
+Mamba/Conda cache the packages you install, so if you've already downloaded a particular version, you can install it in as many environments as you like without having to re-download it. In fact, Mamba/Conda try their hardest to unpack each version once, and then hardlink to it from each environment to keep the storage size of environments down. So don't be afraid to just create a new environment!
 
 Because of this linking behavior, package code is often shared among different environments. If you edit one environment's `lib/python/site-packages` directory for example, those changes are likely to affect other environments. If you want to tinker with the code of your dependencies, consider using the `--copy` argument when installing them to avoid linking!
 
@@ -233,7 +233,7 @@ $ mamba install openff-bespokefit psi4 ambertools
 
 OpenFF does not support or test on Windows natively. All of our software is pure Python code and may work anyway as long as you can provide our dependencies, but many of these dependencies are not available on Windows and may not be in the foreseeable future.
 
-Instead, we recommend using the [Windows Subsystem for Linux] to run OpenFF software on Windows. WSL runs a Linux kernel within your Windows system so you can run ordinary software as if you had a Linux system. If your hardware supports it, we suggest using WSL2 for a smoother experience; this is the default for new WSL installations on supported hardware. WSL2 requires hardware virtualization support, which is available on most modern CPUs but may require activation in the BIOS/UEFI. 
+Instead, we recommend using the [Windows Subsystem for Linux] to run OpenFF software on Windows. WSL runs a Linux kernel within your Windows system so you can run ordinary software as if you had a Linux system. If your hardware supports it, we suggest using WSL2 for a smoother experience; this is the default for new WSL installations on supported hardware. WSL2 requires hardware virtualization support, which is available on most modern CPUs but may require activation in the BIOS/UEFI.
 
 In either case, once WSL is installed you can usually follow any documentation as though you had a Linux machine.
 
@@ -248,7 +248,7 @@ WSL2 [does support](https://developer.nvidia.com/cuda/wsl) GPU compute, at least
 (install_arm)=
 ## OpenFF on Apple Silicon and ARM
 
-As of January 2024, OpenFF software and most of its corner of the computational chemistry ecosystem (OpenMM, RDKit, Psi4, etc.) support Apple Silicon (M1, M2, etc.). However, this may not be true if, for example, using old versions of any software. In such cases, we recommend macOS users of Apple Silicon install the x86_64 version of MambaForge and run all OpenFF software through [Rosetta]. ARM systems without access to a similar emulation layer may not be able to access all of the features of OpenFF software.
+As of January 2024, OpenFF software and most of its corner of the computational chemistry ecosystem (OpenMM, RDKit, Psi4, etc.) support Apple Silicon (M1, M2, etc.). However, this may not be true if, for example, using old versions of any software. In such cases, we recommend macOS users of Apple Silicon install the x86_64 version of Miniforge and run all OpenFF software through [Rosetta]. ARM systems without access to a similar emulation layer may not be able to access all of the features of OpenFF software.
 
 An existing ARM installation of Conda can be configured to [use Rosetta] with the `CONDA_SUBDIR=osx-64` shell environment variable or the `subdir` Conda config variable. We recommend using this on a per-environment basis so that it persists across updates and new installs, but does not affect existing setups:
 
