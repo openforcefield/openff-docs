@@ -271,7 +271,7 @@ Note that this will affect how Conda behaves with other environments.
 
 ## OpenFF on Intel-based macOS (x86)
 
-All OpenFF software is written in pure Python code and can be expected to function long as the relevant dependencies can be installed. As of Fall 2024, some users have reported issues with versions of AmberTools on certain Intel-based macOS platforms. OpenFF tools, for use cases that require it, work as long as the AmberTools installation functions. For those with access to Apple Silicon hardware, we recommend using the native architecture (Apple Silicon/ARM/`osx-arm64`).
+All OpenFF software is written in pure Python code and can be expected to function long as the relevant dependencies can be installed. As of Q3 2024, some users have reported issues with versions of AmberTools on certain Intel-based macOS platforms. OpenFF tools, for use cases that require it, work as long as the AmberTools installation functions. For those with access to Apple Silicon hardware, we recommend using the native architecture (Apple Silicon/ARM/`osx-arm64`).
 
 Note that AmberTools can also be built locally from its own release tarball according to the [instructions Amber's website](https://ambermd.org/GetAmber.php#ambertools).
 
