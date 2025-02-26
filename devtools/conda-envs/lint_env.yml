@@ -9,7 +9,7 @@ dependencies:
     # - myst-nb
     - sphinx-notfound-page
     - ipython >=8.8
-    - sphinx-design
+    - sphinx-design <0.6.1
     - gitpython
     - nbconvert
     - nbformat
