@@ -22,10 +22,6 @@ jobs:
         uses: mamba-org/setup-micromamba@v1
         with:
           environment-file: devtools/conda-envs/lint_env.yml
-          # default - will pull down 2.0 which we don't want!
-          # micromamba-version: latest
-          # pin to latest 1.x release
-          micromamba-version: "1.5.10-0"
 
       - name: Check dead links
         shell: bash -l {0}

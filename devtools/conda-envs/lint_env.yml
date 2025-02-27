@@ -2,6 +2,7 @@ name: openff-docs-lint
 channels:
     - conda-forge
 dependencies:
+    - python <3.13
     - pip
     # readthedocs dependencies
     - sphinx>=5,<7
