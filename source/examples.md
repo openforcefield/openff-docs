@@ -68,4 +68,10 @@ mamba activate openff-examples
 jupyter lab *.ipynb
 ```
 
+## Warranty-free examples
+
+The [`anything-goes`](https://github.com/openforcefield/anything-goes) repository houses many other examples showcasing things people have done with OpenFF tools. They tend to capture one-off ideas which demonstrate an interesting concept or capability but have **not** been taken all the way (or, often, even close) to production quality. They are **not** examples that can be taken off the shelf and used for high-quality research - think of each notebook like a whiteboard drawing, not a white paper.
+
+The examples in [`anything-goes`](https://github.com/openforcefield/anything-goes) are provided **entirely without support, endorsement, or warranty**, either from the contributors or the Open Force Field Consortium/Initiative itself. Further, we (intentionally) do not run continuous integration (CI) tests there, so many examples are likely out of date.
+
 [Conda environment specification]: managing_environments
