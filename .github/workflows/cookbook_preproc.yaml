@@ -159,13 +159,13 @@ jobs:
                 - [ignored] ')}}
 
 
-            Changes will only be visible in the ReadTheDocs
-            preview after it has been [rebuilt].
+            Changes will only be visible in the ReadTheDocs preview after it has been [rebuilt]. 
+            You will need to be logged in to ReadTheDocs to see the rebuild option.
 
 
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-            [rebuilt]: https://readthedocs.org/projects/openff-docs/builds/
+            [rebuilt]: https://app.readthedocs.org/projects/openff-docs/builds/
 
       - name: Report status to PR on templating failure
         if: always() && steps.reportStatusToPr.outcome == 'failure'
@@ -189,13 +189,13 @@ jobs:
             - Notebooks status: N/A
 
 
-            Changes will only be visible in the ReadTheDocs
-            preview after it has been [rebuilt].
+            Changes will only be visible in the ReadTheDocs preview after it has been [rebuilt]. 
+            You will need to be logged in to ReadTheDocs to see the rebuild option.
 
 
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-            [rebuilt]: https://readthedocs.org/projects/openff-docs/builds/
+            [rebuilt]: https://app.readthedocs.org/projects/openff-docs/builds/
 
       - name: Update check
         if: always() && github.event_name == 'workflow_dispatch' && inputs.pr_number != ''
