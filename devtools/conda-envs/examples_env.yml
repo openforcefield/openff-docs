@@ -14,11 +14,11 @@ dependencies:
   - packaging
   # Examples
   - openff-toolkit-examples>=0.16.6
-  - openff-interchange =0.4.1
+  - openff-interchange ~=0.4.2
   - openff-nagl
   # - openff-fragmenter
   - openff-qcsubmit
-  - openmmforcefields =0.14
+  - openmmforcefields ~=0.14.2
   - gromacs >=2021=nompi*
   - lammps
   - rich
