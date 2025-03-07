@@ -23,6 +23,6 @@ dependencies:
   - lammps
   - rich
   - jax
-  - parmed <4
+  - parmed
   - nglview ~=3.0.6
   - psi4
