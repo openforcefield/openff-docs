@@ -103,7 +103,9 @@ jobs:
       - name: Read notebooks log
         if: always()
         shell: bash -l {0}
-        run: echo "NOTEBOOKS_LOG=$(cat 'notebooks_log.json')" >> "$GITHUB_ENV"
+        run: |
+          cat 'notebooks_log.json'
+          echo "NOTEBOOKS_LOG=$(cat 'notebooks_log.json')" >> "$GITHUB_ENV"
 
       - name: Deploy cache
         shell: bash -l {0}
@@ -152,20 +154,20 @@ jobs:
 
             - Notebooks status: ${{fromJSON(env.NOTEBOOKS_LOG).n_successful}} / ${{fromJSON(env.NOTEBOOKS_LOG).n_total}} notebooks successfully executed (${{fromJSON(env.NOTEBOOKS_LOG).n_ignored}} failures ignored)
 
-            ${{(fromJSON(env.NOTEBOOKS_LOG).failed || fromJSON(env.NOTEBOOKS_LOG).ignored) && '- Failing notebooks:
+            ${{(fromJSON(env.NOTEBOOKS_LOG).n_successful != fromJSON(env.NOTEBOOKS_LOG).n_total) && '- Failing notebooks:
                 - ' || ''}}${{join(fromJSON(env.NOTEBOOKS_LOG).failed, '
-                - ')}}${{fromJSON(env.NOTEBOOKS_LOG).ignored && '
-                - [ignored] ' || ''}}${{join(fromJSON(env.NOTEBOOKS_LOG).ignored, '
+                - ')}}${{(fromJSON(env.NOTEBOOKS_LOG).n_ignored == 0) && '' || '
+                - [ignored] '}}${{join(fromJSON(env.NOTEBOOKS_LOG).ignored, '
                 - [ignored] ')}}
 
 
-            Changes will only be visible in the ReadTheDocs
-            preview after it has been [rebuilt].
+            Changes will only be visible in the ReadTheDocs preview after it has been [rebuilt].
+            You will need to be logged in to ReadTheDocs to see the rebuild option.
 
 
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-            [rebuilt]: https://readthedocs.org/projects/openff-docs/builds/
+            [rebuilt]: https://app.readthedocs.org/projects/openff-docs/builds/?version__type=external
 
       - name: Report status to PR on templating failure
         if: always() && steps.reportStatusToPr.outcome == 'failure'
@@ -189,13 +191,13 @@ jobs:
             - Notebooks status: N/A
 
 
-            Changes will only be visible in the ReadTheDocs
-            preview after it has been [rebuilt].
+            Changes will only be visible in the ReadTheDocs preview after it has been [rebuilt].
+            You will need to be logged in to ReadTheDocs to see the rebuild option.
 
 
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-            [rebuilt]: https://readthedocs.org/projects/openff-docs/builds/
+            [rebuilt]: https://app.readthedocs.org/projects/openff-docs/builds/?version__type=external
 
       - name: Update check
         if: always() && github.event_name == 'workflow_dispatch' && inputs.pr_number != ''
