@@ -8,19 +8,22 @@ on:
     branches:
       - main
 
+defaults:
+  run:
+    shell: bash -l {0}
+
 jobs:
   preprocess:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout deployment branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: _cookbook_data_main
           clean: false
 
       - name: Copy cache from main to PR branch
-        shell: bash -l {0}
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com

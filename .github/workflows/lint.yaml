@@ -11,24 +11,26 @@ on:
     - cron: "0 0 * * *"
   workflow_dispatch:
 
+defaults:
+  run:
+    shell: bash -l {0}
+
 jobs:
   check:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install Conda environment
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: devtools/conda-envs/lint_env.yml
 
       - name: Check dead links
-        shell: bash -l {0}
         run: |
           FORCE_COLOR=1 sphinx-build -n -W --keep-going -b linkcheck source build/linkcheck
 
       - name: Check code blocks
-        shell: bash -l {0}
         run: |
           FORCE_COLOR=1 sphinx-build -n -W --keep-going -b codelinter source build/codelinter
