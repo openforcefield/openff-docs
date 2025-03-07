@@ -1,7 +1,8 @@
 # openff-docs
 
  [![Read the Docs](https://img.shields.io/readthedocs/openff-docs?style=for-the-badge&label=Website%20Build)](https://app.readthedocs.org/projects/openff-docs/builds/?version__slug=latest)
- [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/openforcefield/openff-docs/cookbook_preproc.yaml?branch=main&style=for-the-badge&label=Examples)](https://github.com/openforcefield/openff-docs/actions/workflows/cookbook_preproc.yaml?query=branch%3Amain)
+ [![Examples Workflow Status](https://img.shields.io/github/actions/workflow/status/openforcefield/openff-docs/cookbook_preproc.yaml?branch=main&style=for-the-badge&label=Examples)](https://github.com/openforcefield/openff-docs/actions/workflows/cookbook_preproc.yaml?query=branch%3Amain)
+ [![Lint Workflow Status](https://img.shields.io/github/actions/workflow/status/openforcefield/openff-docs/lint.yaml?branch=main&style=for-the-badge&label=Lints)](https://github.com/openforcefield/openff-docs/actions/workflows/lint.yaml?query=branch%3Amain)
 
 Documentation for the Open Force Field ecosystem
 

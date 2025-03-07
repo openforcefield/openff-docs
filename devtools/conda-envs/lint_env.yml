@@ -2,6 +2,7 @@ name: openff-docs-lint
 channels:
     - conda-forge
 dependencies:
+    - python <3.13
     - pip
     # readthedocs dependencies
     - sphinx>=5,<7
@@ -9,7 +10,7 @@ dependencies:
     # - myst-nb
     - sphinx-notfound-page
     - ipython >=8.8
-    - sphinx-design
+    - sphinx-design <0.6.1
     - gitpython
     - nbconvert
     - nbformat

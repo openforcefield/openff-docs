@@ -14,7 +14,7 @@ dependencies:
   - packaging
   # Examples
   - openff-toolkit-examples>=0.16.6
-  - openff-interchange ~=0.4.0
+  - openff-interchange =0.4.1
   - openff-nagl
   # - openff-fragmenter
   - openff-qcsubmit
@@ -26,3 +26,5 @@ dependencies:
   - parmed
   - nglview ~=3.0.6
   - psi4
+  # New versions of torchdata require new versions of PyTorch which are not supported by DGL
+  - torchdata<=0.10.0
