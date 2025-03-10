@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - pip
-  - python=3.10
+  - python=3.11
   - jupyterlab>=4
   - ipywidgets>=8
   # Cookbook
@@ -23,8 +23,8 @@ dependencies:
   - lammps
   - rich
   - jax
-  - parmed <4
+  - parmed
   - nglview ~=3.0.6
   - psi4
-  # New versions of torchdata require new versions of PyTorch which are not supported by DGL
-  - torchdata<=0.10.0
+  # torchdata.datapipes was removed in 0.10.0
+  - torchdata<=0.9.0

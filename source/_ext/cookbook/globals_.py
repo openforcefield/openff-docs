@@ -92,7 +92,9 @@ be rendered if they're in a cache.
 """
 
 # ".*/experimental/.*",
-OPTIONAL_NOTEBOOKS: list[str] = list()
+OPTIONAL_NOTEBOOKS: list[str] = [
+    "openforcefield/openff-toolkit/external/swap_amber_parameters/swap_existing_ligand_parameters.ipynb",
+]
 """
 Notebooks whose execution failure will not cause notebook processing to fail.
 
