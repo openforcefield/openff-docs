@@ -17,6 +17,9 @@ defaults:
   run:
     shell: bash -l {0}
 
+env:
+  PR_NUMBER: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.pr_number || github.event.number }}
+
 jobs:
   preprocess:
     runs-on: ubuntu-latest
@@ -33,11 +36,12 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git push origin HEAD:_cookbook_data_PR${{ github.event.number }}
+          git push origin HEAD:_cookbook_data_PR${{ env.PR_NUMBER }}
 
       - name: Add descriptive comment to PR
         uses: thollander/actions-comment-pull-request@v3
         with:
+          pr-number: ${{ env.PR_NUMBER }}
           message: >
             This repository caches data generated from notebooks stored in other
             repositories in the `_cookbook_data_*` branches. Regenerating this
@@ -60,6 +64,7 @@ jobs:
         uses: thollander/actions-comment-pull-request@v3
         if: failure() && steps.copyCache.outcome == 'failure'
         with:
+          pr-number: ${{ env.PR_NUMBER }}
           message: >
             This repository caches data generated from notebooks stored in other
             repositories in the `_cookbook_data_*` branches. Regenerating this
