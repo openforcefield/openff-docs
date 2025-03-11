@@ -18,7 +18,7 @@ defaults:
     shell: bash -l {0}
 
 env:
-  PR_NUMBER: ${{ github.event_name == 'workflow_dispatch' && github.event.number || inputs.pr_number }}
+  PR_NUMBER: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.pr_number || github.event.number }}
 
 jobs:
   preprocess:
@@ -34,8 +34,9 @@ jobs:
       - name: Copy cache from main to PR branch
         id: copyCache
         run: |
-          echo ${{ env.PR_NUMBER }}
-          echo $PR_NUMBER
+          echo github.event.inputs.pr_number=${{ github.event.inputs.pr_number }}
+          echo env.PR_NUMBER=${{ env.PR_NUMBER }}
+          echo PR_NUMBER=$PR_NUMBER
           git config user.name github-actions
           git config user.email github-actions@github.com
           git push origin HEAD:_cookbook_data_PR${PR_NUMBER}
