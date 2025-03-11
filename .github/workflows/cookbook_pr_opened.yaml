@@ -30,7 +30,7 @@ jobs:
           git push origin HEAD:_cookbook_data_PR${{ github.event.number }}
 
       - name: Add descriptive comment to PR
-        uses: thollander/actions-comment-pull-request@v2
+        uses: thollander/actions-comment-pull-request@v3
         with:
           message: >
             This repository caches data generated from notebooks stored in other
