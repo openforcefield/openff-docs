@@ -7,6 +7,11 @@ on:
       - reopened
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Initialize the cache for PR#:"
+        type: string
 
 defaults:
   run:
@@ -24,13 +29,14 @@ jobs:
           clean: false
 
       - name: Copy cache from main to PR branch
+        id: copyCache
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git push origin HEAD:_cookbook_data_PR${{ github.event.number }}
 
       - name: Add descriptive comment to PR
-        uses: thollander/actions-comment-pull-request@v2
+        uses: thollander/actions-comment-pull-request@v3
         with:
           message: >
             This repository caches data generated from notebooks stored in other
@@ -47,5 +53,24 @@ jobs:
             ```
 
             /regenerate-cache
-            
+
             ```
+
+      - name: Add instructions to run manually on PR from external contributors
+        uses: thollander/actions-comment-pull-request@v3
+        if: failure() && steps.copyCache.outcome == 'failure'
+        with:
+          message: >
+            This repository caches data generated from notebooks stored in other
+            repositories in the `_cookbook_data_*` branches. Regenerating this
+            cache takes about half an hour, so it is not done automatically in
+            PRs.
+
+            The current value of the cache from the `main` branch was not
+            successfully copied over to this PR's cache, most likely because it
+            is from an external contributor. A maintainer can [manually trigger]
+            the workflow here:
+
+            https://github.com/openforcefield/openff-docs/actions/workflows/cookbook_pr_opened.yaml
+
+            [manually trigger]: https://github.com/openforcefield/openff-docs/actions/workflows/cookbook_pr_opened.yaml
