@@ -18,6 +18,7 @@ dependencies:
   - openff-nagl
   # - openff-fragmenter
   - openff-qcsubmit
+  - openff-recharge
   - openmmforcefields ~=0.14.2
   - gromacs >=2021=nompi*
   - lammps
@@ -26,5 +27,6 @@ dependencies:
   - parmed
   - nglview ~=3.0.6
   - psi4
+  - pyarrow
   # torchdata.datapipes was removed in 0.10.0
   - torchdata<=0.9.0
