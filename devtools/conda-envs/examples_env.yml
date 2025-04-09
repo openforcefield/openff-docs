@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - pip
-  - python=3.11
+  - python
   - jupyterlab>=4
   - ipywidgets>=8
   # Cookbook
@@ -13,7 +13,7 @@ dependencies:
   - requests
   - packaging
   # Examples
-  - openff-toolkit-examples>=0.16.6
+  - openff-toolkit-examples>=0.16.8
   - openff-interchange ~=0.4.2
   - openff-nagl
   # - openff-fragmenter
