@@ -42,6 +42,9 @@ Specifications for SMIRNOFF and other standards defined by OpenFF can be found a
 [`openff-nagl`](https://docs.openforcefield.org/projects/nagl)
 : Train and use machine-learned partial charge models targetting molecular graphs
 
+[`openff-nagl-models`](https://docs.openforcefield.org/projects/nagl-models)
+: Load models used by OpenFF Nagl.
+
 ## Contact Us
 
 Need help? Raise an issue on [GitHub], open a discussion on [OpenFF Discussions], or [email us]!
@@ -89,4 +92,5 @@ Fragmenter <https://docs.openforcefield.org/projects/fragmenter>
 Evaluator <https://docs.openforcefield.org/projects/evaluator>
 Recharge <https://docs.openforcefield.org/projects/recharge>
 NAGL <https://docs.openforcefield.org/projects/nagl>
+NAGL Models <https://docs.openforcefield.org/projects/nagl-models>
 :::
