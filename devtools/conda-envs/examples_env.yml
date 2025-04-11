@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - pip
-  - python
+  - python=3.11
   - jupyterlab>=4
   - ipywidgets>=8
   # Cookbook
