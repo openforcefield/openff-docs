@@ -13,7 +13,7 @@ dependencies:
   - requests
   - packaging
   # Examples
-  - openff-toolkit-examples>=0.16.6
+  - openff-toolkit-examples>=0.16.8
   - openff-interchange ~=0.4.2
   - openff-nagl
   # - openff-fragmenter
@@ -26,6 +26,10 @@ dependencies:
   - parmed
   - nglview ~=3.0.6
   - psi4
+  # openff-nagl optional training deps
+  - pyarrow
+  - dgl
+  - openff-recharge
   # torchdata.datapipes was removed in 0.10.0
   - torchdata<=0.9.0
   # NAGL training dependencies
