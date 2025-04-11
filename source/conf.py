@@ -78,6 +78,7 @@ intersphinx_mapping = {
     "openff.evaluator": ("https://docs.openforcefield.org/evaluator/en/stable", None),
     "openff.recharge": ("https://docs.openforcefield.org/recharge/en/stable", None),
     "openff.nagl": ("https://docs.openforcefield.org/nagl/en/stable", None),
+    "openff.nagl_models": ("https://docs.openforcefield.org/nagl-models/en/stable", None),
 }
 intersphinx_disabled_reftypes = ["*"]
 myst_heading_anchors = 2
