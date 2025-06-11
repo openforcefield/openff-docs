@@ -114,12 +114,12 @@ For projects hosted within ReadTheDocs, the project should be [added as a subpro
 Then, redirects can be added to provide `docs.openforcefield.org/projectname`; the "to" URL should be `/projects/projectname`
 
 > Redirect type: `Exact redirect` \
-> From URL: `/interchange/$rest` \
-> To URL: `/projects/interchange/`
+> From URL: `/interchange/*` \
+> To URL: `/projects/interchange/:splat`
 
 > Redirect type: `Exact redirect` \
 > From URL: `/interchange` \
-> To URL: `/projects/interchange/`:
+> To URL: `/projects/interchange/`
 
 You must have maintainer access to a project on RTD to add it as a subproject. If a project cannot be added as a subproject, the "to" URL can be set to the URL of the hosted documentation as with projects hosted externally.
 
