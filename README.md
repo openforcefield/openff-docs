@@ -106,11 +106,12 @@ For projects hosted outside of ReadTheDocs, the "to" URL should be the URL of th
 > From URL: `/standards` \
 > To URL: `https://openforcefield.github.io/standards/`
 
-
-For projects hosted within ReadTheDocs, the project should be [added as a subproject] of `openff-docs` and the "to" URL should be `/projects/projectname`
+For projects hosted within ReadTheDocs, the project should be [added as a subproject] of `openff-docs` to add it to the `docs.openforcefield.org` domain, which provides a URL like `docs.openforcefield.org/projects/projectname`. You must be a maintainer of both the new project and the OpenFF Docs project on RTD to make this change:
 
 > Child: `openff-interchange` \
 > Alias: `interchange`
+
+Then, redirects can be added to provide `docs.openforcefield.org/projectname`; the "to" URL should be `/projects/projectname`
 
 > Redirect type: `Exact redirect` \
 > From URL: `/interchange/$rest` \
