@@ -91,16 +91,16 @@ Note that changes to examples must generally be in a release before they are ren
 
 ## Linking to new projects
 
-ReadTheDocs should be configured to provide [redirects] that allow subprojects to be found at URLs like [docs.openforcefield.org/toolkit]. Redirects can be defined in the [Redirects tab] of the Admin page at [readthedocs.org]. For each project, two "exact" redirects should be defined:
+ReadTheDocs should be configured to provide [redirects] that allow subprojects to be found at URLs like <https://docs.openforcefield.org/toolkit>. Redirects can be defined in the [Redirects tab] of the ReadTheDocs Admin page. For each project, two "exact" redirects should be defined:
 
-1. From `/projectname/$rest` to the URL of the project's docs. This handles arbitrary links within the docs.
+1. From `/projectname/*` to the URL of the project's docs. This handles arbitrary links within the docs.
 2. From `/projectname` to the URL of the project's docs. This handles the bare project name without a trailing forward slash.
 
 For projects hosted outside of ReadTheDocs, the "to" URL should be the URL of the hosted documentation:
 
 > Redirect type: `Exact redirect` \
-> From URL: `/standards/$rest` \
-> To URL: `https://openforcefield.github.io/standards/`
+> From URL: `/standards/*` \
+> To URL: `https://openforcefield.github.io/standards/:splat`
 
 > Redirect type: `Exact redirect` \
 > From URL: `/standards` \
@@ -124,8 +124,6 @@ Then, redirects can be added to provide `docs.openforcefield.org/projectname`; t
 You must have maintainer access to a project on RTD to add it as a subproject. If a project cannot be added as a subproject, the "to" URL can be set to the URL of the hosted documentation as with projects hosted externally.
 
 [docs.openforcefield.org]: https://docs.openforcefield.org/
-[redirects]: https://docs.readthedocs.io/page/user-defined-redirects.html
-[docs.openforcefield.org/toolkit]: https://docs.openforcefield.org/toolkit/
-[readthedocs.org]: https://readthedocs.org/
+[redirects]: https://docs.readthedocs.com/platform/stable/user-defined-redirects.html#user-defined-redirects
 [Redirects tab]: https://readthedocs.org/dashboard/openff-docs/redirects/
 [added as a subproject]: https://readthedocs.org/dashboard/openff-docs/subprojects/
