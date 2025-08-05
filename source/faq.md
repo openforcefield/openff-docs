@@ -78,11 +78,13 @@ To load a PDB file including appropriately named canonical peptides with all ato
 This workflow is an active area of development and we are expanding the scope of what can be loaded as we settle on what is needed.
 
 Given a PDB file of a hypothetical biomolecular system of interest containing a small molecule, there are several routes available to you for identifying the small molecules present:
-- Use a cheminformatics toolkit (see below) to infer bond orders
-- Identify your ligand from a database; e.g. if it is in the Protein Data Bank (PDB), it will be present in the [Ligand Expo](http://ligand-expo.rcsb.org) meaning that it has a database entry and code you can use to look up its putative chemical identity
+- Identify your ligand from a database; e.g. if it is in the Protein Data Bank (PDB), it will be present in the CCD, which is searchable via [PDBeChem] and the [RCSB PDB advanced search]
 - Identify your ligand by name or SMILES string (or similar) from the literature or your collaborators
+- Use a cheminformatics toolkit (see below) to infer bond orders
 
 [the PDB Cookbook]: inv:openff.toolkit#users/pdb_cookbook/index.ipynb
+[PDBeChem]: https://www.ebi.ac.uk/pdbe-srv/pdbechem/
+[RCSB PDB advanced search]: https://www.rcsb.org/search/advanced/chemical
 
 :::::
 
