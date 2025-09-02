@@ -16,7 +16,7 @@ dependencies:
     - nbformat
     # Code example deps
     - openmm
-    - openff-toolkit-base
+    - openff-toolkit-base >=0.17
     - openff-interchange-base
     - ambertools
     - rdkit
