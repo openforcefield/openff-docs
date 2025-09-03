@@ -18,6 +18,7 @@ dependencies:
     - openmm
     - openff-toolkit-base
     - openff-interchange-base
+    - openff-nagl-models
     - ambertools
     - rdkit
 

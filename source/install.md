@@ -273,6 +273,6 @@ Note that this will affect how Conda behaves with other environments.
 
 All OpenFF software is written in pure Python code and can be expected to function long as the relevant dependencies can be installed. As of Q3 2024, some users have reported issues with versions of AmberTools on certain Intel-based macOS platforms. OpenFF tools, for use cases that require it, work as long as the AmberTools installation functions. For those with access to Apple Silicon hardware, we recommend using the native architecture (Apple Silicon/ARM/`osx-arm64`).
 
-Note that AmberTools can also be built locally from its own release tarball according to the [instructions Amber's website](https://ambermd.org/GetAmber.php#ambertools).
+Note that AmberTools can also be built locally from its own release tarball according to instructions on Amber's website.
 
 Note also that many OpenFF use cases only require AmberTools for its AM1-BCC partial charge assignment; for users with [OpenEye Licenses](https://docs.eyesopen.com/applications/common/license.html), OpenEye Toolkits' OEChem module can be used instead.
