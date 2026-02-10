@@ -13,9 +13,8 @@ Interested users from our industrial partners and the broader community are invi
 hidden: True
 ---
 
-protein_prep.md
-smirnoff.md
-vignettes.md
+fitting.md
+ptm.md
 
 :::
 

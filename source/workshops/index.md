@@ -10,6 +10,6 @@ orphan: true
 maxdepth: 1
 ---
 
-2024
-2026
+2024/index.md
+2026/index.md
 :::
