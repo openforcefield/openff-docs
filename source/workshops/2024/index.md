@@ -1,7 +1,3 @@
----
-orphan: true
----
-
 # 2024 OpenFF Workshops
 
 OpenFF will be hosting a series of workshops in February-April 2024. These are interactive 2 hour Zoom sessions led by the creators and maintainers of OpenFF tools, focused on specific topics of interest. 
@@ -37,4 +33,4 @@ vignettes.md
 [Apr 17 14:00 Berlin]: https://time.is/2200_17_Apr_2024_in_Canberra/Beijing/Berlin/Los_Angeles/Chicago/Phoenix/New_York/London/UTC?Protein_Prep_OpenFF_Workshop
 [Apr 24 14:00 Berlin]: https://time.is/2200_24_Apr_2024_in_Canberra/Beijing/Berlin/Los_Angeles/Chicago/Phoenix/New_York/London/UTC?Vignettes_OpenFF_Workshop
 
-Zoom links and installation instructions will be added to the above pages 24 hours in advance of each session. All workshop materials will be made publicly available after the sessions. 
+Zoom links and installation instructions will be added to the above pages 24 hours in advance of each session. All workshop materials will be made publicly available after the sessions.
