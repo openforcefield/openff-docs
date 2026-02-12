@@ -6,7 +6,7 @@ Workshops are each oriented around a Jupyter notebook and related materials and 
 
 Each workshop will be held twice so as to be accessible to most time zones.
 
-Interested users from our industrial partners and the broader community are invited to attend!
+Interested users from our industrial partners and the broader community are invited to attend! Please register your interest [here](https://docs.google.com/forms/d/e/1FAIpQLScPL35xwbA4wSJ0dNbFE5rm4-ojQC2MQIsvROJJXClbJIaDVw/viewform?usp=publish-editor).
 
 :::{toctree}
 ---
