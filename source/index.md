@@ -74,6 +74,7 @@ install
 modelling
 examples
 faq
+2026 Workshops <workshops/2026/index.md>
 :::
 
 :::{toctree}
