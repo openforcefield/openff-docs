@@ -82,7 +82,7 @@ Given a PDB file of a hypothetical biomolecular system of interest containing a 
 - Identify your ligand by name or SMILES string (or similar) from the literature or your collaborators
 - Use a cheminformatics toolkit (see below) to infer bond orders
 
-[PDB Cookbook]: inv:openff.toolkit#users/pdb_cookbook/index.ipynb
+[PDB Cookbook]: https://docs.openforcefield.org/projects/toolkit/en/stable/users/pdb_cookbook/index.html
 [PDBeChem]: https://www.ebi.ac.uk/pdbe-srv/pdbechem/
 [RCSB PDB advanced search]: https://www.rcsb.org/search/advanced/chemical
 
