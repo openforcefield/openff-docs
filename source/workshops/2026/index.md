@@ -22,12 +22,12 @@ ptm.md
 
 | Workshop            | First session                                 | Second session                           |
 | ------------------- | --------------------------------------------- | ---------------------------------------- |
-| [](ptm.md)     | [Mar 10 12:00 New York] \(16:00&nbsp;UTC\) | [Apr 2 14:00 Tokyo] \(07:00&nbsp;UTC\) |
+| [](ptm.md)     | [Mar 10 12:00 New York] \(16:00&nbsp;UTC\) | [Apr 2 16:00 Tokyo] \(07:00&nbsp;UTC\) |
 | [](fitting.md) | [Mar 4 17:00 New York] \(22:00&nbsp;UTC\) | [Apr 8 16:00 Tokyo] \(07:00&nbsp;UTC\) | 
 
 
 [Mar 10 12:00 New York]: https://time.is/1200_10_March_2026_in_New_York/Berlin/Canberra/California/Ohio,_Kentucky,_United_States/London/Tokyo/Beijing/New_Delhi/UTC?Simulating_Post-Translationally_Modified_Proteins_with_OpenFF_Rosemary
-[Apr 2 14:00 Tokyo]: https://time.is/1800_2_April_2026_in_Canberra/Berlin/New_York/California/Ohio,_Kentucky,_United_States/London/Tokyo/Beijing/New_Delhi/UTC?Simulating_Post-Translationally_Modified_Proteins_with_OpenFF_Rosemary
+[Apr 2 16:00 Tokyo]: https://time.is/1800_2_April_2026_in_Canberra/Berlin/New_York/California/Ohio,_Kentucky,_United_States/London/Tokyo/Beijing/New_Delhi/UTC?Simulating_Post-Translationally_Modified_Proteins_with_OpenFF_Rosemary
 [Mar 4 17:00 New York]: https://time.is/0900_5_March_2026_in_Canberra/Berlin/New_York/California/Ohio,_Kentucky,_United_States/London/Tokyo/UTC?Fitting_a_SMIRNOFF_Force_Field_with_PyTorch
 [Apr 8 16:00 Tokyo]: https://time.is/1700_8_April_2026_in_Canberra/Berlin/New_York/California/Ohio,_Kentucky,_United_States/London/Tokyo/Beijing/New_Delhi/UTC?Fitting_a_SMIRNOFF_Force_Field_with_PyTorch
 
