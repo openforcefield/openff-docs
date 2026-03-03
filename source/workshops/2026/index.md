@@ -10,6 +10,8 @@ Interested users from our industrial partners and the broader community are invi
 
 **[Click here to register!](https://docs.google.com/forms/d/e/1FAIpQLScPL35xwbA4wSJ0dNbFE5rm4-ojQC2MQIsvROJJXClbJIaDVw/viewform?usp=publish-editor)**
 
+[Click here to access workshop materials and installation instructions](https://github.com/openforcefield/2026-virtual-workshops/tree/main?tab=readme-ov-file#2026-openff-workshops)
+
 :::{toctree}
 ---
 hidden: True
