@@ -3,9 +3,9 @@ channels:
   - conda-forge
 dependencies:
   # Examples
-  - openff-toolkit-examples>=0.16.9
-  - openff-interchange ~=0.4.2
-  - openff-nagl
+  - openff-toolkit-examples =0.18
+  - openff-interchange =0.5
+  - openff-nagl =0.5
   # openff-fragmenter
   # Runtime
   - pip
@@ -26,7 +26,7 @@ dependencies:
   - rich
   - jax
   - parmed
-  - nglview ~=3.0.6
+  - nglview
   - psi4
   # NAGL training dependencies
   # hopefully will be replaced by openff-nagl-training in future
