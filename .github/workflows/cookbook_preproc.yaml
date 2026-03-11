@@ -92,6 +92,7 @@ jobs:
         uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: devtools/conda-envs/examples_env.yml
+          cache-downloads: false
 
       - name: Pre-process and execute notebooks
         run: |
