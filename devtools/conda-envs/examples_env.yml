@@ -28,7 +28,7 @@ dependencies:
   - jax
   - parmed >=4.3.1
   - nglview
-  - psi4
+  - psi4 >=1.10
   # NAGL training dependencies - constraints are just to help solver
   # hopefully will be replaced by openff-nagl-training in future
   - pyarrow =17
