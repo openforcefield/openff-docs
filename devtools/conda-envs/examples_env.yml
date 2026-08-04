@@ -3,14 +3,14 @@ channels:
   - conda-forge
 dependencies:
   # Examples
-  - openff-toolkit-examples =0.18.1
+  - openff-toolkit-examples =0.18
   - ambertools
-  - openff-interchange =0.5.4
+  - openff-interchange =0.5
   - openff-nagl =0.5
   # openff-fragmenter
   # Runtime
   - pip
-  - python=3.11
+  - python=3.12
   - jupyterlab
   - ipywidgets
   # Cookbook
