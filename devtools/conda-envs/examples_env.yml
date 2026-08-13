@@ -4,12 +4,12 @@ channels:
 dependencies:
   # Examples
   - openff-toolkit-examples =0.18
-  - openff-interchange =0.5
+  - openff-interchange ~=0.5.4
   - openff-nagl =0.5
   # openff-fragmenter
   # Runtime
   - pip
-  - python=3.11
+  - python=3.12
   - jupyterlab
   - ipywidgets
   # Cookbook
@@ -27,11 +27,11 @@ dependencies:
   - jax
   - parmed >=4.3.1
   - nglview
-  - psi4 =1.9.1
-  - libint =2.9
+  - psi4 =1.9.1  # probably want 1.10+
+  - libint =2.9  # probably no longer needed
   # NAGL training dependencies - constraints are just to help solver
   # hopefully will be replaced by openff-nagl-training in future
-  - pyarrow =17
+  - pyarrow =17  # this can probably be bumped up to 20, which is still outdated
   - openff-recharge =0.5.3
   - dask-jobqueue
   - dgl =2.3.0
