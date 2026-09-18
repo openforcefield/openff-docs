@@ -1,0 +1,7 @@
+*.pdb
+*.sdf
+out.*
+out_pointenergy.mdp
+log.lammps
+tmp.in
+*.itp
