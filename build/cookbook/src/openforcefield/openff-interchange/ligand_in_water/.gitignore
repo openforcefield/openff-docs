@@ -1,0 +1,14 @@
+trajectory.pdb
+trajectory_opc.pdb
+trajectory.dcd
+data.csv
+tmp.in
+_tmp_pdb_file.pdb
+mdout.mdp
+run.cpt
+run_prev.cpt
+run.gro
+run.xtc
+tip4p.gro
+tip4p.top
+tip4p_pointenergy.mdp
