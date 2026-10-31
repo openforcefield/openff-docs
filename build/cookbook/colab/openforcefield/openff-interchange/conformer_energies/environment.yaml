@@ -1,0 +1,30 @@
+channels:
+- conda-forge
+dependencies:
+- openff-toolkit-examples =0.18
+- openff-interchange ~=0.5.4
+- openff-nagl =0.5
+- pip
+- python=3.12
+- jupyterlab
+- ipywidgets
+- gitpython
+- nbconvert
+- nbformat
+- requests
+- packaging
+- openff-qcsubmit
+- openmmforcefields =0.15
+- gromacs >=2021=nompi*
+- lammps
+- rich
+- jax
+- parmed >=4.3.1
+- nglview
+- psi4 =1.9.1
+- libint =2.9
+- pyarrow =17
+- openff-recharge =0.5.3
+- dask-jobqueue
+- dgl =2.3.0
+- torchdata<=0.9.0
