@@ -1,0 +1,14 @@
+single-point energy
+&cntrl
+imin=1,
+maxcyc=0,
+ntb=1,
+fswitch=-1.0,
+ntc=1,
+ntf=2,
+cut=9.0,
+/
+&ewald
+order=4
+skinnb=1.0
+//
